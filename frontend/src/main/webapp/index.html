@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="webApp" lang="en">
+<html lang="en" ng-app="webApp" lang="lt">
   <head>
     <base href="/frontend/">
     <meta charset="utf-8">
@@ -18,9 +18,9 @@
   <body>
     <div class="container-fluid top-line">
     <div class="container">
-      <div class="col-md-3 logo-block"><h3><a href="/" class="top-link">Labanoro draugai</a></h3></div>
+      <div class="col-md-3 logo-block"><h3><a ui-shref="/" class="top-link">Labanoro draugai</a></h3></div>
       <div class="col-md-9">
-
+<!--
         <ul class="nav nav-pills" role="tablist">
           <li role="presentation" class="active"><a href="#">Vasarnamio rezervacija</a></li>
           <li role="presentation" class="pull-right"><a href="#">Atsijungti</a></li>
@@ -28,7 +28,11 @@
 glyphicon glyphicon-user"></span> Mano profilis</a></li>
           <li role="presentation"><a href="#">Klubo nariai <span class="badge">3</span></a></li>
         </ul>
-
+ -->
+        <ul class="nav nav-pills" role="tablist">
+          <li role="presentation" class="pull-right"><a ui-sref="login"><span class="glyphicon glyphicon-user"></span> Prisijungti</a></li>
+          <li role="presentation" class="pull-right"><a ui-sref="register">Registracija</a></li>
+        </ul>
       </div>
     </div>
     </div>
@@ -101,6 +105,7 @@ glyphicon glyphicon-user"></span> Mano profilis</a></li>
     <!-- controllers -->
     <script src="js/controllers/registerController.js"></script>
     <script src="js/controllers/loginController.js"></script>
+    <script src="js/controllers/mainController.js"></script>
     <!-- services -->
     <script src="js/services/authService.js"></script>
   </body>

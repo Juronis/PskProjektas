@@ -6,15 +6,20 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
         $urlRouterProvider.otherwise("/");
 
         $stateProvider
-            .state('register', {
+            .state('main', {
                 url: "/",
-                controller: 'registerController',
-                templateUrl: 'partials/registerView.html'
+                controller: 'mainController',
+                templateUrl: 'partials/mainView.html'
             })
             .state('login', {
                 url: "/login",
                 controller: 'loginController',
                 templateUrl: 'partials/loginView.html'
+            })
+            .state('register', {
+                url: "/register",
+                controller: 'registerController',
+                templateUrl: 'partials/registerView.html'
             });
 
         $locationProvider.html5Mode({

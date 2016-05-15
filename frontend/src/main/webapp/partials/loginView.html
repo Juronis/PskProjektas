@@ -1,0 +1,23 @@
+<div class="row">
+    <form method="post" role="form" name="loginForm" novalidate ng-submit="login()">
+        <h3>Prisijungti prie sistemos!</h3>
+        <br /><br />
+        <div class="col-md-6">
+            <div class="input-group" ng-class="{'has-error' : loginForm.email.$invalid && loginForm.email.$dirty, 'has-success' : loginForm.email.$valid && loginForm.email.$dirty}">
+                <span class="input-group-addon" id="basic-addon1">El. paštas</span>
+                <input type="email" class="form-control" aria-describedby="basic-addon1" name="email" ng-model="user.email" required >
+            </div>
+            <br />
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Slaptažodis</span>
+                <input type="password" class="form-control" aria-describedby="basic-addon1" name="password" ng-model="user.password" required >
+            </div>
+            <br />
+            <button type="submit" class="btn btn-success">Prisijungti</button>
+            <button type="reset" class="btn btn-default">Valyti laukelius</button>
+        </div>
+        <div class="col-md-6">
+            [Login with facebook button]
+        </div>
+    </form>
+</div>
