@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "CATEGORY_ITEM")
+@Table(name = "Reservation_Member")
 //An immutable entity may not be updated by the application
 //@org.hibernate.annotations.Immutable
 public class ReservationMember {
