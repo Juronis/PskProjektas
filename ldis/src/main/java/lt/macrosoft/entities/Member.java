@@ -3,7 +3,6 @@ package lt.macrosoft.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import lt.macrosoft.ModelEnums.YesNoType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,12 +23,10 @@ public class Member {
 	private String email;
 
 	@NotNull
-	@Enumerated(EnumType.STRING)
-	private YesNoType isAdmin;
+	private boolean isAdmin;
 
 	@NotNull
-	@Enumerated(EnumType.STRING)
-	private YesNoType isFullMember;
+	private boolean isFullMember;
 
 	@Column(name = "ISFACEBOOKUSER")
 	private boolean facebookUser;
@@ -44,11 +41,11 @@ public class Member {
 		this.creditAmount = creditAmount;
 	}
 
-	public YesNoType getIsFullMember() {
+	public boolean getIsFullMember() {
 		return isFullMember;
 	}
 
-	public void setIsFullMember(YesNoType isFullMember) {
+	public void setIsFullMember(boolean isFullMember) {
 		this.isFullMember = isFullMember;
 	}
 
@@ -78,11 +75,11 @@ public class Member {
 		return reservationItems;
 	}
 
-	public YesNoType getIsAdmin() {
+	public boolean getIsAdmin() {
 		return isAdmin;
 	}
 
-	public void setIsAdmin(YesNoType isAdmin) {
+	public void setIsAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
 
