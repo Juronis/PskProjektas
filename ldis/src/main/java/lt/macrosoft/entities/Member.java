@@ -9,26 +9,34 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "MEMBER", uniqueConstraints = @UniqueConstraint(columnNames = "USERNAME"))
 public class Member {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
-    @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
-    protected Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
+	@SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
+	private Long id;
+	
+	@Column(name = "USERNAME", nullable = false, length = 100)
+	private String userName;
 
-    protected String name;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private YesNoType isAdmin;
+	@Column(name = "EMAIL", length = 150)
+	private String email;
 
 	@NotNull
-    @Enumerated(EnumType.STRING)
-    private YesNoType isFullMember;
-	
-    private int creditAmount;
-	
-    public int getCreditAmount() {
+	@Enumerated(EnumType.STRING)
+	private YesNoType isAdmin;
+
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private YesNoType isFullMember;
+
+	@Column(name = "ISFACEBOOKUSER")
+	private boolean facebookUser;
+
+	private int creditAmount;
+
+	public int getCreditAmount() {
 		return creditAmount;
 	}
 
@@ -43,39 +51,71 @@ public class Member {
 	public void setIsFullMember(YesNoType isFullMember) {
 		this.isFullMember = isFullMember;
 	}
-	
-    @OneToMany(mappedBy = "member")
-    protected Set<ReservationMember> reservationItems = new HashSet<>();
 
-    public Member() {
-    }
+	@OneToMany(mappedBy = "member")
+	protected Set<ReservationMember> reservationItems = new HashSet<>();
 
-    public Member(String name) {
-        this.name = name;
-    }
+	public Member() {
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Member(String name) {
+		this.userName = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public Set<ReservationMember> getReservationItems() {
-        return reservationItems;
-    }
+	public void setUserName(String name) {
+		this.userName = name;
+	}
 
+	public Set<ReservationMember> getReservationItems() {
+		return reservationItems;
+	}
 
-    public YesNoType getIsAdmin() {
+	public YesNoType getIsAdmin() {
 		return isAdmin;
 	}
 
 	public void setIsAdmin(YesNoType isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (this == other)
+			return true;
+		if (other == null)
+			return false;
+		if (!(other instanceof Member))
+			return false;
+		Member that = (Member) other;
+		return this.getUserName().equals(that.getUserName());
+	}
+
+	@Override
+	public int hashCode() {
+		return getUserName().hashCode();
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public Boolean getIsFacebookUser() {
+		return facebookUser;
+	}
+
+	public void setFacebookUser(Boolean isFacebookUser) {
+		this.facebookUser = isFacebookUser;
 	}
 }

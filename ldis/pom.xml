@@ -1,52 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ldis</artifactId>
-    <packaging>war</packaging>
-    <name>ldis.model</name>
-    <groupId>lt.macrosoft.ldis</groupId>
-    <version>0.0.1-SNAPSHOT</version>
 
-    <prerequisites>
-        <maven>3.1.0</maven>
-    </prerequisites>
+	<parent>
+		<groupId>lt.macrosoft.ldis</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
 
-    <properties>
-        <!-- Project -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+	<artifactId>ldis</artifactId>
+	<packaging>jar</packaging>
+	<name>ldis.model</name>
 
-        <!-- Plugins -->
-        <version.plugin.compiler>3.1</version.plugin.compiler>
-
-        <!-- Dependencies -->
-        <version.dependency.javaee>7.0</version.dependency.javaee>
-    </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.plugin.compiler}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <debug>true</debug>
-                    <optimize>true</optimize>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>${version.dependency.javaee}</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 </project>
 
