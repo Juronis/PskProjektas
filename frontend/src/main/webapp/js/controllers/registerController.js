@@ -1,30 +1,33 @@
 app.controller('registerController', ['$scope', '$state', 'authService', function ($scope, $state, authService) {
-    $scope.signupType = "pw";
     
     $scope.register = function () {
-        if ($scope.signupType === "pw") {
-            registerWithUsername();
-        } else {
-            registerWithFB();
+        if ($scope.registerForm.$valid) {
+            if($scope.user.password === $scope.user.password2) {
+                registerWithForm();
+            } else {
+                $scope.errorList = "Nesutampa slaptažodiai";
+            }
+        }
+        else {
+            console.log('testas');
         }
     };
     
-    var registerWithUsername = function () {
-        authService.register($scope.newUser).then(function (response) {
+    var registerWithForm = function () {
+        authService.register($scope.user).then(function (response) {
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            //TODO error handling
-            alert("Couldn't register" + response.data);
+            $scope.errorList = response.data;
         })
     };
 
-    var registerWithFB = function () {
+    $scope.registerWithFacebook = function () {
         authService.authenticateFB().then(function (response) {
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            alert("Couldn't register" + response.data);
+            $scope.errorList = response.data;
         })
     }
 }]);

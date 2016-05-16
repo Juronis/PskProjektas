@@ -1,38 +1,46 @@
-      <div class="row">
-        <form method="post" role="form">
-          <h3>Tu buvai pakviestas tapti labanoro draugijos dalimi!</h3>
-          <br /><br />
-          <div class="col-md-6">
+<div class="row">
+    <div class="alert alert-danger" ng-show="errorList">
+        <strong>Klaida!</strong> {{ errorList }}
+    </div>
+    <div class="col-md-6">
+        <br/>
+        <h3>Tu buvai pakviestas tapti labanoro draugijos dalimi!</h3>
+        <br />
+        <button class="btn btn-block btn-social btn-facebook" ng-click="registerWithFacebook()">
+            <span class="fa fa-facebook-square"></span> Registruotis su Facebook
+        </button>
+        <br />
+        <form method="post" role="form" name="registerForm" ng-submit="register()">
             <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Vardas</span>
-              <input type="text" class="form-control" aria-describedby="basic-addon1">
+                <span class="input-group-addon" id="basic-addon1">Vardas</span>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="user.name" required>
             </div>
-            <br />
+            <br/>
             <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Pavardė</span>
-              <input type="text" class="form-control" aria-describedby="basic-addon1">
+                <span class="input-group-addon" id="basic-addon1">Pavardė</span>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="user.surname" required>
             </div>
-            <br />
+            <br/>
+            <div class="input-group"
+                 ng-class="{'has-error' : registerForm.email.$invalid && registerForm.email.$dirty, 'has-success' : registerForm.email.$valid && registerForm.email.$dirty}">
+                <span class="input-group-addon" id="basic-addon1">El. paštas</span>
+                <input type="email" class="form-control" aria-describedby="basic-addon1" ng-model="user.email" required>
+            </div>
+            <br/><br/>
             <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">El. paštas</span>
-              <input type="text" class="form-control" aria-describedby="basic-addon1">
+                <span class="input-group-addon" id="basic-addon1">Slaptažodis</span>
+                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="user.password"
+                       required>
             </div>
-            <br /><br />
+            <br/>
             <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Slaptažodis</span>
-              <input type="password" class="form-control" aria-describedby="basic-addon1">
+                <span class="input-group-addon" id="basic-addon1">Pakartoti</span>
+                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="user.password2"
+                       required>
             </div>
-            <br />
-            <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Pakartoti</span>
-              <input type="password" class="form-control" aria-describedby="basic-addon1">
-            </div>
-            <br /><br />
+            <br/><br/>
             <button type="submit" class="btn btn-success">Registruotis</button>
             <button type="reset" class="btn btn-default">Valyti laukelius</button>
-          </div>
-          <div class="col-md-6">
-            [Register with facebook button]
-          </div>
         </form>
-      </div>
+    </div>
+</div>

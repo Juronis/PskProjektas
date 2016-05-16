@@ -25,15 +25,14 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
         $locationProvider.html5Mode({
             enabled: true
         });
-/*
-        cfpLoadingBarProvider.includeSpinner = false;
+
         $authProvider.loginUrl = 'rest/login';
         $authProvider.signupUrl = 'rest/register';
-        $authProvider.baseUrl = $('base').attr('href');
-        $authProvider.tokenPrefix='labanoro_draugai';
+        //$authProvider.baseUrl = $('base').attr('href');
+        //$authProvider.tokenPrefix='labanoro_draugai';
         $authProvider.facebook({
-            clientId: '1538319626473322',
+            clientId: '488291451363760',
             url: 'rest/register/facebook'
         });
-*/
+
     }]);
