@@ -23,13 +23,13 @@ public class Reservation {
 
     protected String name;
     
- // tells it is not owner of relationship, and what property maps to it.
-    @OneToMany(mappedBy = "reservation")
-    protected Set<ReservationMember> categorizedItems = new HashSet<>();
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     protected Summerhouse summerhouse;
+    
+    @ManyToOne
+    @NotNull
+    protected Member member;
     
     public Reservation() {
     }
@@ -49,10 +49,4 @@ public class Reservation {
     public void setName(String name) {
         this.name = name;
     }
-
-    public Set<ReservationMember> getCategorizedItems() {
-        return categorizedItems;
-    }
-
-    // ...
 }

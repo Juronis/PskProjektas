@@ -1,6 +1,6 @@
 package lt.macrosoft.DTOs;
 
-import lt.macrosoft.entities.Person;
+import lt.macrosoft.entities.Member;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,7 +16,7 @@ public class PaginatedListWrapper implements Serializable {
     private String sortFields;
     private String sortDirections;
     @XmlElement
-    private List<Person> list;
+    private List<Member> list;
 
     public Integer getCurrentPage() {
         return currentPage;
@@ -62,7 +62,7 @@ public class PaginatedListWrapper implements Serializable {
         return list;
     }
 
-    public void setList(List<Person> list) {
+    public void setList(List<Member> list) {
         this.list = list;
     }
 }
