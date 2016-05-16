@@ -3,7 +3,6 @@ package lt.macrosoft.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +49,7 @@ public class Member {
 	}
 
 	@OneToMany(mappedBy = "member")
-	protected Set<ReservationMember> reservationItems = new HashSet<>();
+	protected Set<Reservation> reservations = new HashSet<>();
 
 	public Member() {
 	}
@@ -71,8 +70,8 @@ public class Member {
 		this.userName = name;
 	}
 
-	public Set<ReservationMember> getReservationItems() {
-		return reservationItems;
+	public Set<Reservation> getReservations() {
+		return reservations;
 	}
 
 	public boolean getIsAdmin() {

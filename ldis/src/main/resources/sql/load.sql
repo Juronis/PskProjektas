@@ -1,0 +1,4 @@
+INSERT INTO MEMBER("id", "creditamount", "email", "isfacebookuser", "isadmin", "isfullmember", "username") VALUES(nextval('hibernate_sequence'),'5' ,'vaidotas.juronis@gmail.com', true, true, true, 'rimtas kentas');
+INSERT INTO MEMBER("id", "creditamount", "email", "isfacebookuser", "isadmin", "isfullmember", "username") VALUES(nextval('hibernate_sequence'),'5' ,'vaidotas.juronis@gmail.com', true, true, true, 'marijus koreniuaskas');
+INSERT INTO MEMBER("id", "creditamount", "email", "isfacebookuser", "isadmin", "isfullmember", "username") VALUES(nextval('hibernate_sequence'),'5' ,'vaidotas.juronis@gmail.com', true, true, true, 'donatas donatelas');
+INSERT INTO MEMBER("id", "creditamount", "email", "isfacebookuser", "isadmin", "isfullmember", "username") VALUES(nextval('hibernate_sequence'),'5' ,'vaidotas.juronis@gmail.com', true, true, true, 'arnas jonaitis');
