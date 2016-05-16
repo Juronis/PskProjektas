@@ -3,7 +3,6 @@ package lt.macrosoft.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import lt.macrosoft.ModelEnums.YesNoType;
 
 /**
  * Simple entity.
