@@ -23,6 +23,17 @@ public class Summerhouse {
     
     @Column(name = "NUMBEROFPLACES")
     private Integer numberOfPlaces;
+    
+	@Column(name = "IMAGEURL")
+    private String imageUrl;
+	
+    public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
 	public Summerhouse() {
     }
