@@ -17,6 +17,9 @@ public class Member {
 	
 	@Column(name = "USERNAME", nullable = false, length = 100)
 	private String userName;
+	
+	@Column(name = "PASSWORD", nullable = false, length = 20)
+	private String password;
 
 	@Column(name = "EMAIL", length = 150)
 	private String email;
@@ -114,4 +117,14 @@ public class Member {
 	public void setFacebookUser(Boolean isFacebookUser) {
 		this.facebookUser = isFacebookUser;
 	}
+	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 }
