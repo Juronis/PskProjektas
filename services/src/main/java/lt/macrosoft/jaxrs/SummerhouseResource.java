@@ -23,5 +23,5 @@ public class SummerhouseResource extends Application {
         return "blablddsadsdasdaa";
     }
     
-
+    
 }

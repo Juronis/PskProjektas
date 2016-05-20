@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>services</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>ldis.services</name>
 
     
