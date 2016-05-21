@@ -6,7 +6,6 @@ app.controller('loginController', ['$scope', function ($scope) {
                 authService.setAuthData(response.data);
                 $state.go('main');
             }).catch(function (response) {
-                //TODO error handling
                 errorList = response.data;
             })
         }
@@ -17,7 +16,6 @@ app.controller('loginController', ['$scope', function ($scope) {
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            //TODO
             errorList = response.data;
         })
     }
