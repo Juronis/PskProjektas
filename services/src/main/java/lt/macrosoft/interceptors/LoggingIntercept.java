@@ -7,8 +7,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
 public class LoggingIntercept {
-   @Inject
-   private Logger logger;
+   
+   private Logger logger = Logger.getLogger("LoggingIntercept.class");
 
    @AroundInvoke
    private Object doLog(InvocationContext ic) {

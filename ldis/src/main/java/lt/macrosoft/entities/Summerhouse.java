@@ -10,8 +10,9 @@ import java.util.Collection;
 public class Summerhouse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
-    @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
+   // @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
     protected Long id;
 
  // tells it is not owner of relationship, and what property maps to it.

@@ -10,8 +10,10 @@ import java.util.Set;
 @Table(name = "EXTRAACTIVITIES")
 public class ExtraActivities {
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
-    @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+
+   // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
+    //@SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
     protected Long id;
 	
 	private Integer Boats;

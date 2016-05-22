@@ -8,20 +8,28 @@ import java.util.Set;
 
 @Entity
 @Table(name = "MEMBER", uniqueConstraints = @UniqueConstraint(columnNames = "USERNAME"))
+@NamedQueries({
+    @NamedQuery(name = "Member.findAll", query = "SELECT m FROM Member m"),
+    @NamedQuery(name = "Member.findByEmail", query = "SELECT m FROM Member m WHERE m.email = :email"),
+    @NamedQuery(name = "Member.findByFacebook", query = "SELECT m FROM Member m WHERE m.facebookUser = :facebookUser")
+    
+})
 public class Member {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
-	@SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
+	//@SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
 	private Long id;
 	
 	@Column(name = "USERNAME", nullable = false, length = 100)
 	private String userName;
 	
-	@Column(name = "PASSWORD", nullable = false, length = 20)
+	@Column(name = "PASSWORD", nullable = false, length = 2000)
 	private String password;
-
-	@Column(name = "EMAIL", length = 150)
+	
+	@NotNull
+	@Column(name = "EMAIL", length = 150, unique=true)
 	private String email;
 
 	@NotNull
@@ -29,9 +37,9 @@ public class Member {
 
 	@NotNull
 	private boolean isFullMember;
-
+	//Jei facebooko useris tai storiname facebooko id.
 	@Column(name = "ISFACEBOOKUSER")
-	private boolean facebookUser;
+	private String facebookUser;
 
 	private int creditAmount;
 
@@ -94,12 +102,12 @@ public class Member {
 		if (!(other instanceof Member))
 			return false;
 		Member that = (Member) other;
-		return this.getUserName().equals(that.getUserName());
+		return this.getEmail().equals(that.getEmail());
 	}
 
 	@Override
 	public int hashCode() {
-		return getUserName().hashCode();
+		return getEmail().hashCode();
 	}
 	
 	public String getEmail() {
@@ -110,11 +118,11 @@ public class Member {
 		this.email = email;
 	}
 	
-	public Boolean getIsFacebookUser() {
+	public String getIsFacebookUser() {
 		return facebookUser;
 	}
 
-	public void setFacebookUser(Boolean isFacebookUser) {
+	public void setFacebookUser(String isFacebookUser) {
 		this.facebookUser = isFacebookUser;
 	}
 	
