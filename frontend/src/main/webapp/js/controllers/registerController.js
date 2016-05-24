@@ -5,11 +5,8 @@ app.controller('registerController', ['$scope', '$state', 'authService', functio
             if($scope.user.password === $scope.user.password2) {
                 registerWithForm();
             } else {
-                $scope.errorList = "Nesutampa slaptažodiai";
+                $scope.messageLog = "Nesutampa slaptažodiai";
             }
-        }
-        else {
-            console.log('testas');
         }
     };
     
@@ -18,7 +15,9 @@ app.controller('registerController', ['$scope', '$state', 'authService', functio
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            $scope.errorList = response.data;
+            if(response.status == 404) {
+                $scope.messageLog = "Puslapis nerastas";
+            }
         })
     };
 
@@ -27,7 +26,9 @@ app.controller('registerController', ['$scope', '$state', 'authService', functio
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            $scope.errorList = response.data;
+            if(response.status == 404) {
+                $scope.messageLog = "Puslapis nerastas";
+            }
         })
     }
 }]);

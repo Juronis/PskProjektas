@@ -20,19 +20,29 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/register",
                 controller: 'registerController',
                 templateUrl: 'partials/registerView.html'
+            })
+            .state('usersList', {
+                url: "/usersList",
+                controller: 'usersListController',
+                templateUrl: 'partials/usersListView.html'
+            })
+            .state('summerHousesList', {
+                url: "/summerHousesList",
+                controller: 'summerHousesListController',
+                templateUrl: 'partials/summerHousesListView.html'
             });
 
         $locationProvider.html5Mode({
             enabled: true
         });
 
-        $authProvider.loginUrl = 'rest/login';
-        $authProvider.signupUrl = 'rest/register';
+        $authProvider.loginUrl = '/frontend/services/resource/login';
+        $authProvider.signupUrl = '/frontend/services/resource/register';
         //$authProvider.baseUrl = $('base').attr('href');
         //$authProvider.tokenPrefix='labanoro_draugai';
         $authProvider.facebook({
             clientId: '488291451363760',
-            url: 'rest/register/facebook'
+            url: '/frontend/services/resource/register/facebook'
         });
 
     }]);
