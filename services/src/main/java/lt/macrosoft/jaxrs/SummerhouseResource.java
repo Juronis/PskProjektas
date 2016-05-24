@@ -20,7 +20,8 @@ public class SummerhouseResource extends Application {
     @GET
     @Path("{id}")
     public String getPerson(@PathParam("id") Long id) {
-        return "blablddsadsdasdaa";
+
+        return "{\"test\":\"blablddsadsdasdaa\"}";
     }
     
     
