@@ -1,4 +1,4 @@
-package lt.macrosoft.resources;
+package lt.macrosoft.jaxrs;
 
 import com.nimbusds.jose.JOSEException;
 
@@ -22,10 +22,10 @@ import com.google.common.base.Optional;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
 
-@Path("/api/me")
+@Path("/members")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MemberResource extends Application {
+public class MemberResource {
 	
 	private final MemberDAO dao;
 	
@@ -35,7 +35,9 @@ public class MemberResource extends Application {
 	public MemberResource() {
 		dao=null;
 	}
+	
 	@GET
+	@Path("me")
 	public Response getUser(@Context HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthUser(request);
 		
@@ -47,7 +49,7 @@ public class MemberResource extends Application {
 	
 	// for testing
 	@GET
-	@Path("/all")
+	@Path("all")
 	public Response getAllUsers() {
 		return Response.ok().entity(dao.findAll()).build();
 	}

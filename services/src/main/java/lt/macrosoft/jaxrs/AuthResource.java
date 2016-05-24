@@ -1,4 +1,4 @@
-package lt.macrosoft.resources;
+package lt.macrosoft.jaxrs;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -39,7 +39,6 @@ import lt.macrosoft.entities.Member;
 import lt.macrosoft.utils.AuthUtils;
 import lt.macrosoft.utils.PasswordService;
 
-@ApplicationPath("/resource")
 @Path("/auth")
 @Stateless
 @Produces(MediaType.APPLICATION_JSON)

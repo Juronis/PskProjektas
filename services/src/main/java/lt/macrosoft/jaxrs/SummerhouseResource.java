@@ -10,18 +10,11 @@ import javax.ws.rs.core.MediaType;
 
 import java.util.List;
 
-@Stateless
-@ApplicationPath("/resource")
-@Path("persons")
+@Path("/summerhouses")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class SummerhouseResource extends Application {
+public class SummerhouseResource {
 
-    @GET
-    @Path("{id}")
-    public String getPerson(@PathParam("id") Long id) {
-        return "blablddsadsdasdaa";
-    }
-    
+ 
     
 }
