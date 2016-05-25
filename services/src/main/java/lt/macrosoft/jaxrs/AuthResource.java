@@ -2,6 +2,7 @@ package lt.macrosoft.jaxrs;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.ejb.Stateless;
@@ -62,8 +63,13 @@ public class AuthResource {
 
   @GET
   @Path("{id}")
-  public String getPerson(@PathParam("id") Long id) {
-      return "blablddsadsdasdaa";
+  public String getPerson(@PathParam("id") Long id, @Context final HttpServletRequest request) {
+      Enumeration<String> x = request.getHeaderNames();
+      String hedas = x.nextElement();
+      System.out.println(hedas);
+      String headeris = request.getHeader(hedas);
+      System.out.println(headeris);
+      return headeris;
   }
   
   public AuthResource(final Client client, final MemberDAO dao) {
@@ -76,7 +82,6 @@ public class AuthResource {
   @Path("login")
   public Response login(final Member member, @Context final HttpServletRequest request)
       throws JOSEException {
-      System.out.println("Bandyta prisijungi");
     final Optional<Member> foundUser = dao.findByEmail(member.getEmail());
     if (foundUser.isPresent()
         && PasswordService.checkPassword(member.getPassword(), foundUser.get().getPassword())) {
