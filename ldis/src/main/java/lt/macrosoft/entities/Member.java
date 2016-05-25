@@ -45,7 +45,7 @@ public class Member {
 
 	private int creditAmount;
 
-	@Column(name = "LOGINTOKEN", nullable = false, length = 2000)
+	@Column(name = "LOGINTOKEN", nullable = true, length = 2000)
 	private String logintoken;
 
 	public int getCreditAmount() {

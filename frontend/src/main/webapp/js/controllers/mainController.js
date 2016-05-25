@@ -1,6 +1,10 @@
-app.controller('mainController', ['$scope', function ($scope) {
+app.controller('mainController', ['$scope', '$http', function ($scope, $http) {
 
-   /* $http.get("/frontend/services/resource/persons/4")
-        .then(function(response){ $scope.testas = response.data; }) */
+    $http.get("/frontend/services/resources/auth/4")
+        .then(function(response){
+            $scope.testas = response.data;
+        });
+
+
 
 }]);
