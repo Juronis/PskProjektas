@@ -26,7 +26,7 @@ import lt.macrosoft.entities.Member;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MemberResource {
-	
+
 	private final MemberDAO dao;
 	
 	public MemberResource(MemberDAO memberDAO) {

@@ -7,14 +7,19 @@ import lt.macrosoft.entities.District;
 import lt.macrosoft.entities.Summerhouse;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import java.util.List;
 
 @Path("/summerhouses")
 public class SummerhouseResource {
+    @Context
+    private HttpServletRequest httpRequest;
+
     @Inject
     SummerhouseDAO summerhouseDAO;
     @Inject
@@ -33,14 +38,6 @@ public class SummerhouseResource {
     public List<Summerhouse> getSummerhouses(@QueryParam("district") String district,
                                              @DefaultValue("0") @QueryParam("priceMin") double priceMin,
                                              @DefaultValue("0") @QueryParam("numPlaces") int numPlaces) {
-        return summerhouseDAO.getEntityManager()
-                .createQuery(
-                        "SELECT s FROM Summerhouse s WHERE s.district = :district AND s.price >= :priceMin AND s.numberOfPlaces >= :numPlaces",
-                        Summerhouse.class
-                )
-                .setParameter("priceMin", priceMin)
-                .setParameter("district", district)
-                .setParameter("numPlaces", numPlaces)
-                .getResultList();
+        return summerhouseDAO.findAllCustom(district, priceMin, numPlaces).get();
     }
 }

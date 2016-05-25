@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SummerhouseDAO extends GenericDAO<Summerhouse, Long> {
     Optional<List<Summerhouse>> findByDistrict(String district);
+    Optional<List<Summerhouse>> findAllCustom(String district, double priceMin, int numPlaces);
 }

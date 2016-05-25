@@ -22,4 +22,14 @@ public class SummerhouseDAOImpl extends GenericDAOImpl<Summerhouse, Long> implem
 				.setParameter("district", district).getResultList()
 		);
 	}
+
+	@Override
+	public Optional<List<Summerhouse>> findAllCustom(String district, double priceMin, int numPlaces) {
+		return Optional.fromNullable(
+				getEntityManager().createNamedQuery("Summerhouse.findAllCustom", Summerhouse.class)
+				.setParameter("priceMin", priceMin)
+				.setParameter("district", district)
+				.setParameter("numPlaces", numPlaces)
+				.getResultList());
+	}
 }

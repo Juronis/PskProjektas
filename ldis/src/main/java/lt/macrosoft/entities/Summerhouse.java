@@ -8,6 +8,7 @@ import java.util.Collection;
 @Table(name = "SUMMERHOUSE")
 @NamedQueries({
         @NamedQuery(name = "Summerhouse.findByDistrict", query = "SELECT s FROM Summerhouse s WHERE s.district = :district"),
+        @NamedQuery(name = "Summerhouse.findAllCustom", query = "SELECT s FROM Summerhouse s WHERE s.district = :district AND s.price >= :priceMin AND s.numberOfPlaces >= :numPlaces")
 })
 public class Summerhouse {
 

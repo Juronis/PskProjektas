@@ -7,8 +7,11 @@ import lt.macrosoft.mail.MailStatus;
 import lt.macrosoft.mail.MailerBean;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -21,19 +24,22 @@ import java.util.logging.Logger;
  * Created by Arnas on 2016-05-25.
  */
 @Path("/approvals")
-public class ApprovalService {
-    private static final Logger logger = Logger.getLogger(ApprovalService.class.getName());
+@Stateless
+public class ApprovalResource {
+    private static final Logger logger = Logger.getLogger(ApprovalResource.class.getName());
+    @Context
+    HttpServletRequest request;
 
     @EJB
     MailerBean mailerBean;
     @Inject
     ApprovalDAO approvalDAO;
 
-    public ApprovalService() {
+    public ApprovalResource() {
         this.approvalDAO = null;
     }
 
-    public ApprovalService(ApprovalDAO approvalDAO) {
+    public ApprovalResource(ApprovalDAO approvalDAO) {
         this.approvalDAO = approvalDAO;
     }
 
