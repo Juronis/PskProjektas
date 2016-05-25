@@ -47,6 +47,9 @@ public class Member {
 
 	private int creditAmount;
 
+	@Column(name = "LOGINTOKEN", nullable = false, length = 2000)
+	private String logintoken;
+
 	public int getCreditAmount() {
 		return creditAmount;
 	}
@@ -137,6 +140,14 @@ public class Member {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getLoginToke() {
+		return logintoken;
+	}
+
+	public void setLoginToken(String logintoken) {
+		this.logintoken = logintoken;
 	}
 
 }
