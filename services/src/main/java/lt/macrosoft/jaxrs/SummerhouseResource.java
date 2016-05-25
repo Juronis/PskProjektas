@@ -16,5 +16,5 @@ public class SummerhouseResource {
     @Inject
     SummerhouseDAO dao;
 
-
+    
 }

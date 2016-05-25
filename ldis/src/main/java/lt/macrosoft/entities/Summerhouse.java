@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
+@Table(name = "SUMMERHOUSE")
+@NamedQueries({
+        @NamedQuery(name = "Summerhouse.findByDistrict", query = "SELECT s FROM Summerhouse s WHERE s.district = :district"),
+})
 public class Summerhouse {
 
     @Id
@@ -27,7 +31,10 @@ public class Summerhouse {
     
 	@Column(name = "IMAGEURL")
     private String imageUrl;
-	
+
+    @Column(name = "DISTRICT")
+    private String district;
+
     public String getImageUrl() {
 		return imageUrl;
 	}
@@ -62,4 +69,13 @@ public class Summerhouse {
 	public void setNumberOfPlaces(Integer numberOfPlaces) {
 		this.numberOfPlaces = numberOfPlaces;
 	}
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 }
+
