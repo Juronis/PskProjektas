@@ -1,4 +1,4 @@
-app.controller('loginController', ['$scope', function ($scope) {
+app.controller('loginController', ['$scope', '$state', 'authService', function ($scope, $state, authService) {
 
     $scope.login = function() {
         if ($scope.loginForm.$valid) {
@@ -6,7 +6,13 @@ app.controller('loginController', ['$scope', function ($scope) {
                 authService.setAuthData(response.data);
                 $state.go('main');
             }).catch(function (response) {
-                errorList = response.data;
+                if(response.status == 500) {
+                    console.log('testas');
+                    $scope.messageLog = "Neteisingi prisijungimo duomenys";
+                }
+                if(response.status == 401) {
+                    $scope.messageLog = "Unautorizer prisijungimo duomenys";
+                }
             })
         }
     }
@@ -16,7 +22,7 @@ app.controller('loginController', ['$scope', function ($scope) {
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            errorList = response.data;
+            $scope.messageLog = response.data;
         })
     }
 

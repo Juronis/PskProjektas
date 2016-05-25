@@ -66,7 +66,6 @@ public class MemberResource {
 		
 		Member userToUpdate = foundUser.get();
 		userToUpdate.setName(member.getName());
-		userToUpdate.setSurname(member.getSurname());
 		userToUpdate.setEmail(member.getEmail());
 		dao.save(userToUpdate);
 
