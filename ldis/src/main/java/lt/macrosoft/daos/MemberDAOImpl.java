@@ -25,9 +25,9 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 	}
 
 	public Optional<Member> findByFacebook(String FacebookId) {
-
-		return Optional.fromNullable(getEntityManager().createNamedQuery("Member.findByEmail", Member.class)
-				.setParameter("email", FacebookId).getSingleResult());
+		System.out.println("FACEBOOKKID: " + FacebookId);
+		return Optional.fromNullable(getEntityManager().createNamedQuery("Member.findByFacebook", Member.class)
+				.setParameter("facebookUser", FacebookId).getSingleResult());
 	}
 
 	public Member save(Member member) {
