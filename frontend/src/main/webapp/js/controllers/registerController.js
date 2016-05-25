@@ -2,7 +2,7 @@ app.controller('registerController', ['$scope', '$state', 'authService', functio
     
     $scope.register = function () {
         if ($scope.registerForm.$valid) {
-            if($scope.user.password === $scope.user.password2) {
+            if($scope.user.password === password2) {
                 registerWithForm();
             } else {
                 $scope.messageLog = "Nesutampa slaptažodiai";
@@ -11,7 +11,7 @@ app.controller('registerController', ['$scope', '$state', 'authService', functio
     };
     
     var registerWithForm = function () {
-        authService.register($scope.user).then(function (response) {
+        authService.register(userInfo).then(function (response) {
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
