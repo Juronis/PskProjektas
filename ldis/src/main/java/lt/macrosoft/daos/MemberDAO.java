@@ -15,4 +15,6 @@ public interface MemberDAO extends GenericDAO<Member, Long> {
 	
 	public Optional<Member> findByFacebook(String email);
 
+	public Optional<Member> getMemberByToken(String header);
+
 }

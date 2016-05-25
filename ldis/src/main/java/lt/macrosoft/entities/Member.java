@@ -11,7 +11,8 @@ import java.util.Set;
 @NamedQueries({
     @NamedQuery(name = "Member.findAll", query = "SELECT m FROM Member m"),
     @NamedQuery(name = "Member.findByEmail", query = "SELECT m FROM Member m WHERE m.email = :email"),
-    @NamedQuery(name = "Member.findByFacebook", query = "SELECT m FROM Member m WHERE m.facebookUser = :facebookUser")
+    @NamedQuery(name = "Member.findByFacebook", query = "SELECT m FROM Member m WHERE m.facebookUser = :facebookUser"),
+	@NamedQuery(name = "Member.findByToken", query = "SELECT m FROM Member m WHERE m.logintoken = :logintoken")
     
 })
 public class Member {
@@ -24,10 +25,7 @@ public class Member {
 	
 	@Column(name = "NAME", length = 100)
 	private String name;
-	
-	@Column(name = "SURNAME", length = 100)
-	private String surname;
-	
+
 	@Column(name = "PASSWORD", nullable = false, length = 2000)
 	private String password;
 	

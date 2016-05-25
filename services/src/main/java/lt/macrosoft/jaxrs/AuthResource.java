@@ -66,9 +66,12 @@ public class AuthResource {
   public String getPerson(@PathParam("id") Long id, @Context final HttpServletRequest request) {
       Enumeration<String> x = request.getHeaderNames();
       String hedas = x.nextElement();
-      System.out.println(hedas);
       String headeris = request.getHeader(hedas);
       System.out.println(headeris);
+      Optional<Member> memberis = dao.getMemberByToken(headeris);
+      if (memberis.isPresent()) {
+          System.out.println(memberis.get().getEmail());
+      }
       return headeris;
   }
   
