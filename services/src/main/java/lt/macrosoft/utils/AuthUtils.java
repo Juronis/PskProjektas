@@ -2,6 +2,8 @@ package lt.macrosoft.utils;
 
 import java.text.ParseException;
 
+import javax.ws.rs.core.HttpHeaders;
+
 import com.nimbusds.jose.crypto.MACVerifier;
 import org.joda.time.DateTime;
 
@@ -19,10 +21,15 @@ public final class AuthUtils {
 	
 	private static final JWSHeader JWT_HEADER = new JWSHeader(JWSAlgorithm.HS256);
 	private static final String TOKEN_SECRET = "aliceinwonderland";
-	public static final String AUTH_HEADER_KEY = "Authorization";
+	public static final String AUTH_HEADER_KEY = HttpHeaders.AUTHORIZATION;
 	
 	public static String getSubject(String authHeader) throws ParseException, JOSEException {
 		return decodeToken(authHeader).getSubject();
+	}
+	
+	public static boolean validateToken(String authHeader) throws ParseException, JOSEException {
+		SignedJWT signedJWT = SignedJWT.parse(getSerializedToken(authHeader));
+		return signedJWT.verify(new MACVerifier(TOKEN_SECRET));
 	}
 	
 	public static ReadOnlyJWTClaimsSet decodeToken(String authHeader) throws ParseException, JOSEException {
@@ -33,7 +40,7 @@ public final class AuthUtils {
 			throw new JOSEException("Signature verification failed");
 		}
 	}
-	
+
 	public static Token createToken(String host, long sub) throws JOSEException {
 		JWTClaimsSet claim = new JWTClaimsSet();
 		claim.setSubject(Long.toString(sub));

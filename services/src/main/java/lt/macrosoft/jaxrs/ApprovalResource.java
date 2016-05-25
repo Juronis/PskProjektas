@@ -3,8 +3,10 @@ package lt.macrosoft.jaxrs;
 import com.google.common.base.Optional;
 import lt.macrosoft.daos.ApprovalDAO;
 import lt.macrosoft.entities.Approval;
+import lt.macrosoft.enums.Role;
 import lt.macrosoft.mail.MailStatus;
 import lt.macrosoft.mail.MailerBean;
+import lt.macrosoft.security.Secured;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -42,7 +44,7 @@ public class ApprovalResource {
     public ApprovalResource(ApprovalDAO approvalDAO) {
         this.approvalDAO = approvalDAO;
     }
-
+    @Secured({Role.ADMIN})
     @Path("send")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

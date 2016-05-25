@@ -1,6 +1,7 @@
 package lt.macrosoft.jaxrs;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Map;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +40,7 @@ import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.core.Token;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
+import lt.macrosoft.enums.Role;
 import lt.macrosoft.utils.AuthUtils;
 import lt.macrosoft.utils.PasswordService;
 
@@ -52,6 +55,9 @@ public class AuthResource {
   @Inject
   MemberDAO dao;
 
+  @Context
+  SecurityContext securityContext;
+  
   public static final String CLIENT_ID_KEY = "client_id", REDIRECT_URI_KEY = "redirect_uri",
       CLIENT_SECRET = "client_secret", CODE_KEY = "code", GRANT_TYPE_KEY = "grant_type",
       AUTH_CODE = "authorization_code";
@@ -61,39 +67,25 @@ public class AuthResource {
       UNLINK_ERROR_MSG = "Could not unlink %s account because it is your only sign-in method";
 
   public static final ObjectMapper MAPPER = new ObjectMapper();
-
+  
+  //kaip ir nieko naudingo nedarantis metodas Naudokite toki koda:
+  //Principal principal = securityContext.getUserPrincipal();
+  //String username = principal.getName();
   @GET
-  @Path("{id}")
-  public String getPerson(@PathParam("id") Long id, @Context final HttpServletRequest request) {
-      Enumeration<String> x = request.getHeaderNames();
-      String hedas = x.nextElement();
-      String headeris = request.getHeader(hedas);
-      System.out.println(headeris);
-
-      String em;
-      try {
-          em = AuthUtils.getSubject(headeris);
-      } catch (JOSEException | ParseException  e) {
-          em = "0";
+  public String getPerson( @Context final HttpServletRequest request) {
+	  Long id;
+	  try {
+		 id = Long.parseLong(AuthUtils.getSubject(
+				  request.getHeader(AuthUtils.AUTH_HEADER_KEY)));
+      } catch (JOSEException | NumberFormatException |ParseException e) {
+          id = 0L;
       }
-
-
-      Long idas;
-      try {
-          idas = Long.parseLong(em);
-      } catch (NumberFormatException e) {
-          idas = 0l;
-      }
-
-      Optional<Member> memberis = dao.getMemberById(idas);
+      Optional<Member> memberis = dao.getMemberById(id);
       if (memberis.isPresent()) {
           return memberis.get().getEmail();
-          //String mailas = memberis.get().getEmail();
-
       } else {
-          return idas.toString();
+          return id.toString();
       }
-
   }
   
   public AuthResource(final Client client, final MemberDAO dao) {
@@ -122,9 +114,11 @@ public class AuthResource {
       System.out.println("Bent Jau bande");
 	  member.setPassword(PasswordService.hashPassword(member.getPassword()));
       member.setLoginToken("N");
+      member.setRole(Role.CANDIDATE);
       final Member savedUser = dao.save(member);
     final Token token = AuthUtils.createToken(request.getRemoteHost(), savedUser.getId());
       member.setLoginToken(token.getToken());
+      System.out.println("Tokenas " + token.getToken());
         dao.findById(savedUser.getId()).setLoginToken(token.getToken());
     return Response.status(Status.CREATED).entity(token).build();
   }

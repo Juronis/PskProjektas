@@ -1,12 +1,15 @@
 package lt.macrosoft.daos;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.swing.text.html.Option;
+import javax.persistence.TypedQuery;
 
 import com.google.common.base.Optional;
 
 import lt.macrosoft.entities.Member;
+import lt.macrosoft.enums.Role;
 
 
 public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements MemberDAO {
@@ -47,5 +50,18 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 		  System.out.println("ciamember" + member.getId());
 		  System.out.println(getCount());
 		return member;
+	}
+	
+	public Optional<Role> findRolesById(Long id){
+		String query = "SELECT i.role FROM Member i WHERE i.id = :id";
+		TypedQuery<Role> typedQuery = em.createQuery(query , Role.class);
+		typedQuery.setParameter("id",id);
+		List<Role> results = typedQuery.getResultList();
+        if(results.size() == 1) {
+            return Optional.fromNullable(results.get(0));
+        } else if (results.size() > 1) {
+            throw new RuntimeException("Username should be unique.");
+        }
+        return null;
 	}
 }
