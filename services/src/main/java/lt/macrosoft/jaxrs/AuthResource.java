@@ -76,6 +76,7 @@ public class AuthResource {
   @Path("login")
   public Response login(final Member member, @Context final HttpServletRequest request)
       throws JOSEException {
+      System.out.println("Bandyta prisijungi");
     final Optional<Member> foundUser = dao.findByEmail(member.getEmail());
     if (foundUser.isPresent()
         && PasswordService.checkPassword(member.getPassword(), foundUser.get().getPassword())) {
