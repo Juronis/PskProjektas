@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "MEMBER", uniqueConstraints = @UniqueConstraint(columnNames = "USERNAME"))
+@Table(name = "MEMBER", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL", "FACEBOOKUSER"}))
 @NamedQueries({
     @NamedQuery(name = "Member.findAll", query = "SELECT m FROM Member m"),
     @NamedQuery(name = "Member.findByEmail", query = "SELECT m FROM Member m WHERE m.email = :email"),
@@ -22,8 +22,11 @@ public class Member {
 	//@SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
 	private Long id;
 	
-	@Column(name = "USERNAME", nullable = false, length = 100)
-	private String userName;
+	@Column(name = "NAME", length = 100)
+	private String name;
+	
+	@Column(name = "SURNAME", length = 100)
+	private String surname;
 	
 	@Column(name = "PASSWORD", nullable = false, length = 2000)
 	private String password;
@@ -37,8 +40,9 @@ public class Member {
 
 	@NotNull
 	private boolean isFullMember;
+	
 	//Jei facebooko useris tai storiname facebooko id.
-	@Column(name = "ISFACEBOOKUSER")
+	@Column(name = "FACEBOOKUSER")
 	private String facebookUser;
 
 	private int creditAmount;
@@ -66,19 +70,27 @@ public class Member {
 	}
 
 	public Member(String name) {
-		this.userName = name;
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
 
-	public void setUserName(String name) {
-		this.userName = name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Set<Reservation> getReservations() {

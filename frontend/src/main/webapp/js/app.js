@@ -36,13 +36,13 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
             enabled: true
         });
 
-        $authProvider.loginUrl = '/frontend/services/resource/login';
-        $authProvider.signupUrl = '/frontend/services/resource/register';
+        $authProvider.loginUrl = '/frontend/services/resources/auth/login';
+        $authProvider.signupUrl = '/frontend/services/resources/auth/signup';
         //$authProvider.baseUrl = $('base').attr('href');
         //$authProvider.tokenPrefix='labanoro_draugai';
         $authProvider.facebook({
             clientId: '488291451363760',
-            url: '/frontend/services/resource/register/facebook'
+            url: '/frontend/services/resources/auth/facebook'
         });
 
     }]);

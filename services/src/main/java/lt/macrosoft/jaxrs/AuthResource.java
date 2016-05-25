@@ -89,11 +89,8 @@ public class AuthResource {
   @Path("signup")
   public Response signup(final Member member, @Context final HttpServletRequest request)
       throws JOSEException {
-	  System.out.println("member" + member.getEmail());
 	  member.setPassword(PasswordService.hashPassword(member.getPassword()));
     final Member savedUser = dao.save(member);
-	  System.out.println("pomember" + savedUser.getId());
-	  System.out.println("host" + request.getRemoteHost());
     final Token token = AuthUtils.createToken(request.getRemoteHost(), savedUser.getId());
     return Response.status(Status.CREATED).entity(token).build();
   }
