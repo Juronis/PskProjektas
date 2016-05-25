@@ -1,8 +1,6 @@
 package lt.macrosoft.entities;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,36 +12,48 @@ import java.util.Collection;
 public class Summerhouse {
 
     @Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
-   // @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
+    // @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
     protected Long id;
 
- // tells it is not owner of relationship, and what property maps to it.
+    // tells it is not owner of relationship, and what property maps to it.
     @OneToMany(mappedBy = "summerhouse")
     protected Collection<Reservation> reservations = new ArrayList<>();
-    
+
     @Column(name = "DESCRIPTION", length = 2000)
-    private String description; 
-    
+    private String description;
+
     @Column(name = "NUMBEROFPLACES")
     private Integer numberOfPlaces;
-    
-	@Column(name = "IMAGEURL")
+
+    @Column(name = "IMAGEURL")
     private String imageUrl;
 
-    @Column(name = "DISTRICT")
-    private String district;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private District district;
+
+    //TODO: Add notnull
+    @Column(name = "PRICE")
+    private double price;
+
+    public Summerhouse() {
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public String getImageUrl() {
-		return imageUrl;
-	}
+        return imageUrl;
+    }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public Summerhouse() {
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Collection<Reservation> getReservation() {
@@ -53,28 +63,28 @@ public class Summerhouse {
     public void setReservations(Collection<Reservation> reservations) {
         this.reservations = reservations;
     }
-    
+
     public String getDescription() {
-		return description;
-	}
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}	
-    
-	public Integer getNumberOfPlaces() {
-		return numberOfPlaces;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setNumberOfPlaces(Integer numberOfPlaces) {
-		this.numberOfPlaces = numberOfPlaces;
-	}
+    public Integer getNumberOfPlaces() {
+        return numberOfPlaces;
+    }
 
-    public String getDistrict() {
+    public void setNumberOfPlaces(Integer numberOfPlaces) {
+        this.numberOfPlaces = numberOfPlaces;
+    }
+
+    public District getDistrict() {
         return district;
     }
 
-    public void setDistrict(String district) {
+    public void setDistrict(District district) {
         this.district = district;
     }
 }
