@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="alert alert-danger" ng-show="errorList">
-        <strong>Klaida!</strong> {{ errorList }}
+    <div class="alert alert-danger" ng-show="messageLog">
+        <strong>Klaida!</strong> {{ messageLog }}
     </div>
     <div class="col-md-6">
         <br/>
@@ -10,7 +10,7 @@
             <span class="fa fa-facebook-square"></span> Prisijungti su Facebook
         </button>
         <br/>
-        <form method="post" role="form" name="loginForm" novalidate ng-submit="login()">
+        <form method="post" role="form" name="loginForm" ng-submit="login()">
             <div class="input-group"
                  ng-class="{'has-error' : loginForm.email.$invalid && loginForm.email.$dirty, 'has-success' : loginForm.email.$valid && loginForm.email.$dirty}">
                 <span class="input-group-addon" id="basic-addon1">El. paštas</span>

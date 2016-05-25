@@ -1,10 +1,14 @@
-app.service('userService', ['$http', '$rootScope', function ($http, $rootScope) {
+app.service('userService', ['$http', function ($http) {
 
     var baseUrl = "/frontend/services/resource/user/";
 
     this.getUserData = function() {
         var url = baseUrl+"getUserData";
-        return $http.get(url);
+        $http.get(url).then(function (response) {
+            return response.data;
+        }).catch(function (response) {
+            //TODO error handling
+        })
     }
 
     this.setUserData = function(userInfo) {
@@ -16,5 +20,17 @@ app.service('userService', ['$http', '$rootScope', function ($http, $rootScope) 
         var url = baseUrl+"sendEmailRequest";
         return $http.post(url, email);
     }
+
+    this.isMember = function () {
+        return this.getUserData.role === 'MEMBER';
+    };
+
+    this.isCandidate = function () {
+        return this.getUserData.role === 'CANDIDATE';
+    };
+
+    this.isAdmin = function () {
+        return this.getUserData.role === 'ADMIN';
+    };
 
 }]);

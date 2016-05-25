@@ -19,11 +19,10 @@
 </head>
 <body>
 <div class="container-fluid top-line">
-    <div class="container">
+    <div class="container" ng-controller="menuController">
         <div class="col-md-3 logo-block"><h3><a ui-sref="main" class="top-link">Labanoro draugai</a></h3></div>
         <div class="col-md-9">
-
-            <ul class="nav nav-pills" role="tablist" ng-if="!isAuthenticated" ng-cloak>
+            <ul class="nav nav-pills" role="tablist" ng-show="isAuthenticated" ng-cloak>
                 <li role="presentation" ng-if="!isMember || isAdmin" ui-sref-active="active"><a
                         ui-sref="summerHousesList">Vasarnamio rezervacija</a></li>
                 <li role="presentation" class="pull-right" ui-sref-active="active"><a ng-click="logout()"
@@ -36,7 +35,7 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
                 </li>
             </ul>
 
-            <ul class="nav nav-pills" role="tablist" ng-if="!isAuthenticated" ng-cloak>
+            <ul class="nav nav-pills" role="tablist" ng-show="!isAuthenticated" ng-cloak>
                 <li role="presentation" class="pull-right" ui-sref-active="active"><a ui-sref="login"><span
                         class="glyphicon glyphicon-user"></span> Prisijungti</a></li>
                 <li role="presentation" class="pull-right" ui-sref-active="active"><a
@@ -128,6 +127,7 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 <script src="js/controllers/mainController.js"></script>
 <script src="js/controllers/summerHousesListController.js"></script>
 <script src="js/controllers/usersListController.js"></script>
+<script src="js/controllers/menuController.js"></script>
 
 <!-- services -->
 <script src="js/services/authService.js"></script>
