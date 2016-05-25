@@ -2,6 +2,7 @@ package lt.macrosoft.daos;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.swing.text.html.Option;
 
 import com.google.common.base.Optional;
 
@@ -17,6 +18,16 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 
 	public Optional<Member> getMemberById(Long id) {
 		return Optional.fromNullable(findById(id));
+	}
+
+	public Optional<Member> getMemberByToken(String header) {
+		String[] headerParts = header.split(" ");
+		if (headerParts[1] != null) {
+			return Optional.fromNullable(getEntityManager().createNamedQuery("Member.findByToken", Member.class)
+				.setParameter("logintoken", headerParts[1]).getSingleResult());
+		} else {
+			return null;
+		}
 	}
 
 	public Optional<Member> findByEmail(String email) {
