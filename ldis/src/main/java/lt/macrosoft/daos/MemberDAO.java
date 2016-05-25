@@ -1,5 +1,6 @@
 package lt.macrosoft.daos;
 
+
 import com.google.common.base.Optional;
 
 import lt.macrosoft.entities.Member;

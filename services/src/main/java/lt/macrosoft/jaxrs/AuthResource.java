@@ -231,8 +231,8 @@ public class AuthResource {
       }
 
       userToSave = foundUser.get();
-      if (userToSave.getUserName() == null) {
-        userToSave.setUserName(displayName);
+      if (userToSave.getName() == null) {
+        userToSave.setName(displayName);
       }
       userToSave = dao.save(userToSave);
     } else {
@@ -241,7 +241,7 @@ public class AuthResource {
         userToSave = user.get();
       } else {
         userToSave = new Member();
-        userToSave.setUserName(displayName);
+        userToSave.setName(displayName);
         userToSave = dao.save(userToSave);
       }
     }

@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 
 import lt.macrosoft.entities.Member;
 
+
 public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements MemberDAO {
 
 	@Inject
