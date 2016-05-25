@@ -3,12 +3,23 @@ package lt.macrosoft.daos;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import com.google.common.base.Optional;
 import lt.macrosoft.entities.Summerhouse;
+
+import java.util.List;
 
 public class SummerhouseDAOImpl extends GenericDAOImpl<Summerhouse, Long> implements SummerhouseDAO {
 
 	@Inject
 	public SummerhouseDAOImpl(EntityManager em) {
 	    super(em, Summerhouse.class);
+	}
+
+	@Override
+	public Optional<List<Summerhouse>> findByDistrict(String district) {
+		return Optional.fromNullable(
+				getEntityManager().createNamedQuery("Summerhouse.findByDistrict", Summerhouse.class)
+				.setParameter("district", district).getResultList()
+		);
 	}
 }
