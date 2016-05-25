@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -68,11 +69,31 @@ public class AuthResource {
       String hedas = x.nextElement();
       String headeris = request.getHeader(hedas);
       System.out.println(headeris);
-      Optional<Member> memberis = dao.getMemberByToken(headeris);
-      if (memberis.isPresent()) {
-          System.out.println(memberis.get().getEmail());
+
+      String em;
+      try {
+          em = AuthUtils.getSubject(headeris);
+      } catch (JOSEException | ParseException  e) {
+          em = "0";
       }
-      return headeris;
+
+
+      Long idas;
+      try {
+          idas = Long.parseLong(em);
+      } catch (NumberFormatException e) {
+          idas = 0l;
+      }
+
+      Optional<Member> memberis = dao.getMemberById(idas);
+      if (memberis.isPresent()) {
+          return memberis.get().getEmail();
+          //String mailas = memberis.get().getEmail();
+
+      } else {
+          return idas.toString();
+      }
+
   }
   
   public AuthResource(final Client client, final MemberDAO dao) {
@@ -98,9 +119,13 @@ public class AuthResource {
   @Path("signup")
   public Response signup(final Member member, @Context final HttpServletRequest request)
       throws JOSEException {
+      System.out.println("Bent Jau bande");
 	  member.setPassword(PasswordService.hashPassword(member.getPassword()));
-    final Member savedUser = dao.save(member);
+      member.setLoginToken("N");
+      final Member savedUser = dao.save(member);
     final Token token = AuthUtils.createToken(request.getRemoteHost(), savedUser.getId());
+      member.setLoginToken(token.getToken());
+        dao.findById(savedUser.getId()).setLoginToken(token.getToken());
     return Response.status(Status.CREATED).entity(token).build();
   }
 
