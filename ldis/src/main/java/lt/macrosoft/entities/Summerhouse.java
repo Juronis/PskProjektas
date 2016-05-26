@@ -25,6 +25,9 @@ public class Summerhouse {
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
 
+    @Column(name = "ADDRESS", unique = true)
+    private String address;
+
     @Column(name = "NUMBEROFPLACES")
     private Integer numberOfPlaces;
 
@@ -36,16 +39,16 @@ public class Summerhouse {
 
     //TODO: Add notnull
     @Column(name = "PRICE")
-    private double price;
+    private int price;
 
     public Summerhouse() {
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
