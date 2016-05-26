@@ -18,6 +18,7 @@ import lt.macrosoft.utils.AuthUtils;
 import com.google.common.base.Optional;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
+import lt.macrosoft.utils.PasswordService;
 
 @Path("/members")
 @Stateless
@@ -43,7 +44,7 @@ public class MemberResource {
 	public Response sendMemberByAuth(@Context HttpServletRequest request) throws ParseException, JOSEException {
 		System.out.println("bent bande");
 		String subject = AuthUtils.getSubject(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-		Optional<Member> memberis = getAuthUser(request);
+		Optional<Member> memberis = getAuthMember(request);
 		if (!memberis.isPresent()) {
 			return Response.status(Status.NOT_FOUND).build();
 		} else {
@@ -51,29 +52,11 @@ public class MemberResource {
 		}
 	}
 	
-	// for testing
+
 	@GET
 	@Path("all")
-	public Response getAllUsers() {
+	public Response sendAllUMembers() {
 		return Response.ok().entity(dao.findAll()).build();
-	}
-
-	@PUT
-	public Response updateUser(@Valid Member member, @Context HttpServletRequest request) throws ParseException, JOSEException {
-		Optional<Member> foundUser = getAuthUser(request);
-		
-		if (!foundUser.isPresent()) {
-			return Response
-					.status(Status.NOT_FOUND)
-					.entity(AuthResource.NOT_FOUND_MSG).build();
-		}
-		
-		Member userToUpdate = foundUser.get();
-		userToUpdate.setName(member.getName());
-		userToUpdate.setEmail(member.getEmail());
-		dao.save(userToUpdate);
-
-		return Response.ok().build();
 	}
 
 
@@ -88,12 +71,39 @@ public class MemberResource {
 		return Response.ok().entity(member.get()).build();
 	}
 
+	@POST
+	@Path("/update")
+	public Response updateMember(final Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		Optional<Member> foundUser = getAuthMember(request);
 
+		if (!foundUser.isPresent()) {
+			return Response
+					.status(Status.NOT_FOUND)
+					.entity(AuthResource.NOT_FOUND_MSG).build();
+		}
+		Member userToUpdate = foundUser.get();
+		//TODO: sukurti metoda passwordo validacijai
+		if (member.getPassword() != null) {
+			userToUpdate.setPassword(PasswordService.hashPassword(member.getPassword()));
+		}
+		//TODO: sukurti metoda emailo validacijai
+		if (member.getEmail() != userToUpdate.getEmail()) {
+			userToUpdate.setEmail(member.getEmail());
+		}
+		dao.save(userToUpdate);
+		return Response.ok().build();
+	}
+
+	@GET
+	@Path("total")
+	public Response sendMembersTotal() {
+		return Response.ok().entity(dao.findAll().size()).build();
+	}
 	
 	/*
 	 * Helper methods
 	 */	
-	private Optional<Member> getAuthUser(HttpServletRequest request) throws ParseException, JOSEException {
+	private Optional<Member> getAuthMember(HttpServletRequest request) throws ParseException, JOSEException {
 		String subject = AuthUtils.getSubject(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
 		return dao.getMemberById(Long.parseLong(subject));
 	}
