@@ -45,8 +45,8 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
         </div>
     </div>
 </div>
-<div class="container-fluid top-header">
-    <div class="container" ng-if="!isAuthenticated" ng-cloak>
+<div class="container-fluid top-header" ng-controller="headerController">
+    <div class="container" ng-if="isAuthenticated" ng-cloak>
         <div class="col-md-8 header-content">
           <span>
             <h1>Pakviesk draugą!</h1>
@@ -128,6 +128,8 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 <script src="js/controllers/summerHousesListController.js"></script>
 <script src="js/controllers/usersListController.js"></script>
 <script src="js/controllers/menuController.js"></script>
+<script src="js/controllers/headerController.js"></script>
+<script src="js/controllers/editProfileController.js"></script>
 
 <!-- services -->
 <script src="js/services/authService.js"></script>
