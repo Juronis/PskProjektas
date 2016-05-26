@@ -114,15 +114,14 @@ public class Member {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	public String getIsFacebookUser() {
+
+	public String getFacebookUser() {
 		return facebookUser;
 	}
 
-	public void setFacebookUser(String isFacebookUser) {
-		this.facebookUser = isFacebookUser;
+	public void setFacebookUser(String FacebookUser) {
+		this.facebookUser = FacebookUser;
 	}
-	
 
 	public String getPassword() {
 		return password;
