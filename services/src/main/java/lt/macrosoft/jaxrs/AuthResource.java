@@ -68,26 +68,6 @@ public class AuthResource {
 
   public static final ObjectMapper MAPPER = new ObjectMapper();
   
-  //kaip ir nieko naudingo nedarantis metodas Naudokite toki koda:
-  //Principal principal = securityContext.getUserPrincipal();
-  //String username = principal.getName();
-  @GET
-  public String getPerson( @Context final HttpServletRequest request) {
-	  Long id;
-	  try {
-		 id = Long.parseLong(AuthUtils.getSubject(
-				  request.getHeader(AuthUtils.AUTH_HEADER_KEY)));
-      } catch (JOSEException | NumberFormatException |ParseException e) {
-          id = 0L;
-      }
-      Optional<Member> memberis = dao.getMemberById(id);
-      if (memberis.isPresent()) {
-          return memberis.get().getEmail();
-      } else {
-          return id.toString();
-      }
-  }
-  
   public AuthResource(final Client client, final MemberDAO dao) {
     this.client = client;
     this.dao = dao;
@@ -151,9 +131,22 @@ public class AuthResource {
     
     final Map<String, Object> userInfo = getResponseEntity(response);
 
-    // Step 3. Process the authenticated the user.
-    return processUser(request, userInfo.get("id").toString(),
-        userInfo.get("name").toString());
+      //Member member = new Member();
+      System.out.println(userInfo.toString());
+      /*member.setName(userInfo.get("name").toString());
+      System.out.println(userInfo.get("first_name"));
+      member.setEmail(userInfo.get("email").toString());
+      member.setFacebookUser(userInfo.get("id").toString());
+      member.setCreditAmount(0);
+      member.setLoginToken("N");
+      member.setRole(Role.CANDIDATE);
+      System.out.println(member.getName());
+      final Member savedUser = dao.save(member);
+      final Token token = AuthUtils.createToken(request.getRemoteHost(), savedUser.getId());
+      member.setLoginToken(token.getToken());
+      System.out.println("Tokenas " + token.getToken());
+      dao.findById(savedUser.getId()).setLoginToken(token.getToken());*/
+      return Response.status(Status.CREATED).entity("s").build();
   }
 
   /*@POST

@@ -61,7 +61,7 @@ public class MemberResource {
 
 
 	@GET
-	@Path("/byid/{id}")
+	@Path("byid/{id}")
 	public Response sendMemberById(@PathParam("id") Long id, @Context HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> member = dao.getMemberById(id);
 
@@ -72,7 +72,7 @@ public class MemberResource {
 	}
 
 	@POST
-	@Path("/update")
+	@Path("update")
 	public Response updateMember(final Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
 
