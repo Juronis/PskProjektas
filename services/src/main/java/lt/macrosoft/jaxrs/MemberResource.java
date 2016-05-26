@@ -4,30 +4,32 @@ import com.nimbusds.jose.JOSEException;
 
 import java.text.ParseException;
 
+import javax.ejb.Stateful;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 
+import lt.macrosoft.security.Secured;
 import lt.macrosoft.utils.AuthUtils;
 import com.google.common.base.Optional;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
 
 @Path("/members")
+@Stateless
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MemberResource {
 
-	private final MemberDAO dao;
+	@Inject
+	MemberDAO dao;
+
+	@Context
+	SecurityContext securityContext;
 	
 	public MemberResource(MemberDAO memberDAO) {
 		this.dao = memberDAO;
@@ -37,14 +39,16 @@ public class MemberResource {
 	}
 	
 	@GET
-	@Path("me")
-	public Response getUser(@Context HttpServletRequest request) throws ParseException, JOSEException {
-		Optional<Member> foundUser = getAuthUser(request);
-		
-		if (!foundUser.isPresent()) {
+	@Path("byauth")
+	public Response sendMemberByAuth(@Context HttpServletRequest request) throws ParseException, JOSEException {
+		System.out.println("bent bande");
+		String subject = AuthUtils.getSubject(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+		Optional<Member> memberis = getAuthUser(request);
+		if (!memberis.isPresent()) {
 			return Response.status(Status.NOT_FOUND).build();
+		} else {
+			return Response.ok().entity(memberis.get()).build();
 		}
-		return Response.ok().entity(foundUser.get()).build();
 	}
 	
 	// for testing
@@ -71,6 +75,20 @@ public class MemberResource {
 
 		return Response.ok().build();
 	}
+
+
+	@GET
+	@Path("/byid/{id}")
+	public Response sendMemberById(@PathParam("id") Long id, @Context HttpServletRequest request) throws ParseException, JOSEException {
+		Optional<Member> member = dao.getMemberById(id);
+
+		if (!member.isPresent()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.ok().entity(member.get()).build();
+	}
+
+
 	
 	/*
 	 * Helper methods
