@@ -14,12 +14,18 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
             .state('login', {
                 url: "/login",
                 controller: 'loginController',
-                templateUrl: 'partials/loginView.html'
+                templateUrl: 'partials/loginView.html',
+                data: {
+                    requireLogin: false
+                }
             })
             .state('register', {
                 url: "/register",
                 controller: 'registerController',
-                templateUrl: 'partials/registerView.html'
+                templateUrl: 'partials/registerView.html',
+                data: {
+                    requireLogin: false
+                }
             })
             .state('usersList', {
                 url: "/usersList",
@@ -30,6 +36,11 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/summerHousesList",
                 controller: 'summerHousesListController',
                 templateUrl: 'partials/summerHousesListView.html'
+            })
+            .state('editProfile', {
+                url: "/editProfile",
+                controller: 'editProfileController',
+                templateUrl: 'partials/editProfileView.html'
             });
 
         $locationProvider.html5Mode({
@@ -38,8 +49,6 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
 
         $authProvider.loginUrl = '/frontend/services/resources/auth/login';
         $authProvider.signupUrl = '/frontend/services/resources/auth/signup';
-        //$authProvider.baseUrl = $('base').attr('href');
-        //$authProvider.tokenPrefix='labanoro_draugai';
         $authProvider.facebook({
             clientId: '488291451363760',
             url: '/frontend/services/resources/auth/facebook'

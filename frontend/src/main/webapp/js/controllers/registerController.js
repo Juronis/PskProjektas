@@ -3,8 +3,7 @@ app.controller('registerController', ['$scope', '$state', 'authService', functio
     $scope.register = function () {
         if ($scope.registerForm.$valid) {
             if($scope.user.password === $scope.password2) {
-                $scope.user.name += " ";
-                $scope.user.name += $scope.surname;
+                $scope.user.name = $scope.name + " " + $scope.surname;
                 registerWithForm();
             } else {
                 $scope.messageLog = "Nesutampa slaptažodiai";
@@ -17,9 +16,9 @@ app.controller('registerController', ['$scope', '$state', 'authService', functio
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            if(response.status == 404) {
-                $scope.messageLog = "Puslapis nerastas";
-            }
+            //if(response.status == 500) {
+                $scope.messageLog = response.status;
+            //}
         })
     };
 

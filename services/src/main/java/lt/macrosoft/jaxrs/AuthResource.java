@@ -1,6 +1,7 @@
 package lt.macrosoft.jaxrs;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Map;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +40,7 @@ import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.core.Token;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
+import lt.macrosoft.enums.Role;
 import lt.macrosoft.utils.AuthUtils;
 import lt.macrosoft.utils.PasswordService;
 
@@ -52,6 +55,9 @@ public class AuthResource {
   @Inject
   MemberDAO dao;
 
+  @Context
+  SecurityContext securityContext;
+  
   public static final String CLIENT_ID_KEY = "client_id", REDIRECT_URI_KEY = "redirect_uri",
       CLIENT_SECRET = "client_secret", CODE_KEY = "code", GRANT_TYPE_KEY = "grant_type",
       AUTH_CODE = "authorization_code";
@@ -61,40 +67,6 @@ public class AuthResource {
       UNLINK_ERROR_MSG = "Could not unlink %s account because it is your only sign-in method";
 
   public static final ObjectMapper MAPPER = new ObjectMapper();
-
-  @GET
-  @Path("{id}")
-  public String getPerson(@PathParam("id") Long id, @Context final HttpServletRequest request) {
-      Enumeration<String> x = request.getHeaderNames();
-      String hedas = x.nextElement();
-      String headeris = request.getHeader(hedas);
-      System.out.println(headeris);
-
-      String em;
-      try {
-          em = AuthUtils.getSubject(headeris);
-      } catch (JOSEException | ParseException  e) {
-          em = "0";
-      }
-
-
-      Long idas;
-      try {
-          idas = Long.parseLong(em);
-      } catch (NumberFormatException e) {
-          idas = 0l;
-      }
-
-      Optional<Member> memberis = dao.getMemberById(idas);
-      if (memberis.isPresent()) {
-          return memberis.get().getEmail();
-          //String mailas = memberis.get().getEmail();
-
-      } else {
-          return idas.toString();
-      }
-
-  }
   
   public AuthResource(final Client client, final MemberDAO dao) {
     this.client = client;
@@ -122,9 +94,11 @@ public class AuthResource {
       System.out.println("Bent Jau bande");
 	  member.setPassword(PasswordService.hashPassword(member.getPassword()));
       member.setLoginToken("N");
+      member.setRole(Role.CANDIDATE);
       final Member savedUser = dao.save(member);
     final Token token = AuthUtils.createToken(request.getRemoteHost(), savedUser.getId());
       member.setLoginToken(token.getToken());
+      System.out.println("Tokenas " + token.getToken());
         dao.findById(savedUser.getId()).setLoginToken(token.getToken());
     return Response.status(Status.CREATED).entity(token).build();
   }
@@ -157,9 +131,22 @@ public class AuthResource {
     
     final Map<String, Object> userInfo = getResponseEntity(response);
 
-    // Step 3. Process the authenticated the user.
-    return processUser(request, userInfo.get("id").toString(),
-        userInfo.get("name").toString());
+      //Member member = new Member();
+      System.out.println(userInfo.toString());
+      /*member.setName(userInfo.get("name").toString());
+      System.out.println(userInfo.get("first_name"));
+      member.setEmail(userInfo.get("email").toString());
+      member.setFacebookUser(userInfo.get("id").toString());
+      member.setCreditAmount(0);
+      member.setLoginToken("N");
+      member.setRole(Role.CANDIDATE);
+      System.out.println(member.getName());
+      final Member savedUser = dao.save(member);
+      final Token token = AuthUtils.createToken(request.getRemoteHost(), savedUser.getId());
+      member.setLoginToken(token.getToken());
+      System.out.println("Tokenas " + token.getToken());
+      dao.findById(savedUser.getId()).setLoginToken(token.getToken());*/
+      return Response.status(Status.CREATED).entity("s").build();
   }
 
   /*@POST

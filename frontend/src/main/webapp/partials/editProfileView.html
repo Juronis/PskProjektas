@@ -1,32 +1,42 @@
 <div class="row">
-    <form method="post" role="form" class="col-md-6">
+    <div class="alert alert-danger" ng-show="messageLog">
+        <strong>Klaida!</strong> {{ messageLog }}
+    </div>
+    <div class="col-md-6">
+        <br/>
         <h3>Redaguoti profilį</h3>
         <br />
-        <div class="input-group">
-            <span class="input-group-addon">El. paštas</span>
-            <input type="text" class="form-control" value="doncatas@gmail.com" disabled>
-        </div><br />
-        <div class="input-group">
-            <span class="input-group-addon">Vardas</span>
-            <input type="text" class="form-control" value="Donatas" disabled>
-        </div><br />
-        <div class="input-group">
-            <span class="input-group-addon">Pavardė</span>
-            <input type="text" class="form-control" value="Maikštėnas" disabled>
-        </div><br /><br />
-        <div class="input-group">
-            <span class="input-group-addon">Slaptažodis</span>
-            <input type="password" class="form-control">
-        </div><br />
-        <div class="input-group">
-            <span class="input-group-addon">Pakartoti</span>
-            <input type="password" class="form-control">
-        </div><br /><br />
-        <button type="submit" class="btn btn-success">Atnaujinti informaciją</button>
-        <button type="reset" class="btn btn-default">Valyti laukelius</button>
-    </form>
-    <div class="col-md-6">
-        <h3>Nebenori būti labanoro draugijoje?</h3><br />
-        <button type="submit" class="btn btn-danger">Išsiregistruoti</button>
+        <form method="post" role="form" name="editForm" ng-submit="edit()">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Vardas</span>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="name" disabled value="name">
+            </div>
+            <br/>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Pavardė</span>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="surname" disabled value="surname">
+            </div>
+            <br/>
+            <div class="input-group"
+                 ng-class="{'has-error' : editForm.email.$invalid && editForm.email.$dirty, 'has-success' : editForm.email.$valid && editForm.email.$dirty}">
+                <span class="input-group-addon" id="basic-addon1">El. paštas</span>
+                <input type="email" class="form-control" aria-describedby="basic-addon1" ng-model="user.email" required>
+            </div>
+            <br/><br/>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Slaptažodis</span>
+                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="password"
+                       pattern=".{5,}">
+            </div>
+            <br/>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Pakartoti</span>
+                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="password2"
+                       pattern=".{5,}">
+            </div>
+            <br/><br/>
+            <button type="submit" class="btn btn-success">Redaguoti profilį</button>
+            <button type="reset" class="btn btn-default">Valyti laukelius</button>
+        </form>
     </div>
 </div>
