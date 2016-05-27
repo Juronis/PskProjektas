@@ -2,10 +2,13 @@ package lt.macrosoft.daos;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceException;
 
 import com.google.common.base.Optional;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.entities.Summerhouse.District;
+import lt.macrosoft.enums.Exceptions;
 
 import java.util.List;
 
@@ -41,4 +44,15 @@ public class SummerhouseDAOImpl extends GenericDAOImpl<Summerhouse, Long> implem
         System.out.println(getCount());
         return summerhouse;
     }
+    
+    public Exceptions deleteSummerhouse(Summerhouse summerhouse) {
+		try {
+			em.remove(summerhouse);
+		} catch (OptimisticLockException e) {
+			return Exceptions.OPTIMISTIC;
+		} catch (PersistenceException e) {
+			return Exceptions.PERSISTENCE;
+		}
+		return Exceptions.SUCCESS;
+	}
 }

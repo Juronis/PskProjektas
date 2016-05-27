@@ -1,13 +1,15 @@
 package lt.macrosoft.daos;
 
-import com.google.common.base.Optional;
-import lt.macrosoft.entities.Reservation;
-
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
+import com.google.common.base.Optional;
+
+import lt.macrosoft.entities.Reservation;
 
 /**
  * Created by Arnas on 2016-05-26.
@@ -53,5 +55,5 @@ public class ReservationDAOImpl  extends GenericDAOImpl<Reservation, Long> imple
         System.out.println("persist reservation" + reservation.toString());
         System.out.println(getCount());
         return reservation;
-    }
+    }	
 }

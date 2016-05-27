@@ -14,6 +14,7 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 
 import lt.macrosoft.enums.Exceptions;
+import lt.macrosoft.jaxrs.Error;
 import lt.macrosoft.security.Secured;
 import lt.macrosoft.utils.AuthUtils;
 import com.google.common.base.Optional;
@@ -78,8 +79,8 @@ public class MemberResource {
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
 			return Response
-					.status(Status.NOT_FOUND)
-					.entity(AuthResource.NOT_FOUND_MSG).build();
+					.status(Status.GONE)
+					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
 		Exceptions result = dao.deleteMember(memberToDelete);
