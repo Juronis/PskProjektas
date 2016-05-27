@@ -1,15 +1,24 @@
 package lt.macrosoft.entities;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import lt.macrosoft.enums.Role;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+
 @Entity
-@Table(name = "SUMMERHOUSE")
+@Table(name = "SUMMERHOUSE", uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @NamedQueries({
         @NamedQuery(name = "Summerhouse.findByDistrict", query = "SELECT s FROM Summerhouse s WHERE s.district = :district"),
         @NamedQuery(name = "Summerhouse.findAllCustom", query = "SELECT s FROM Summerhouse s WHERE s.district = :district AND s.price >= :priceMin AND s.numberOfPlaces >= :numPlaces")
@@ -25,8 +34,12 @@ public class Summerhouse {
     // tells it is not owner of relationship, and what property maps to it.
     @OneToMany(mappedBy = "summerhouse")
     protected Collection<Reservation> reservations = new ArrayList<>();
+    
+    @NotNull
+    @Column(name = "NAME", length = 50)
+    private String name;
 
-    @Column(name = "DESCRIPTION", length = 2000)
+	@Column(name = "DESCRIPTION", length = 2000)
     private String description;
 
     @Column(name = "NUMBEROFPLACES")
@@ -102,6 +115,14 @@ public class Summerhouse {
     public void setDistrict(District district) {
         this.district = district;
     }
+    
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
     
     public enum District {
 
