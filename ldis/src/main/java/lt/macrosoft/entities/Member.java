@@ -3,6 +3,8 @@ package lt.macrosoft.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import lt.macrosoft.enums.Role;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +15,6 @@ import java.util.Set;
     @NamedQuery(name = "Member.findByEmail", query = "SELECT m FROM Member m WHERE m.email = :email"),
     @NamedQuery(name = "Member.findByFacebook", query = "SELECT m FROM Member m WHERE m.facebookUser = :facebookUser"),
 	@NamedQuery(name = "Member.findByToken", query = "SELECT m FROM Member m WHERE m.logintoken = :logintoken")
-    
 })
 public class Member {
 
@@ -34,11 +35,18 @@ public class Member {
 	private String email;
 
 	@NotNull
-	private boolean isAdmin;
-
-	@NotNull
-	private boolean isFullMember;
+	@Column(name = "ROLE")
+	@Enumerated(EnumType.STRING)
+	private Role role;
 	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	//Jei facebooko useris tai storiname facebooko id.
 	@Column(name = "FACEBOOKUSER")
 	private String facebookUser;
@@ -54,14 +62,6 @@ public class Member {
 
 	public void setCreditAmount(int creditAmount) {
 		this.creditAmount = creditAmount;
-	}
-
-	public boolean getIsFullMember() {
-		return isFullMember;
-	}
-
-	public void setIsFullMember(boolean isFullMember) {
-		this.isFullMember = isFullMember;
 	}
 
 	@OneToMany(mappedBy = "member")
@@ -90,14 +90,6 @@ public class Member {
 		return reservations;
 	}
 
-	public boolean getIsAdmin() {
-		return isAdmin;
-	}
-
-	public void setIsAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
-	}
-
 	@Override
 	public boolean equals(Object other) {
 		if (this == other)
@@ -122,15 +114,14 @@ public class Member {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	public String getIsFacebookUser() {
+
+	public String getFacebookUser() {
 		return facebookUser;
 	}
 
-	public void setFacebookUser(String isFacebookUser) {
-		this.facebookUser = isFacebookUser;
+	public void setFacebookUser(String FacebookUser) {
+		this.facebookUser = FacebookUser;
 	}
-	
 
 	public String getPassword() {
 		return password;
@@ -140,7 +131,7 @@ public class Member {
 		this.password = password;
 	}
 
-	public String getLoginToke() {
+	public String getLoginToken() {
 		return logintoken;
 	}
 

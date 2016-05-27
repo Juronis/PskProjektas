@@ -1,18 +1,19 @@
 app.service('userService', ['$http', function ($http) {
 
-    var baseUrl = "/frontend/services/resource/user/";
+    var baseUrl = "/frontend/services/resources/members/";
 
-    this.getUserData = function() {
-        var url = baseUrl+"getUserData";
-        $http.get(url).then(function (response) {
-            return response.data;
-        }).catch(function (response) {
-            //TODO error handling
-        })
+    this.getUserDataByAuth = function() {
+        var url = baseUrl+"byAuth";
+        return $http.get(url);
+    }
+
+    this.getUserDataById = function(id) {
+        var url = baseUrl+"byId/"+id;
+        return $http.get(url);
     }
 
     this.setUserData = function(userInfo) {
-        var url = baseUrl+"setUserData";
+        var url = baseUrl+"update";
         return $http.post(url, userInfo);
     }
 
