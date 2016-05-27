@@ -4,11 +4,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import com.google.common.base.Optional;
 
 import lt.macrosoft.entities.Member;
+import lt.macrosoft.enums.Exceptions;
 import lt.macrosoft.enums.Role;
 
 
@@ -63,5 +66,15 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
             throw new RuntimeException("Username should be unique.");
         }
         return null;
+	}
+	public Exceptions deleteMember(Member member) {
+		try {
+			em.remove(member);
+		} catch (OptimisticLockException e) {
+			return Exceptions.OPTIMISTIC;
+		} catch (PersistenceException e) {
+			return Exceptions.PERSISTENCE;
+		}
+		return Exceptions.SUCCESS;
 	}
 }
