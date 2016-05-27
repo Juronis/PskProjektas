@@ -17,21 +17,35 @@ app.service('userService', ['$http', function ($http) {
         return $http.post(url, userInfo);
     }
 
+    this.delete = function() {
+        var url = baseUrl+"delete";
+        return $http.get(url);
+    }
+
     this.sendEmailRequest = function(email) {
         var url = baseUrl+"sendEmailRequest";
         return $http.post(url, email);
     }
 
     this.isMember = function () {
-        return this.getUserData.role === 'MEMBER';
-    };
-
-    this.isCandidate = function () {
-        return this.getUserData.role === 'CANDIDATE';
+        this.getUserDataByAuth().then(function(response){
+            return response.role === 'MEMBER';
+        });
+        return false;
     };
 
     this.isAdmin = function () {
-        return this.getUserData.role === 'ADMIN';
+        this.getUserDataByAuth().then(function(response){
+            return response.role === 'ADMIN';
+        });
+        return false;
+    };
+
+    this.isCandidate = function () {
+        this.getUserDataByAuth().then(function(response){
+            return response.role === 'CANDIDATE';
+        });
+        return false;
     };
 
 }]);
