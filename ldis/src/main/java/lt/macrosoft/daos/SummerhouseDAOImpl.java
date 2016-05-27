@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 
 import com.google.common.base.Optional;
 import lt.macrosoft.entities.Summerhouse;
+import lt.macrosoft.entities.Summerhouse.District;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class SummerhouseDAOImpl extends GenericDAOImpl<Summerhouse, Long> implem
 	}
 
 	@Override
-	public Optional<List<Summerhouse>> findByDistrict(String district) {
+	public Optional<List<Summerhouse>> findByDistrict(District district) {
 		return Optional.fromNullable(
 				getEntityManager().createNamedQuery("Summerhouse.findByDistrict", Summerhouse.class)
 				.setParameter("district", district).getResultList()
@@ -24,7 +25,7 @@ public class SummerhouseDAOImpl extends GenericDAOImpl<Summerhouse, Long> implem
 	}
 
 	@Override
-	public Optional<List<Summerhouse>> findAllCustom(String district, double priceMin, int numPlaces) {
+	public Optional<List<Summerhouse>> findAllCustom(District district, double priceMin, int numPlaces) {
 		return Optional.fromNullable(
 				getEntityManager().createNamedQuery("Summerhouse.findAllCustom", Summerhouse.class)
 				.setParameter("priceMin", priceMin)
