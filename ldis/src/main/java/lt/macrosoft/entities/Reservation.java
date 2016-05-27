@@ -21,8 +21,6 @@ public class Reservation {
    // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
    // @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
     protected Long id;
-
-    protected String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -42,10 +40,6 @@ public class Reservation {
     protected Date dateEnd;
     
     public Reservation() {
-    }
-
-    public Reservation(String name) {
-        this.name = name;
     }
 
     public Date getDateStart() {
@@ -68,11 +62,19 @@ public class Reservation {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public Summerhouse getSummerhouse() {
+        return summerhouse;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSummerhouse(Summerhouse summerhouse) {
+        this.summerhouse = summerhouse;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

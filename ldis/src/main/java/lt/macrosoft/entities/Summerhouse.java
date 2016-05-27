@@ -44,6 +44,10 @@ public class Summerhouse {
     public Summerhouse() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public int getPrice() {
         return price;
     }

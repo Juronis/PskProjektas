@@ -13,4 +13,6 @@ public interface ReservationDAO extends GenericDAO<Reservation, Long>  {
     Optional<List<Reservation>> findBySummerhouseId(Long summerhouseId);
 
     Optional<List<Date[]>> findReservedDatesBySummerhouse(Long summerhouseId);
+
+    Reservation save(Reservation reservation);
 }

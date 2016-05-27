@@ -46,4 +46,12 @@ public class ReservationDAOImpl  extends GenericDAOImpl<Reservation, Long> imple
         Optional<List<Date[]>> optional = Optional.fromNullable(dates);
         return optional;
     }
+
+    @Override
+    public Reservation save(Reservation reservation) {
+        em.persist(reservation);
+        System.out.println("persist reservation" + reservation.toString());
+        System.out.println(getCount());
+        return reservation;
+    }
 }

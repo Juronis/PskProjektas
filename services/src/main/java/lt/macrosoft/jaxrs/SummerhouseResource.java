@@ -2,6 +2,7 @@ package lt.macrosoft.jaxrs;
 
 
 import com.nimbusds.jose.JOSEException;
+import lt.macrosoft.beans.SummerhouseStatelessBean;
 import lt.macrosoft.daos.DistrictDAO;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.daos.SummerhouseDAO;
@@ -9,6 +10,7 @@ import lt.macrosoft.entities.District;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.utils.AuthUtils;
+import lt.macrosoft.utils.DateUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -19,11 +21,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
 @Path("/summerhouses")
 public class SummerhouseResource {
+    @EJB
+    SummerhouseStatelessBean summerhouseStatelessBean;
     @Inject
     MemberDAO memberDAO;
     @Inject
@@ -54,8 +59,8 @@ public class SummerhouseResource {
     @POST
     @Path("reserve/{summerhouseId}/{dateStart}/{dateEnd}")
     public Response reserveSummerhouse(@PathParam("summerhouseId") Long id,
-                                       @PathParam("dateStart") String dateStart,
-                                       @PathParam("dateEnd") String dateEnd) {
+                                       @PathParam("dateStart") String dateStartStr,
+                                       @PathParam("dateEnd") String dateEndStr) {
         String userId = null;
         try {
             userId = AuthUtils.getSubject(httpRequest.getHeader(AuthUtils.AUTH_HEADER_KEY));
@@ -72,7 +77,17 @@ public class SummerhouseResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(Error.MEMBER_NOT_ENOUGH_CREDIT).build();
         }
 
-        //TODO
-        return Response.ok().build();
+        Date dateStart = DateUtils.getDate(dateStartStr);
+        Date dateEnd = DateUtils.getDate(dateEndStr);
+
+        if(summerhouseStatelessBean.isDateAvailable(summerhouse, dateStart, dateEnd)) {
+            if(summerhouseStatelessBean.reserve(summerhouse, member, dateStart, dateEnd)) {
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.DB_RESERVATION_PERSIST).build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_DATE_UNAVAILABLE).build();
+        }
     }
 }
