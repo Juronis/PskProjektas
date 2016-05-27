@@ -1,6 +1,10 @@
 package lt.macrosoft.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+import lt.macrosoft.enums.Role;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -25,34 +29,29 @@ public class Summerhouse {
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
 
-    @Column(name = "ADDRESS", unique = true)
-    private String address;
-
     @Column(name = "NUMBEROFPLACES")
     private Integer numberOfPlaces;
 
     @Column(name = "IMAGEURL")
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+	@Column(name = "DISTRICT")
+	@Enumerated(EnumType.STRING)
     private District district;
 
     //TODO: Add notnull
     @Column(name = "PRICE")
-    private int price;
+    private double price;
 
     public Summerhouse() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -94,6 +93,21 @@ public class Summerhouse {
 
     public void setDistrict(District district) {
         this.district = district;
+    }
+    
+    public enum District {
+
+        MOLETAI(1),
+        UTENA(2),
+        ŠVENČIONYS(3);
+        private int id;
+        private District(final int district) {
+            id = district;
+        }
+
+        public int getDistrict() {
+            return id;
+        }
     }
 }
 
