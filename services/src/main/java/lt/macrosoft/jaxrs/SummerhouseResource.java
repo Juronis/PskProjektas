@@ -3,10 +3,9 @@ package lt.macrosoft.jaxrs;
 
 import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.beans.SummerhouseStatelessBean;
-import lt.macrosoft.daos.DistrictDAO;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.daos.SummerhouseDAO;
-import lt.macrosoft.entities.District;
+import lt.macrosoft.entities.Summerhouse.District;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.utils.AuthUtils;
@@ -33,8 +32,6 @@ public class SummerhouseResource {
     MemberDAO memberDAO;
     @Inject
     SummerhouseDAO summerhouseDAO;
-    @Inject
-    DistrictDAO districtDAO;
 
     @Context
     private HttpServletRequest httpRequest;
@@ -45,15 +42,15 @@ public class SummerhouseResource {
     @GET
     @Path("districts")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<District> getDistricts() {
-        return districtDAO.findAll();
+    public District[] formDistrictList() {
+		return District.values();
     }
 
     @GET
     public List<Summerhouse> getSummerhouses(@QueryParam("district") String district,
                                              @DefaultValue("0") @QueryParam("priceMin") double priceMin,
                                              @DefaultValue("0") @QueryParam("numPlaces") int numPlaces) {
-        return summerhouseDAO.findAllCustom(district, priceMin, numPlaces).get();
+        return summerhouseDAO.findAllCustom(District.valueOf(district), priceMin, numPlaces).get();
     }
 
     @POST

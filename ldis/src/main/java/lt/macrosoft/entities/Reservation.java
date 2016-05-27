@@ -24,7 +24,7 @@ public class Reservation {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-    @Column(name = "SUMMERHOUSE")
+    @JoinColumn(name = "SUMMERHOUSE")
     protected Summerhouse summerhouse;
     
     @ManyToOne

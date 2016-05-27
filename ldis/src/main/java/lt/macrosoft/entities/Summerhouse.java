@@ -16,7 +16,7 @@ import java.util.Collection;
 })
 public class Summerhouse {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
     // @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
@@ -47,6 +47,14 @@ public class Summerhouse {
     public Summerhouse() {
     }
 
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
     public double getPrice() {
         return price;
     }
@@ -99,7 +107,7 @@ public class Summerhouse {
 
         MOLETAI(1),
         UTENA(2),
-        ŠVENČIONYS(3);
+        SVENCIONYS(3);
         private int id;
         private District(final int district) {
             id = district;
