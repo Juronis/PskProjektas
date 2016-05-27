@@ -72,7 +72,7 @@ public class MemberResource {
 		return Response.ok().entity(member.get()).build();
 	}
 
-	@POST
+	@DELETE
 	@Path("delete")
 	public Response deleteMember(@Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);

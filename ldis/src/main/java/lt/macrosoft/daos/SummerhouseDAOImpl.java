@@ -33,4 +33,12 @@ public class SummerhouseDAOImpl extends GenericDAOImpl<Summerhouse, Long> implem
 				.setParameter("numPlaces", numPlaces)
 				.getResultList());
 	}
+	
+	@Override
+    public Summerhouse save(Summerhouse summerhouse){
+    	em.persist(summerhouse);
+        System.out.println("persist approval" + summerhouse.toString());
+        System.out.println(getCount());
+        return summerhouse;
+    }
 }

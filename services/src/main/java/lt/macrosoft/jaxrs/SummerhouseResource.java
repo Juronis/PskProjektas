@@ -1,6 +1,5 @@
 package lt.macrosoft.jaxrs;
 
-
 import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.beans.SummerhouseStatelessBean;
 import lt.macrosoft.daos.MemberDAO;
@@ -26,65 +25,89 @@ import java.util.List;
 @Stateless
 @Path("/summerhouses")
 public class SummerhouseResource {
-    @EJB
-    SummerhouseStatelessBean summerhouseStatelessBean;
-    @Inject
-    MemberDAO memberDAO;
-    @Inject
-    SummerhouseDAO summerhouseDAO;
+	@EJB
+	SummerhouseStatelessBean summerhouseStatelessBean;
+	@Inject
+	MemberDAO memberDAO;
+	@Inject
+	SummerhouseDAO summerhouseDAO;
 
-    @Context
-    private HttpServletRequest httpRequest;
+	@Context
+	private HttpServletRequest httpRequest;
 
-    public SummerhouseResource() {
-    }
+	public SummerhouseResource() {
+	}
 
-    @GET
-    @Path("districts")
-    @Produces(MediaType.APPLICATION_JSON)
-    public District[] formDistrictList() {
+	@GET
+	@Path("districts")
+	@Produces(MediaType.APPLICATION_JSON)
+	public District[] formDistrictList() {
 		return District.values();
-    }
+	}
 
-    @GET
-    public List<Summerhouse> getSummerhouses(@QueryParam("district") String district,
-                                             @DefaultValue("0") @QueryParam("priceMin") double priceMin,
-                                             @DefaultValue("0") @QueryParam("numPlaces") int numPlaces) {
-        return summerhouseDAO.findAllCustom(District.valueOf(district), priceMin, numPlaces).get();
-    }
+	@GET
+	public List<Summerhouse> getSummerhouses(@QueryParam("district") String district,
+			@DefaultValue("0") @QueryParam("priceMin") double priceMin,
+			@DefaultValue("0") @QueryParam("numPlaces") int numPlaces) {
+		return summerhouseDAO.findAllCustom(District.valueOf(district), priceMin, numPlaces).get();
+	}
 
-    @POST
-    @Path("reserve/{summerhouseId}/{dateStart}/{dateEnd}")
-    public Response reserveSummerhouse(@PathParam("summerhouseId") Long id,
-                                       @PathParam("dateStart") String dateStartStr,
-                                       @PathParam("dateEnd") String dateEndStr) {
-        String userId = null;
-        try {
-            userId = AuthUtils.getSubject(httpRequest.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        } catch (ParseException | JOSEException e) {
-            e.printStackTrace();
-        }
-        if (userId == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+	@GET
+	@Path("pad")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Summerhouse getSummerhouse() {
+		Summerhouse a = new Summerhouse();
+		a.setPrice(7);
+		a.setDistrict(District.MOLETAI);
+		a.setDescription("puikus vasarnamis");
+		a.setNumberOfPlaces(4);
+		a.setImageUrl("http://s1.15cdn.lt/static/cache/NTgweDMwMCw5NjB4NjM5LDYxNjEzMyxvcmlnaW5hbCwsMzk2MzU1MTE1NA==/15ig20160527gerves2537_result-57487732747d9.jpg");
+		return a;
+	}
+	@POST
+	@Path("add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addSummerhouse(Summerhouse summerhouse) {
+		try {
+			summerhouseDAO.save(summerhouse);
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(Error.DB_SUMERHOUSE_PERSIST).build();
+		}
+		return Response.ok().build();
+	}
 
-        Member member = memberDAO.findById(Long.getLong(userId));
-        Summerhouse summerhouse = summerhouseDAO.findById(id);
+	@POST
+	@Path("reserve/{summerhouseId}/{dateStart}/{dateEnd}")
+	public Response reserveSummerhouse(@PathParam("summerhouseId") Long id, @PathParam("dateStart") String dateStartStr,
+			@PathParam("dateEnd") String dateEndStr) {
+		String userId = null;
+		try {
+			userId = AuthUtils.getSubject(httpRequest.getHeader(AuthUtils.AUTH_HEADER_KEY));
+		} catch (ParseException | JOSEException e) {
+			e.printStackTrace();
+		}
+		if (userId == null)
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        if (member.getCreditAmount() < summerhouse.getPrice()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(Error.MEMBER_NOT_ENOUGH_CREDIT).build();
-        }
+		Member member = memberDAO.findById(Long.getLong(userId));
+		Summerhouse summerhouse = summerhouseDAO.findById(id);
 
-        Date dateStart = DateUtils.getDate(dateStartStr);
-        Date dateEnd = DateUtils.getDate(dateEndStr);
+		if (member.getCreditAmount() < summerhouse.getPrice()) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(Error.MEMBER_NOT_ENOUGH_CREDIT).build();
+		}
 
-        if(summerhouseStatelessBean.isDateAvailable(summerhouse, dateStart, dateEnd)) {
-            if(summerhouseStatelessBean.reserve(summerhouse, member, dateStart, dateEnd)) {
-                return Response.ok().build();
-            } else {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.DB_RESERVATION_PERSIST).build();
-            }
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_DATE_UNAVAILABLE).build();
-        }
-    }
+		Date dateStart = DateUtils.getDate(dateStartStr);
+		Date dateEnd = DateUtils.getDate(dateEndStr);
+
+		if (summerhouseStatelessBean.isDateAvailable(summerhouse, dateStart, dateEnd)) {
+			if (summerhouseStatelessBean.reserve(summerhouse, member, dateStart, dateEnd)) {
+				return Response.ok().build();
+			} else {
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.DB_RESERVATION_PERSIST)
+						.build();
+			}
+		} else {
+			return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_DATE_UNAVAILABLE).build();
+		}
+	}
 }
