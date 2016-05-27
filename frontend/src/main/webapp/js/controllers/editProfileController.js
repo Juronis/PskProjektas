@@ -18,10 +18,15 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', 'aut
     var updateProfile = false;
 
     $scope.delete = function() {
-        var answer = confirm("Ar tikrai norite ištrinti paskyrą?");
-        if(answer == true) {
-            userService.delete().then(function(response) {
-                authService.logout();
+        var answer = prompt("Įveskite slaptažodį", false);
+        answer = { "password" : answer };
+        if(answer) {
+            userService.checkPassword(answer).then(function() {
+                userService.delete().then(function (response) {
+                    authService.logout();
+                }).catch(function (response) {
+                    //TODO: error handling
+                });
             }).catch(function (response) {
                 //TODO: error handling
             });

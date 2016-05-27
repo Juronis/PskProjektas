@@ -22,6 +22,11 @@ app.service('userService', ['$http', function ($http) {
         return $http.get(url);
     }
 
+    this.checkPassword = function(data) {
+        var url = baseUrl+"checkPassword";
+        return $http.get(url, data);
+    }
+
     this.sendEmailRequest = function(email) {
         var url = baseUrl+"sendEmailRequest";
         return $http.post(url, email);
