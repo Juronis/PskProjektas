@@ -1,4 +1,4 @@
-app.controller('editProfileController', ['$scope', '$state', 'userService', function ($scope, $state, userService) {
+app.controller('editProfileController', ['$scope', '$state', 'userService', 'authService', function ($scope, $state, userService, authService) {
     var currentEmail = null;
 
     var setFields = function() {
@@ -16,6 +16,17 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', func
     setFields();
 
     var updateProfile = false;
+
+    $scope.delete = function() {
+        var answer = confirm("Ar tikrai norite ištrinti paskyrą?");
+        if(answer == true) {
+            userService.delete().then(function(response) {
+                authService.logout();
+            }).catch(function (response) {
+                //TODO: error handling
+            });
+        }
+    }
 
     $scope.edit = function() {
         if ($scope.editForm.$valid) {
