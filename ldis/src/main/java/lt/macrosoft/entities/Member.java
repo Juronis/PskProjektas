@@ -140,10 +140,6 @@ public class Member {
 		this.password = password;
 	}
 
-	public String getLoginToke() {
-		return logintoken;
-	}
-
 	public void setLoginToken(String logintoken) {
 		this.logintoken = logintoken;
 	}
