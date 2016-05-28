@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Labanoro draugai</title>
-
+	<link rel="shortcut icon" href="/frontend/favicon.ico" type="image/x-icon" />
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
     <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -21,8 +22,28 @@
 <div class="container-fluid top-line">
     <div class="container" ng-controller="menuController">
         <div class="col-md-3 logo-block"><h3><a ui-sref="main" class="top-link">Labanoro draugai</a></h3></div>
+        <div class="col-xs-12 visible-xs"><hr /></div>
         <div class="col-md-9">
             <ul class="nav nav-pills" role="tablist" ng-show="isAuthenticated" ng-cloak>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administracija <b class="caret"></b></a>
+
+                    <ul class="dropdown-menu">
+                        <li ui-sref-active="active"><a ui-sref="addSummerHouse">Vasarnamio pridėjimas</a></li>
+                        <li ui-sref-active="active"><a href="#">Vasarnamių valdymas</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li ui-sref-active="active"><a href="#">Narių valdymas</a></li>
+                        <li ui-sref-active="active"><a href="#">Nustatymai</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li ui-sref-active="active"><a href="#">Stojimo anketos redagavimas</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li ui-sref-active="active"><a ui-sref="addCredits">Klubo taškų skyrimas</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li ui-sref-active="active"><a href="#">Mokėjimų patvirtinimas</a></li>
+                        </ul>
+                </li>
+
                 <li role="presentation" ng-if="!isMember || isAdmin" ui-sref-active="active"><a
                         ui-sref="summerHousesList">Vasarnamio rezervacija</a></li>
                 <li role="presentation" class="pull-right" ui-sref-active="active"><a ng-click="logout()"
@@ -46,7 +67,7 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
     </div>
 </div>
 <div class="container-fluid top-header" ng-controller="headerController">
-    <div class="container" ng-if="isAuthenticated" ng-cloak>
+    <div class="container" ng-show="isAuthenticated && (isMember || isAdmin)" ng-cloak>
         <div class="col-md-8 header-content">
           <span>
             <h1>Pakviesk draugą!</h1>
@@ -57,23 +78,23 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
             <p>
             <div class="row">
                 <div class="input-group col-md-8">
-                    <input type="text" class="form-control input-lg" placeholder="El. paštas">
+                    <input type="text" class="form-control input-lg" placeholder="El. paštas" ng-model="email">
               <span class="input-group-btn">
-                <button class="btn btn-primary btn-lg" type="button">Pakviesti!</button>
+                <button class="btn btn-primary btn-lg" type="button" ng-click="sendRequest()">Pakviesti!</button>
               </span>
                 </div><!-- /input-group -->
             </div>
             </p>
         </div>
         <div class="col-md-1"></div>
-        <div class="col-md-3 header-points visible-md visible-lg" ng-if="!isAuthenticated" ng-cloak>
+        <div class="col-md-3 header-points visible-md visible-lg" ng-cloak>
             <div class="header-points-top">
                 <h4>Jūsų taškai</h4>
             </div>
             <div class="header-points-content">
                 <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input type="text" class="form-control" value="127.25" disabled>
+                    <input type="text" class="form-control" value="credits" disabled>
                 </div>
                 <br/>
                 <div class="btn-group">
@@ -89,7 +110,27 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
             </div>
         </div>
     </div>
-    <div class="container" ng-if="!isAuthenticated">
+    <div class="container" ng-show="isAuthenticated" ng-cloak>
+        <div class="col-md-8 header-content">
+          <span>
+            <h1>Paprašyk rekomendacijos!</h1>
+            <p>
+                Nusiųskite jau esamiems klubo nariams rekomendacijos prašymo laišką!<br/><br/>
+            </p>
+          </span>
+            <p>
+            <div class="row">
+                <div class="input-group col-md-8">
+                    <input type="text" class="form-control input-lg" placeholder="El. paštas" ng-model="email">
+              <span class="input-group-btn">
+                <button class="btn btn-primary btn-lg" type="button" ng-click="sendRecommendation()">Siųsti!</button>
+              </span>
+                </div><!-- /input-group -->
+            </div>
+            </p>
+        </div>
+    </div>
+    <div class="container" ng-show="!isAuthenticated">
         <div class="col-md-8 header-content">
           <span>
           <h1>Labanoro draugai</h1>
@@ -114,6 +155,8 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 
 <!-- JS libs -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script src="bower_components/satellizer/satellizer.min.js"></script>
@@ -130,11 +173,14 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 <script src="js/controllers/menuController.js"></script>
 <script src="js/controllers/headerController.js"></script>
 <script src="js/controllers/editProfileController.js"></script>
+<script src="js/controllers/admin/addSummerHouseController.js"></script>
+<script src="js/controllers/admin/addCreditsControllers.js"></script>
 
 <!-- services -->
 <script src="js/services/authService.js"></script>
 <script src="js/services/userService.js"></script>
 <script src="js/services/transfersService.js"></script>
+<script src="js/services/summerHouseService.js"></script>
 
 </body>
 </html>

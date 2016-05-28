@@ -19,12 +19,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.io.IOUtils;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 @Path("/summerhouses")
@@ -39,6 +47,8 @@ public class SummerhouseResource {
 	@Context
 	private HttpServletRequest httpRequest;
 
+	private final String UPLOADED_FILE_PATH = System.getProperty("jboss.home.dir")+ "\\images\\";
+	
 	public SummerhouseResource() {
 	}
 
@@ -138,5 +148,33 @@ public class SummerhouseResource {
 		} else {
 			return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_DATE_UNAVAILABLE).build();
 		}
+	}
+	
+	@POST
+	@Path("/upload")
+	@Consumes("multipart/form-data")
+	public Response uploadFile(MultipartFormDataInput input) {
+		String fileName = "";
+		
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("uploadedFile");
+		for (InputPart inputPart : inputParts) {
+		 try {
+			MultivaluedMap<String, String> header = inputPart.getHeaders();
+			fileName = summerhouseStatelessBean.getFileName(header);
+
+			//convert the uploaded file to inputstream
+			InputStream inputStream = inputPart.getBody(InputStream.class,null);
+			byte [] bytes = IOUtils.toByteArray(inputStream);
+				
+			//constructs upload file path
+			String fullFileName = UPLOADED_FILE_PATH + fileName;
+			summerhouseStatelessBean.writeFile(bytes,fullFileName);
+		  } catch (IOException e) {
+			e.printStackTrace();
+		  }
+		}
+		return Response.status(200)
+		    .entity("/pictures/" + fileName).build();
 	}
 }

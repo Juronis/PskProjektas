@@ -83,7 +83,7 @@ public class AuthResource {
     if (foundUser.isPresent()
         && PasswordService.checkPassword(member.getPassword(), foundUser.get().getPassword())) {
       final Token token = AuthUtils.createToken(request.getRemoteHost(), foundUser.get().getId());
-      return Response.ok().entity(token).build();
+      return Response.status(Status.CREATED).entity(token).build();
     }
     return Response.status(Status.UNAUTHORIZED).entity(LOGING_ERROR_MSG).build();
   }
