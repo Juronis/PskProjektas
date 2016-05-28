@@ -1,10 +1,12 @@
 package lt.macrosoft.jaxrs;
 
+import com.google.common.base.Optional;
 import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.beans.SummerhouseStatelessBean;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.daos.SummerhouseDAO;
 import lt.macrosoft.entities.Summerhouse.District;
+import lt.macrosoft.enums.Exceptions;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.utils.AuthUtils;
@@ -18,6 +20,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +56,7 @@ public class SummerhouseResource {
 		return summerhouseDAO.findAllCustom(District.valueOf(district), priceMin, numPlaces).get();
 	}
 
+	/*Realiai sito nereikia, bet kolkas pasilaikykime testavimui*/
 	@GET
 	@Path("pad")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -61,9 +66,33 @@ public class SummerhouseResource {
 		a.setDistrict(District.MOLETAI);
 		a.setDescription("puikus vasarnamis");
 		a.setNumberOfPlaces(4);
+		a.setName("lelija");
 		a.setImageUrl("http://s1.15cdn.lt/static/cache/NTgweDMwMCw5NjB4NjM5LDYxNjEzMyxvcmlnaW5hbCwsMzk2MzU1MTE1NA==/15ig20160527gerves2537_result-57487732747d9.jpg");
 		return a;
 	}
+	
+	@DELETE
+	@Path("delete/{id}")
+	public Response deleteSummerhouse(@PathParam("id") Long id) throws ParseException, JOSEException {
+		Summerhouse summerhouse = summerhouseDAO.findById(id);
+		if (summerhouse == null) {
+			return Response
+					.status(Status.GONE)
+					.entity(Error.DB_DELETE).build();
+		}
+		Exceptions result = summerhouseDAO.deleteSummerhouse(summerhouse);
+		switch (result) {
+			case SUCCESS:
+				return Response.ok().build();
+			case OPTIMISTIC:
+				return  Response.status(Status.FORBIDDEN).build();
+			case PERSISTENCE:
+				return Response.status(Status.REQUEST_TIMEOUT).build();
+			default:
+				return  Response.status(Status.NOT_FOUND).build();
+		}
+	}
+	
 	@POST
 	@Path("add")
 	@Consumes(MediaType.APPLICATION_JSON)

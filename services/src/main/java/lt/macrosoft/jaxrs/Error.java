@@ -10,7 +10,8 @@ public enum Error {
     DB_RESERVATION_PERSIST(21, "Nepavyko išsaugoti įrašo duomenų bazėje"),
     DB_APPROVAL_NOT_FOUND(22, "APPROVALS lentoje nerastas įrašas. Ar buvo išsiųstas pakvietimas?"),
     DB_APPROVAL_LIST_NOT_FOUND(23, "APPROVALS lentoje nerastas įrašų sąrašas. Ar buvo išsiųsti pakvietimai?"),
-    DB_SUMERHOUSE_PERSIST(24, "Nepavyko išsaugoti įrašo duomenų bazėje");
+    DB_SUMERHOUSE_PERSIST(24, "Nepavyko išsaugoti įrašo duomenų bazėje"),
+    DB_DELETE(25, "Nepavyko ištrinti įrašo duomenų bazėje nes jo ir nebuvo");
     private final int code;
     private final String message;
 

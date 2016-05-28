@@ -14,6 +14,7 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 
 import lt.macrosoft.enums.Exceptions;
+import lt.macrosoft.jaxrs.Error;
 import lt.macrosoft.security.Secured;
 import lt.macrosoft.utils.AuthUtils;
 import com.google.common.base.Optional;
@@ -74,25 +75,28 @@ public class MemberResource {
 
 	@DELETE
 	@Path("delete")
-	public Response deleteMember(@Context final HttpServletRequest request) throws ParseException, JOSEException {
+	public Response deleteMember(String password, @Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
 			return Response
-					.status(Status.NOT_FOUND)
-					.entity(AuthResource.NOT_FOUND_MSG).build();
+					.status(Status.GONE)
+					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
-		Exceptions result = dao.deleteMember(memberToDelete);
-		switch (result) {
-			case SUCCESS:
-				return Response.ok().build();
-			case OPTIMISTIC:
-				return  Response.status(Status.FORBIDDEN).build();
-			case PERSISTENCE:
-				return Response.status(Status.REQUEST_TIMEOUT).build();
-			default:
-				return  Response.status(Status.NOT_FOUND).build();
+		if (memberToDelete.getPassword() == PasswordService.hashPassword(password)) {
+			Exceptions result = dao.deleteMember(memberToDelete);
+			switch (result) {
+				case SUCCESS:
+					return Response.ok().build();
+				case OPTIMISTIC:
+					return Response.status(Status.FORBIDDEN).build();
+				case PERSISTENCE:
+					return Response.status(Status.REQUEST_TIMEOUT).build();
+				default:
+					return Response.status(Status.NOT_FOUND).build();
+			}
 		}
+		return Response.status(Status.UNAUTHORIZED).build();
 	}
 
 	@POST

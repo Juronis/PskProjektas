@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.ApplicationPath;
@@ -108,13 +109,11 @@ public class AuthResource {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response loginFacebook(@Valid final Payload payload,
       @Context final HttpServletRequest request) throws JsonParseException, JsonMappingException,
-      IOException, ParseException, JOSEException {
-    final String accessTokenUrl = "https://graph.facebook.com/v2.3/oauth/access_token";
-    final String graphApiUrl = "https://graph.facebook.com/v2.3/me";
+      IOException, ParseException, JOSEException, NoResultException {
+    final String accessTokenUrl = "https://graph.facebook.com/v2.3/oauth/access_token?scope=email";
+    final String graphApiUrl = "https://graph.facebook.com/v2.3/me?locale=en_US&fields=name,email";
 
     Response response;
-
-    // Step 1. Exchange authorization code for access token.
 
     response =
         client.target(accessTokenUrl).queryParam(CLIENT_ID_KEY, payload.getClientId())
@@ -130,23 +129,28 @@ public class AuthResource {
                 .queryParam("expires_in", responseEntity.get("expires_in")).request("text/plain").get();
     
     final Map<String, Object> userInfo = getResponseEntity(response);
-
-      //Member member = new Member();
-      System.out.println(userInfo.toString());
-      /*member.setName(userInfo.get("name").toString());
-      System.out.println(userInfo.get("first_name"));
-      member.setEmail(userInfo.get("email").toString());
-      member.setFacebookUser(userInfo.get("id").toString());
-      member.setCreditAmount(0);
-      member.setLoginToken("N");
-      member.setRole(Role.CANDIDATE);
-      System.out.println(member.getName());
-      final Member savedUser = dao.save(member);
-      final Token token = AuthUtils.createToken(request.getRemoteHost(), savedUser.getId());
-      member.setLoginToken(token.getToken());
-      System.out.println("Tokenas " + token.getToken());
-      dao.findById(savedUser.getId()).setLoginToken(token.getToken());*/
-      return Response.status(Status.CREATED).entity("s").build();
+      final Optional<Member> memberByFacebook = dao.findByFacebook(userInfo.get("id").toString());
+      if (memberByFacebook.isPresent()) {
+          Member member = memberByFacebook.get();
+          member.setEmail(userInfo.get("email").toString());
+          final Token token = AuthUtils.createToken(request.getRemoteHost(), member.getId());
+          member.setLoginToken(token.getToken());
+          dao.save(member);
+          return Response.status(Status.CREATED).entity(token).build();
+      } else {
+          Member member = new Member();
+          member.setName(userInfo.get("name").toString());
+          member.setEmail(userInfo.get("email").toString());
+          member.setFacebookUser(userInfo.get("id").toString());
+          member.setCreditAmount(0);
+          member.setLoginToken("N");
+          member.setRole(Role.CANDIDATE);
+          member.setPassword("fb");
+          dao.save(member);
+          final Token token = AuthUtils.createToken(request.getRemoteHost(), member.getId());
+          member.setLoginToken(token.getToken());
+          return Response.status(Status.CREATED).entity(token).build();
+      }
   }
 
   /*@POST

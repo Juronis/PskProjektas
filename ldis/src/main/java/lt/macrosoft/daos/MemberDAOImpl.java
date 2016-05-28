@@ -3,10 +3,7 @@ package lt.macrosoft.daos;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
 import com.google.common.base.Optional;
 
@@ -42,10 +39,14 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 				.setParameter("email", email).getSingleResult());
 	}
 
-	public Optional<Member> findByFacebook(String FacebookId) {
-		System.out.println("FACEBOOKKID: " + FacebookId);
-		return Optional.fromNullable(getEntityManager().createNamedQuery("Member.findByFacebook", Member.class)
-				.setParameter("facebookUser", FacebookId).getSingleResult());
+	public Optional<Member> findByFacebook(String facebookId) {
+		System.out.println("FACEBOOKKID: " + facebookId);
+		try {
+			return Optional.fromNullable(getEntityManager().createNamedQuery("Member.findByFacebook", Member.class)
+					.setParameter("facebookUser", facebookId).getSingleResult());
+		} catch (NoResultException e) {
+			return Optional.absent();
+		}
 	}
 
 	public Member save(Member member) {
