@@ -65,4 +65,9 @@ app.service('userService', ['$http', function ($http) {
         return null;
     }
 
+    this.getUserByEmail = function(data) {
+        var url = baseUrl + "byEmail";
+        return $http.post(url, data);
+    }
+
 }]);

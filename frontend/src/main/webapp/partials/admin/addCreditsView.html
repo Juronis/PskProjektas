@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="alert alert-danger" ng-show="messageLog">
+        <strong>Klaida!</strong> {{ messageLog }}
+    </div>
+    <div class="alert alert-success" ng-show="successMessage">
+        <strong>Sėkminga!</strong> {{ successMessage }}
+    </div>
+    <div class="col-md-6">
+        <br/>
+        <h3>Pridėti naują vasarnamį</h3>
+        <br />
+        <form method="post" role="form" name="summerHouseForm" ng-submit="add()">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">El. paštas</span>
+                <input type="email" id="email" class="form-control" aria-describedby="basic-addon1" ng-model="email" pattern=".{3,}" required>
+            </div>
+            <br />
+            <button type="button" ng-click="check()" class="btn btn-default">Tikrinti ar toks narys egzistuoja</button>
+            <br />
+            <br />
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Kreditų kiekis</span>
+                <input type="number" class="form-control" aria-describedby="basic-addon1" ng-model="credits" required>
+            </div>
+            <br/>
+            <br/>
+
+            <button type="submit" class="btn btn-success">Skirti taškus</button>
+            <button type="reset" class="btn btn-default">Valyti laukelius</button>
+        </form>
+
+    </div>
+</div>
