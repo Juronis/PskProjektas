@@ -136,7 +136,7 @@ public class MemberResource {
 	}
 
 
-	@GET
+	@POST
 	@Path("byemail")
 	public Response checkMemberByEmail(Member member) {
 		if(member.getEmail() == null) {
