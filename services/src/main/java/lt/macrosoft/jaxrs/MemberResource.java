@@ -89,7 +89,8 @@ public class MemberResource {
 					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
-		if (memberToDelete.getPassword() == PasswordService.hashPassword(member.getPassword())) {
+		if (PasswordService.checkPassword(member.getPassword(), memberToDelete.getPassword())) {
+		//if (memberToDelete.getPassword() == PasswordService.hashPassword(member.getPassword())) {
 			Exceptions result = dao.deleteMember(memberToDelete);
 			switch (result) {
 				case SUCCESS:
