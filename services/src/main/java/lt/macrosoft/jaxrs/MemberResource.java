@@ -3,6 +3,7 @@ package lt.macrosoft.jaxrs;
 import com.nimbusds.jose.JOSEException;
 
 import java.text.ParseException;
+import java.util.Map;
 
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
@@ -21,6 +22,8 @@ import com.google.common.base.Optional;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.utils.PasswordService;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 
 @Path("/members")
 @Stateless
@@ -75,7 +78,10 @@ public class MemberResource {
 
 	@DELETE
 	@Path("delete")
-	public Response deleteMember(String password, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+	public Response deleteMember(Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		if (member.getPassword() == null){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
 			return Response
@@ -83,7 +89,7 @@ public class MemberResource {
 					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
-		if (memberToDelete.getPassword() == PasswordService.hashPassword(password)) {
+		if (memberToDelete.getPassword() == PasswordService.hashPassword(member.getPassword())) {
 			Exceptions result = dao.deleteMember(memberToDelete);
 			switch (result) {
 				case SUCCESS:
@@ -127,7 +133,20 @@ public class MemberResource {
 	public Response sendMembersTotal() {
 		return Response.ok().entity(dao.findAll().size()).build();
 	}
-	
+
+
+	@GET
+	@Path("byemail")
+	public Response checkMemberByEmail(Member member) {
+		if(member.getEmail() == null) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		Optional<Member> findMember = dao.findByEmail(member.getEmail());
+		if (!findMember.isPresent()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.status(Status.OK).build();
+	}
 	/*
 	 * Helper methods
 	 */	
