@@ -34,14 +34,12 @@
                         <li ui-sref-active="active"><a href="#">Vasarnamių valdymas</a></li>
                         <li role="separator" class="divider"></li>
                         <li ui-sref-active="active"><a href="#">Narių valdymas</a></li>
-                        <li ui-sref-active="active"><a href="#">Nustatymai</a></li>
+                        <li ui-sref-active="active"><a ui-sref="usersSettings">Nustatymai</a></li>
                         <li role="separator" class="divider"></li>
                         <li ui-sref-active="active"><a href="#">Stojimo anketos redagavimas</a></li>
                         <li role="separator" class="divider"></li>
                         <li ui-sref-active="active"><a ui-sref="addCredits">Klubo taškų skyrimas</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li ui-sref-active="active"><a href="#">Mokėjimų patvirtinimas</a></li>
-                        </ul>
+                    </ul>
                 </li>
 
                 <li role="presentation" ng-if="!isMember || isAdmin" ui-sref-active="active"><a
@@ -174,13 +172,15 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 <script src="js/controllers/headerController.js"></script>
 <script src="js/controllers/editProfileController.js"></script>
 <script src="js/controllers/admin/addSummerHouseController.js"></script>
-<script src="js/controllers/admin/addCreditsControllers.js"></script>
+<script src="js/controllers/admin/addCreditsController.js"></script>
+<script src="js/controllers/admin/usersSettingsController.js"></script>
 
 <!-- services -->
 <script src="js/services/authService.js"></script>
 <script src="js/services/userService.js"></script>
 <script src="js/services/transfersService.js"></script>
 <script src="js/services/summerHouseService.js"></script>
+<script src="js/services/adminService.js"></script>
 
 </body>
 </html>

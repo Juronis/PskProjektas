@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="alert alert-danger" ng-show="messageLog">
+        <strong>Klaida!</strong> {{ messageLog }}
+    </div>
+    <div class="alert alert-success" ng-show="successMessage">
+        <strong>Sėkminga!</strong> {{ successMessage }}
+    </div>
+    <div class="col-md-6">
+        <br/>
+        <h3>Pridėti naują vasarnamį</h3>
+        <br />
+        <form method="post" role="form" name="userSettingsForm" ng-submit="edit()">
+            <div class="input-group" id="email">
+                <span class="input-group-addon" id="basic-addon1">Max klubo narių skaičius</span>
+                <input type="number" class="form-control" aria-describedby="basic-addon1" ng-model="maxUsers" required>
+            </div>
+            <br />
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Metinis klubo nario mokestis</span>
+                <input type="number" class="form-control" aria-describedby="basic-addon1" ng-model="membershipFee" required>
+            </div>
+            <br/>
+            <br/>
+
+            <button type="submit" class="btn btn-success">Atnaujinti</button>
+            <button type="reset" class="btn btn-default">Valyti laukelius</button>
+        </form>
+
+    </div>
+</div>

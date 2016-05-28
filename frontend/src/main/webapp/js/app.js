@@ -51,6 +51,11 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/admin/addCredits",
                 controller: 'addCreditsController',
                 templateUrl: 'partials/admin/addCreditsView.html'
+            })
+            .state('userSettings', {
+                url: "/admin/usersSettings",
+                controller: 'usersSettingsController',
+                templateUrl: 'partials/admin/usersSettingsView.html'
             });
 
         $locationProvider.html5Mode({
