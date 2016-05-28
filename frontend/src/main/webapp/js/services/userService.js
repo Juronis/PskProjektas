@@ -32,25 +32,37 @@ app.service('userService', ['$http', function ($http) {
         return $http.post(url, email);
     }
 
+    this.sendRecommendation = function(email) {
+        var url = baseUrl+"sendRecommendation";
+        return $http.post(url, email);
+    }
+
     this.isMember = function () {
         this.getUserDataByAuth().then(function(response){
-            return response.role === 'MEMBER';
+            return response.data.role === 'MEMBER';
         });
         return false;
     };
 
     this.isAdmin = function () {
         this.getUserDataByAuth().then(function(response){
-            return response.role === 'ADMIN';
+            return response.data.role === 'ADMIN';
         });
         return false;
     };
 
     this.isCandidate = function () {
         this.getUserDataByAuth().then(function(response){
-            return response.role === 'CANDIDATE';
+            return response.data.role === 'CANDIDATE';
         });
         return false;
     };
+
+    this.userCredits = function() {
+        this.getUserDataByAuth().then(function(response) {
+            return response.data.amount;
+        });
+        return null;
+    }
 
 }]);

@@ -41,6 +41,11 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/editProfile",
                 controller: 'editProfileController',
                 templateUrl: 'partials/editProfileView.html'
+            })
+            .state('addSummerHouse', {
+                url: "/admin/addSummerHouse",
+                controller: 'addSummerHouseController',
+                templateUrl: 'partials/admin/addSummerHouseView.html'
             });
 
         $locationProvider.html5Mode({

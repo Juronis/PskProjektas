@@ -17,22 +17,6 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', 'aut
 
     var updateProfile = false;
 
-    $scope.delete = function() {
-        var answer = prompt("Įveskite slaptažodį", false);
-        answer = { "password" : answer };
-        if(answer) {
-            userService.checkPassword(answer).then(function() {
-                userService.delete().then(function (response) {
-                    authService.logout();
-                }).catch(function (response) {
-                    //TODO: error handling
-                });
-            }).catch(function (response) {
-                //TODO: error handling
-            });
-        }
-    }
-
     $scope.edit = function() {
         if ($scope.editForm.$valid) {
             if($scope.password == null) {
@@ -57,6 +41,23 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', 'aut
                     //TODO: error handling
                 })
             }
+        }
+    }
+
+    $scope.delete = function() {
+        var answer = prompt("Įveskite slaptažodį", "");
+        if(answer) {
+            answer = { "password" : answer };
+            userService.checkPassword(answer).then(function() {
+                userService.delete().then(function (response) {
+                    authService.logout();
+                    $state.go("main");
+                }).catch(function (response) {
+                    //TODO: error handling
+                });
+            }).catch(function (response) {
+                //TODO: error handling
+            });
         }
     }
 
