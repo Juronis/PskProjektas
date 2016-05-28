@@ -75,7 +75,7 @@ public class MemberResource {
 
 	@DELETE
 	@Path("delete")
-	public Response deleteMember(@Context final HttpServletRequest request) throws ParseException, JOSEException {
+	public Response deleteMember(String password, @Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
 			return Response
@@ -83,17 +83,20 @@ public class MemberResource {
 					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
-		Exceptions result = dao.deleteMember(memberToDelete);
-		switch (result) {
-			case SUCCESS:
-				return Response.ok().build();
-			case OPTIMISTIC:
-				return  Response.status(Status.FORBIDDEN).build();
-			case PERSISTENCE:
-				return Response.status(Status.REQUEST_TIMEOUT).build();
-			default:
-				return  Response.status(Status.NOT_FOUND).build();
+		if (memberToDelete.getPassword() == PasswordService.hashPassword(password)) {
+			Exceptions result = dao.deleteMember(memberToDelete);
+			switch (result) {
+				case SUCCESS:
+					return Response.ok().build();
+				case OPTIMISTIC:
+					return Response.status(Status.FORBIDDEN).build();
+				case PERSISTENCE:
+					return Response.status(Status.REQUEST_TIMEOUT).build();
+				default:
+					return Response.status(Status.NOT_FOUND).build();
+			}
 		}
+		return Response.status(Status.UNAUTHORIZED).build();
 	}
 
 	@POST

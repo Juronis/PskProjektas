@@ -8,6 +8,7 @@ import lt.macrosoft.enums.Role;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "MEMBER", uniqueConstraints = @UniqueConstraint(columnNames = {"EMAIL", "FACEBOOKUSER"}))
 @NamedQueries({
@@ -16,6 +17,7 @@ import java.util.Set;
     @NamedQuery(name = "Member.findByFacebook", query = "SELECT m FROM Member m WHERE m.facebookUser = :facebookUser"),
 	@NamedQuery(name = "Member.findByToken", query = "SELECT m FROM Member m WHERE m.logintoken = :logintoken")
 })
+
 public class Member {
 
 	@Id
