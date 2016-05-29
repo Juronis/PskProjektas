@@ -4,6 +4,8 @@ import com.nimbusds.jose.JOSEException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import javax.ejb.Stateful;
@@ -15,6 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 
+import lt.macrosoft.daos.ParameterDAO;
 import lt.macrosoft.enums.Exceptions;
 import lt.macrosoft.jaxrs.Error;
 import lt.macrosoft.security.Secured;
@@ -36,6 +39,9 @@ public class MemberResource {
 
 	@Inject
 	MemberDAO dao;
+
+	@Inject
+	ParameterDAO par;
 
 	@Context
 	SecurityContext securityContext;
@@ -181,6 +187,38 @@ public class MemberResource {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.status(Status.OK).build();
+	}
+
+	@GET
+	@Path("membership")
+	public Response buyMembership(@Context final HttpServletRequest request) throws ParseException, JOSEException {
+		Optional<Member> foundUser = getAuthMember(request);
+		if (!foundUser.isPresent()) {
+			return Response
+					.status(Status.UNAUTHORIZED).build(); //Nerastas toks member
+		}
+		Member member = foundUser.get();
+
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.add(Calendar.YEAR, 1);
+		Date nextYear = cal.getTime();
+
+		if (member.getMembership() != null) {
+			if (member.getMembership().after(today)) {
+				return Response.status(Status.METHOD_NOT_ALLOWED).build(); //Jei dar galioja
+			}
+		}
+
+		Integer price = Integer.parseInt(par.findParameterValue("MEMBERSHIP_PRICE").get().getPvalue());
+		if (member.getCreditAmount() >= price) {
+			member.setMembership(nextYear);
+			member.setCreditAmount(member.getCreditAmount() - price);
+			dao.save(member);
+			return Response.status(Status.OK).build();  //pavyko gauti prenumerata
+		} else {
+			return Response.status(Status.PAYMENT_REQUIRED).build(); //nepakanka credito
+		}
 	}
 	/*
 	 * Helper methods
