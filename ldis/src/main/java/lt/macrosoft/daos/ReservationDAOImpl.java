@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import com.google.common.base.Optional;
 
@@ -63,7 +64,16 @@ public class ReservationDAOImpl  extends GenericDAOImpl<Reservation, Long> imple
 
     @Override
     public Optional<Reservation> findUnique(Member member, Summerhouse summerhouse, Date dateStart, Date dateEnd) {
-        return null;
+        try {
+            return Optional.fromNullable(getEntityManager().createNamedQuery("Reservation.findUnique", Reservation.class)
+                    .setParameter("dateStart", dateStart)
+                    .setParameter("dateEnd", dateEnd)
+                    .setParameter("member", member)
+                    .setParameter("summerhouse", summerhouse)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.absent();
+        }
     }
 
     @Override

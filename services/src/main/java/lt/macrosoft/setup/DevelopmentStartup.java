@@ -102,12 +102,12 @@ public class DevelopmentStartup extends SystemStartup {
         memberDao.saveIfNotExists(member);
 
         Member member2 = new Member();
-        member.setEmail("test2@test.com");
-        member.setName("test2");
-        member.setCreditAmount(100);
-        member.setPassword(PasswordService.hashPassword("test"));
-        member.setRole(Role.FULLUSER);
-        memberDao.saveIfNotExists(member);
+        member2.setEmail("test2@test.com");
+        member2.setName("test2");
+        member2.setCreditAmount(100);
+        member2.setPassword(PasswordService.hashPassword("test"));
+        member2.setRole(Role.FULLUSER);
+        memberDao.saveIfNotExists(member2);
 
         Member candidate = new Member();
         candidate.setEmail("can@can.com");
