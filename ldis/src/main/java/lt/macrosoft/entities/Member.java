@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 
 import lt.macrosoft.enums.Role;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,6 +58,10 @@ public class Member {
 
 	@Column(name = "LOGINTOKEN", nullable = true, length = 2000)
 	private String logintoken;
+
+	@Column(name = "MEMBERSHIP_UNTIL")
+	@Temporal(TemporalType.DATE)
+	private Date membership;
 
 	public int getCreditAmount() {
 		return creditAmount;
@@ -139,6 +144,14 @@ public class Member {
 
 	public void setLoginToken(String logintoken) {
 		this.logintoken = logintoken;
+	}
+
+	public Date getMembership() {
+		return membership;
+	}
+
+	public void setMembership(Date membership) {
+		this.membership = membership;
 	}
 
 }

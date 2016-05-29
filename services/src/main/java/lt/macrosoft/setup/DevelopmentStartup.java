@@ -9,9 +9,11 @@ import javax.inject.Inject;
 
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.daos.ReservationDAO;
+import lt.macrosoft.daos.ParameterDAO;
 import lt.macrosoft.daos.SummerhouseDAO;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Reservation;
+import lt.macrosoft.entities.Parameter;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.entities.Summerhouse.District;
 import lt.macrosoft.enums.Role;
@@ -30,6 +32,8 @@ public class DevelopmentStartup extends SystemStartup {
     private  SummerhouseDAO summerhouseDao;
     @Inject
     private  MemberDAO memberDao;
+    @Inject
+    private ParameterDAO dao;
     @Inject
     ReservationDAO reservationDAO;
     /**
@@ -112,6 +116,27 @@ public class DevelopmentStartup extends SystemStartup {
         candidate.setPassword(PasswordService.hashPassword("candidate"));
         candidate.setRole(Role.CANDIDATE);
         memberDao.saveIfNotExists(candidate);
+
+        Parameter parameter = new Parameter();
+        parameter.setName("MEMBERSHIP_PRICE");
+        parameter.setPvalue("50");
+        dao.saveOrUpdate(parameter);
+        parameter = new Parameter();
+        parameter.setName("MAX_MEMBERS");
+        parameter.setPvalue("200");
+        dao.saveOrUpdate(parameter);
+        parameter = new Parameter();
+        parameter.setName("MAX_REGISTRATION_DAYS");
+        parameter.setPvalue("14");
+        dao.saveOrUpdate(parameter);
+        parameter = new Parameter();
+        parameter.setName("MINIMUM_RECOMMENDATIONS");
+        parameter.setPvalue("2");
+        dao.saveOrUpdate(parameter);
+        parameter = new Parameter();
+        parameter.setName("BIRTHDAY_REQUIRED");
+        parameter.setPvalue("T");
+        dao.saveOrUpdate(parameter);
 
 
 

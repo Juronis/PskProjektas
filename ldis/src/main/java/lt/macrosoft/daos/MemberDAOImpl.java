@@ -80,6 +80,7 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 		return Exceptions.SUCCESS;
 	}
 
+
 	@Override
 	public Member saveIfNotExists(Member member) {
 		Optional<Member> check = findByEmail(member.getEmail());
