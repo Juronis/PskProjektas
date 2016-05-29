@@ -55,8 +55,6 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 
 	public Member save(Member member) {
 		em.persist(member);
-		  System.out.println("ciamember" + member.getId());
-		  System.out.println(getCount());
 		return member;
 	}
 	

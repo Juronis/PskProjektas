@@ -92,7 +92,6 @@ public class AuthResource {
   @Path("signup")
   public Response signup(final Member member, @Context final HttpServletRequest request)
       throws JOSEException {
-      System.out.println("Bent Jau bande");
 	  member.setPassword(PasswordService.hashPassword(member.getPassword()));
       member.setLoginToken("N");
       member.setRole(Role.CANDIDATE);
