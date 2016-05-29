@@ -2,10 +2,13 @@ package lt.macrosoft.daos;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
 import com.google.common.base.Optional;
+
+import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.entities.Summerhouse.District;
 import lt.macrosoft.enums.Exceptions;
@@ -54,5 +57,24 @@ public class SummerhouseDAOImpl extends GenericDAOImpl<Summerhouse, Long> implem
 			return Exceptions.PERSISTENCE;
 		}
 		return Exceptions.SUCCESS;
+	}
+    
+    @Override
+    public Optional<Summerhouse> findByName(String name) {
+		try {
+			return Optional.fromNullable(getEntityManager().createNamedQuery("Summerhouse.findByName", Summerhouse.class)
+					.setParameter("name", name).getSingleResult());
+		} catch (NoResultException e) {
+			return Optional.absent();
+		}
+	}
+    
+	@Override
+	public Summerhouse saveIfNotExists(Summerhouse summerhouse) {
+		Optional<Summerhouse> check= findByName(summerhouse.getName());
+		if (!check.isPresent()){
+			save(summerhouse);
+		}
+		return summerhouse;
 	}
 }
