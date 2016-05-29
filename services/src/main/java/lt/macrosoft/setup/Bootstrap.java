@@ -9,9 +9,6 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
 
-/**
- * Boostraps the application by adding an initial user.
- */
 @Singleton
 @Startup
 public class Bootstrap {

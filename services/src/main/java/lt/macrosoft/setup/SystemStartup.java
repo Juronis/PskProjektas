@@ -2,10 +2,6 @@ package lt.macrosoft.setup;
 
 import java.util.logging.Logger;
 
-/**
- * Initializes the system
- * @author Ryan Cuprak
- */
 public class SystemStartup {
     
     /**

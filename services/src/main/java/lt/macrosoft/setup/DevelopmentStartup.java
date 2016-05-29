@@ -11,10 +11,6 @@ import lt.macrosoft.daos.SummerhouseDAO;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.entities.Summerhouse.District;
 
-/**
- * Initializes the system at start-up for developer testing.
- * @author Ryan Cuprak
- */
 @Alternative
 public class DevelopmentStartup extends SystemStartup {
     
