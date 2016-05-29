@@ -150,7 +150,7 @@ public class Member {
 		return membership;
 	}
 
-	public void setMembership(Date dateStart) {
+	public void setMembership(Date membership) {
 		this.membership = membership;
 	}
 
