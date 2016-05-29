@@ -2,7 +2,9 @@ package lt.macrosoft.jaxrs;
 
 import com.nimbusds.jose.JOSEException;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.Map;
 
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
@@ -21,6 +23,10 @@ import com.google.common.base.Optional;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.utils.PasswordService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Path("/members")
 @Stateless
@@ -73,9 +79,28 @@ public class MemberResource {
 		return Response.ok().entity(member.get()).build();
 	}
 
-	@DELETE
+	@POST
 	@Path("delete")
-	public Response deleteMember(@Context final HttpServletRequest request) throws ParseException, JOSEException {
+	public Response deleteMember(String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String password;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("password");
+			if (jsonNode1 == null) {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			password = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
 			return Response
@@ -83,17 +108,20 @@ public class MemberResource {
 					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
-		Exceptions result = dao.deleteMember(memberToDelete);
-		switch (result) {
-			case SUCCESS:
-				return Response.ok().build();
-			case OPTIMISTIC:
-				return  Response.status(Status.FORBIDDEN).build();
-			case PERSISTENCE:
-				return Response.status(Status.REQUEST_TIMEOUT).build();
-			default:
-				return  Response.status(Status.NOT_FOUND).build();
+		if (PasswordService.checkPassword(password, memberToDelete.getPassword())) {
+			Exceptions result = dao.deleteMember(memberToDelete);
+			switch (result) {
+				case SUCCESS:
+					return Response.ok().build();
+				case OPTIMISTIC:
+					return Response.status(Status.FORBIDDEN).build();
+				case PERSISTENCE:
+					return Response.status(Status.REQUEST_TIMEOUT).build();
+				default:
+					return Response.status(Status.NOT_FOUND).build();
+			}
 		}
+		return Response.status(Status.UNAUTHORIZED).build();
 	}
 
 	@POST
@@ -124,7 +152,36 @@ public class MemberResource {
 	public Response sendMembersTotal() {
 		return Response.ok().entity(dao.findAll().size()).build();
 	}
-	
+
+
+	@GET
+	@Path("byemail")
+	public Response checkMemberByEmail(String json, @Context final HttpServletRequest request) {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String email;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("email");
+			if (jsonNode1 == null) {
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			email = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.NOT_FOUND).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		Optional<Member> findMember = dao.findByEmail(email);
+		if (!findMember.isPresent()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.status(Status.OK).build();
+	}
 	/*
 	 * Helper methods
 	 */	

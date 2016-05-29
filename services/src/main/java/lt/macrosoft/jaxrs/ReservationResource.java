@@ -2,6 +2,7 @@ package lt.macrosoft.jaxrs;
 
 import com.google.common.base.Optional;
 import lt.macrosoft.daos.ReservationDAO;
+import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Reservation;
 
 import javax.ejb.Stateless;
@@ -42,5 +43,13 @@ public class ReservationResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Reservation> getReservationsTotal() {
         return reservationDAO.findAll();
+    }
+
+    @Path("membersByDate/{dateStart}/{dateEnd}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Member> getMembersByReservationDate(@PathParam("dateStart") String dateStart,
+                                                    @PathParam("dateEnd") String dateEnd) {
+
     }
 }

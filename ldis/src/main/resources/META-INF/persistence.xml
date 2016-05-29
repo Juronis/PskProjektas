@@ -6,9 +6,9 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<!-- If you are running in a production environment, add a managed data 
 			source, the example data source is just for development and testing! -->
-		<jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
+		<jta-data-source>java:/MySqlDSMarijus</jta-data-source>
 		<properties>
-			 <property name="hibernate.hbm2ddl.auto" value="drop-and-create" /> 
+			 <!-- <property name="hibernate.hbm2ddl.auto" value="drop-and-create" /> -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 
 
@@ -23,8 +23,8 @@
 			<property name="hibernate.order_by.default_null_ordering"
 				value="first" />
 
-			 <property name="javax.persistence.schema-generation.database.action"
-				value="drop-and-create" /> 
+			 <!-- <property name="javax.persistence.schema-generation.database.action"
+				value="drop-and-create" /> -->
 			 <!--<property name="javax.persistence.schema-generation.create-source"
 				value="script" />
 			<property name="javax.persistence.schema-generation.drop-source"

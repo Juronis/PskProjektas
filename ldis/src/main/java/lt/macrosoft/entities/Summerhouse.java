@@ -2,17 +2,21 @@ package lt.macrosoft.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -52,8 +56,39 @@ public class Summerhouse {
 	@Column(name = "DISTRICT")
 	@Enumerated(EnumType.STRING)
     private District district;
+    
+    @NotNull
+	@Column(name = "DATEFROM", length = 10)
+    private String dateFrom;
+    
+    @NotNull
+	@Column(name = "DATETO",length = 10)
+    private String dateTo; 
+    
+    @OneToOne(
+		fetch = FetchType.LAZY,
+		optional = true
+	)
+	@PrimaryKeyJoinColumn
+	protected ExtraActivities extraActivities;
+    
+    public String getDateFrom() {
+		return dateFrom;
+	}
 
-    //TODO: Add notnull
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public String getDateTo() {
+		return dateTo;
+	}
+
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+
+	//TODO: Add notnull
     @Column(name = "PRICE")
     private double price;
 

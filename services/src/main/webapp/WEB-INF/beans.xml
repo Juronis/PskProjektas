@@ -15,5 +15,7 @@
     created by defaulting to only "half" of the classes being CDI managed is
     ridiculous.
     -->
-
+	<alternatives>
+        <class>lt.macrosoft.setup.DevelopmentStartup</class>
+    </alternatives>
 </beans>

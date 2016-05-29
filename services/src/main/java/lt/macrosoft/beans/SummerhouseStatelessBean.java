@@ -8,6 +8,11 @@ import lt.macrosoft.entities.Summerhouse;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.core.MultivaluedMap;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -55,4 +60,45 @@ public class SummerhouseStatelessBean {
         reservationDAO.save(reservation);
         return reservation.getId() != null;
     }
+    
+	/**
+	 * header sample
+	 * {
+	 * 	Content-Type=[image/png], 
+	 * 	Content-Disposition=[form-data; name="file"; filename="filename.extension"]
+	 * }
+	 **/
+	//get uploaded filename, is there a easy way in RESTEasy?
+	public String getFileName(MultivaluedMap<String, String> header) {
+
+		String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
+		
+		for (String filename : contentDisposition) {
+			if ((filename.trim().startsWith("filename"))) {
+
+				String[] name = filename.split("=");
+				
+				String finalFileName = name[1].trim().replaceAll("\"", "");
+				return finalFileName;
+			}
+		}
+		return "unknown";
+	}
+
+	//save to somewhere
+	public void writeFile(byte[] content, String filename) throws IOException {
+
+		File file = new File(filename);
+
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+
+		FileOutputStream fop = new FileOutputStream(file);
+
+		fop.write(content);
+		fop.flush();
+		fop.close();
+
+	}
 }
