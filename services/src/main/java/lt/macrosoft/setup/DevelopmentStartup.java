@@ -40,7 +40,7 @@ public class DevelopmentStartup extends SystemStartup {
         firstSummerhouse.setDateFrom("2016-05-05");
         firstSummerhouse.setDateTo("2016-09-05");
         firstSummerhouse.setImageUrl("http://mstcontractors.com/mstc/images/stories/nice-house-main.jpg");
-        summerhouseDao.save(firstSummerhouse);
+        summerhouseDao.saveIfNotExists(firstSummerhouse);
         
         Member admin = new Member();
         admin.setEmail("admin@admin.com");
@@ -48,7 +48,7 @@ public class DevelopmentStartup extends SystemStartup {
         admin.setCreditAmount(100000);;
         admin.setPassword(PasswordService.hashPassword("admin"));
         admin.setRole(Role.ADMIN);
-        memberDao.save(admin);
+        memberDao.saveIfNotExists(admin);
         
         Member member = new Member();
         member.setEmail("test@test.com");
@@ -56,7 +56,7 @@ public class DevelopmentStartup extends SystemStartup {
         member.setCreditAmount(100);
         member.setPassword(PasswordService.hashPassword("test"));
         member.setRole(Role.FULLUSER);
-        memberDao.save(member);
+        memberDao.saveIfNotExists(member);
         
         Member candidate = new Member();
         candidate.setEmail("can@can.com");
@@ -64,6 +64,6 @@ public class DevelopmentStartup extends SystemStartup {
         candidate.setCreditAmount(0);
         candidate.setPassword(PasswordService.hashPassword("candidate"));
         candidate.setRole(Role.CANDIDATE);
-        memberDao.save(candidate);
+        memberDao.saveIfNotExists(candidate);
     }
 }
