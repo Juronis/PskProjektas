@@ -58,12 +58,12 @@ public class Summerhouse {
     private District district;
     
     @NotNull
-	@Column(name = "DATEFROM")
-    private Date dateFrom;
+	@Column(name = "DATEFROM", length = 10)
+    private String dateFrom;
     
     @NotNull
-	@Column(name = "DATETO")
-    private Date dateTo; 
+	@Column(name = "DATETO",length = 10)
+    private String dateTo; 
     
     @OneToOne(
 		fetch = FetchType.LAZY,
@@ -72,7 +72,23 @@ public class Summerhouse {
 	@PrimaryKeyJoinColumn
 	protected ExtraActivities extraActivities;
     
-    //TODO: Add notnull
+    public String getDateFrom() {
+		return dateFrom;
+	}
+
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public String getDateTo() {
+		return dateTo;
+	}
+
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+
+	//TODO: Add notnull
     @Column(name = "PRICE")
     private double price;
 
