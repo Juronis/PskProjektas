@@ -1,22 +1,25 @@
 package lt.macrosoft.jaxrs;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import com.nimbusds.jose.JOSEException;
-import lt.macrosoft.daos.ParameterDAO;
-import lt.macrosoft.entities.Parameter;
+import java.text.ParseException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.io.IOException;
-import java.text.ParseException;
+
+import com.google.common.base.Optional;
+import com.nimbusds.jose.JOSEException;
+
+import lt.macrosoft.daos.ParameterDAO;
+import lt.macrosoft.entities.Parameter;
 
 /**
  * Created by Main on 5/29/2016.
@@ -50,7 +53,7 @@ public class ParameterResource {
     }
 
     @POST
-    @Path("set")
+    @Path("update")
     public Response updateParameterValue(Parameter parameter) throws ParseException, JOSEException {
     //String newval = "{\"name\":\"MEMBERSHIP_PRICE\",\"pvalue\":\"50\"}";
         Optional<Parameter> updateParameter = dao.findParameterValue(parameter.getName());
@@ -59,10 +62,10 @@ public class ParameterResource {
                     .status(Response.Status.NOT_FOUND)
                     .entity(AuthResource.NOT_FOUND_MSG).build();
         }
-        Parameter updatingParameter = updateParameter.get();
+        Parameter newParameter = updateParameter.get();
         if (parameter.getPvalue() != null) {
-            updatingParameter.setPvalue(parameter.getPvalue());
-            dao.save(updatingParameter);
+            newParameter.setPvalue(parameter.getPvalue());
+            dao.save(newParameter);
         }
         return Response.ok().build();
     }
