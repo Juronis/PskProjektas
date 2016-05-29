@@ -159,6 +159,11 @@ public class MemberResource {
 					.entity(Error.DB_DELETE).build();
 		}
 		Member adminMember = adminUser.get();
+
+		if (adminMember.getId() == id) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		if (PasswordService.checkPassword(password, adminMember.getPassword())) {
 
 			Optional<Member> memberToDelete = dao.getMemberById(id);
