@@ -1,6 +1,5 @@
 package lt.macrosoft.jaxrs;
 
-import com.google.common.base.Optional;
 import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.beans.SummerhouseStatelessBean;
 import lt.macrosoft.daos.MemberDAO;
@@ -70,6 +69,13 @@ public class SummerhouseResource {
 		a.setImageUrl("http://s1.15cdn.lt/static/cache/NTgweDMwMCw5NjB4NjM5LDYxNjEzMyxvcmlnaW5hbCwsMzk2MzU1MTE1NA==/15ig20160527gerves2537_result-57487732747d9.jpg");
 		return a;
 	}
+
+	@GET
+	@Path("all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Summerhouse> getAllSummerhouses() {
+		return summerhouseDAO.findAll();
+	}
 	
 	@DELETE
 	@Path("delete/{id}")
@@ -96,11 +102,12 @@ public class SummerhouseResource {
 	@POST
 	@Path("add")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addSummerhouse(Summerhouse summerhouse) {
 		try {
 			summerhouseDAO.save(summerhouse);
 		} catch (Exception e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(Error.DB_SUMERHOUSE_PERSIST).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(Error.DB_SUMMERHOUSE_PERSIST).build();
 		}
 		return Response.ok().build();
 	}

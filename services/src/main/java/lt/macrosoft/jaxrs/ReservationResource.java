@@ -2,6 +2,7 @@ package lt.macrosoft.jaxrs;
 
 import com.google.common.base.Optional;
 import lt.macrosoft.daos.ReservationDAO;
+import lt.macrosoft.entities.Reservation;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,7 +32,15 @@ public class ReservationResource {
         if(!list.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
-            return Response.ok().entity(list).build();
+            return Response.ok().entity(list.get()).build();
         }
+    }
+
+    //Testing
+    @Path("total")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Reservation> getReservationsTotal() {
+        return reservationDAO.findAll();
     }
 }
