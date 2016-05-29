@@ -131,6 +131,62 @@ public class MemberResource {
 	}
 
 	@POST
+	@Path("delete/{id}")
+	public Response deleteMemberByAdmin(@PathParam("id") Long id, String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String password;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("password");
+			if (jsonNode1 == null) {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			password = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+
+		Optional<Member> adminUser = getAuthMember(request);
+		if (!adminUser.isPresent()) {
+			return Response
+					.status(Status.GONE)
+					.entity(Error.DB_DELETE).build();
+		}
+		Member adminMember = adminUser.get();
+		if (PasswordService.checkPassword(password, adminMember.getPassword())) {
+
+			Optional<Member> memberToDelete = dao.getMemberById(id);
+			if (!memberToDelete.isPresent()) {
+				return Response
+						.status(Status.GONE)
+						.entity(Error.DB_DELETE).build();
+			}
+
+
+			Exceptions result = dao.deleteMember(memberToDelete.get());
+
+			switch (result) {
+				case SUCCESS:
+					return Response.ok().build();
+				case OPTIMISTIC:
+					return Response.status(Status.FORBIDDEN).build();
+				case PERSISTENCE:
+					return Response.status(Status.REQUEST_TIMEOUT).build();
+				default:
+					return Response.status(Status.NOT_FOUND).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+	}
+
+
+	@POST
 	@Path("update")
 	public Response updateMember(final Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
