@@ -12,7 +12,13 @@
 	<artifactId>frontend</artifactId>
 	<packaging>war</packaging>
 	<name>ldis.frontend</name>
-
+	<dependencies>
+		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<finalName>frontend</finalName>
 	</build>
