@@ -23,7 +23,14 @@ public class ExtraActivities {
 	private Integer ChildrenActivities;
 	private Integer Trampoline;
 	private Integer Sauna;
+	private Integer Tub;
 	
+	public Integer getTub() {
+		return Tub;
+	}
+	public void setTub(Integer tub) {
+		Tub = tub;
+	}
 	public Long getId() {
 		return id;
 	}
