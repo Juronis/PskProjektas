@@ -12,7 +12,11 @@ import javax.validation.constraints.NotNull;
         @UniqueConstraint(columnNames = {"SUMMERHOUSE", "DATE_START", "DATE_END"})
 })
 @NamedQueries({
-        @NamedQuery(name = "Reservation.findBySummerhouseId", query = "SELECT r FROM Reservation r WHERE r.summerhouse.id = :summerhouseId")
+        @NamedQuery(name = "Reservation.findBySummerhouseId", query = "SELECT r FROM Reservation r WHERE r.summerhouse.id = :summerhouseId"),
+        @NamedQuery(name = "Reservation.findByDate", query = "SELECT r FROM Reservation r WHERE r.dateEnd >= :dateStart AND r.dateEnd <= :dateEnd"),
+        @NamedQuery(name = "Reservation.findUnique",
+                query = "SELECT r FROM Reservation r " +
+                        " WHERE r.member = :member AND r.dateStart = :dateStart AND r.dateEnd = :dateEnd AND r.summerhouse = :summerhouse")
 })
 public class Reservation {
 

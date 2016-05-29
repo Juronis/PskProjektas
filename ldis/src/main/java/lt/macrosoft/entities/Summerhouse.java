@@ -4,21 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -60,11 +46,13 @@ public class Summerhouse {
     
     @NotNull
 	@Column(name = "DATEFROM", length = 10)
-    private String dateFrom;
+    @Temporal(TemporalType.DATE)
+    private Date dateFrom;
     
     @NotNull
 	@Column(name = "DATETO",length = 10)
-    private String dateTo; 
+    @Temporal(TemporalType.DATE)
+    private Date dateTo;
     
     @OneToOne(
 		fetch = FetchType.LAZY,
@@ -73,19 +61,19 @@ public class Summerhouse {
 	@PrimaryKeyJoinColumn
 	protected ExtraActivities extraActivities;
     
-    public String getDateFrom() {
+    public Date getDateFrom() {
 		return dateFrom;
 	}
 
-	public void setDateFrom(String dateFrom) {
+	public void setDateFrom(Date dateFrom) {
 		this.dateFrom = dateFrom;
 	}
 
-	public String getDateTo() {
+	public Date getDateTo() {
 		return dateTo;
 	}
 
-	public void setDateTo(String dateTo) {
+	public void setDateTo(Date dateTo) {
 		this.dateTo = dateTo;
 	}
 
