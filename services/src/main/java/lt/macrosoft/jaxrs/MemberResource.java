@@ -2,6 +2,7 @@ package lt.macrosoft.jaxrs;
 
 import com.nimbusds.jose.JOSEException;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
 
@@ -22,8 +23,10 @@ import com.google.common.base.Optional;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.utils.PasswordService;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Path("/members")
 @Stateless
@@ -78,10 +81,26 @@ public class MemberResource {
 
 	@POST
 	@Path("delete")
-	public Response deleteMember(Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
-		if (member.getPassword() == null){
+	public Response deleteMember(String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String password;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("password");
+			if (jsonNode1 == null) {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			password = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
+
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
 			return Response
@@ -89,8 +108,7 @@ public class MemberResource {
 					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
-		if (PasswordService.checkPassword(member.getPassword(), memberToDelete.getPassword())) {
-		//if (memberToDelete.getPassword() == PasswordService.hashPassword(member.getPassword())) {
+		if (PasswordService.checkPassword(password, memberToDelete.getPassword())) {
 			Exceptions result = dao.deleteMember(memberToDelete);
 			switch (result) {
 				case SUCCESS:
@@ -136,13 +154,29 @@ public class MemberResource {
 	}
 
 
-	@POST
+	@GET
 	@Path("byemail")
-	public Response checkMemberByEmail(Member member) {
-		if(member.getEmail() == null) {
+	public Response checkMemberByEmail(String json, @Context final HttpServletRequest request) {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String email;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("email");
+			if (jsonNode1 == null) {
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			email = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.NOT_FOUND).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		Optional<Member> findMember = dao.findByEmail(member.getEmail());
+
+		Optional<Member> findMember = dao.findByEmail(email);
 		if (!findMember.isPresent()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
