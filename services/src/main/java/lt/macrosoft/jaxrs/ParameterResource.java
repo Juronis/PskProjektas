@@ -36,27 +36,10 @@ public class ParameterResource {
     SecurityContext securityContext;
 
     @GET
-    @Path("get")
-    public Response findParameterValue(String json) throws ParseException, JOSEException {
+    @Path("get/{parameter}")
+    public Response findParameterValue(@PathParam("parameter") String parameter) throws ParseException, JOSEException {
         //String json = "{\"name\":\"MEMBERSHIP_PRICE\"}";
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode actualObj;
-        String parameter;
-        try {
-            actualObj = mapper.readTree(json);
-            JsonNode jsonNode1 = actualObj.get("name");
-            if (jsonNode1 == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
-            parameter = jsonNode1.textValue();
 
-        } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
 
 
         if(dao.findParameterValue(parameter).isPresent()){
