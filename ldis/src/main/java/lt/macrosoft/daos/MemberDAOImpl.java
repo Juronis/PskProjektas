@@ -34,7 +34,6 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 	}
 
 	public Optional<Member> findByEmail(String email) {
-
 		try {
 			return Optional.fromNullable(getEntityManager().createNamedQuery("Member.findByEmail", Member.class)
 					.setParameter("email", email).getSingleResult());
@@ -55,8 +54,6 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 
 	public Member save(Member member) {
 		em.persist(member);
-		  System.out.println("ciamember" + member.getId());
-		  System.out.println(getCount());
 		return member;
 	}
 	
@@ -81,5 +78,14 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 			return Exceptions.PERSISTENCE;
 		}
 		return Exceptions.SUCCESS;
+	}
+
+	@Override
+	public Member saveIfNotExists(Member member) {
+		Optional<Member> check = findByEmail(member.getEmail());
+		if (!check.isPresent()){
+			save(member);
+		}
+		return member;
 	}
 }

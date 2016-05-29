@@ -25,6 +25,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "SUMMERHOUSE", uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @NamedQueries({
         @NamedQuery(name = "Summerhouse.findByDistrict", query = "SELECT s FROM Summerhouse s WHERE s.district = :district"),
+        @NamedQuery(name = "Summerhouse.findByName", query = "SELECT s FROM Summerhouse s WHERE s.name = :name"),
         @NamedQuery(name = "Summerhouse.findAllCustom", query = "SELECT s FROM Summerhouse s WHERE s.district = :district AND s.price >= :priceMin AND s.numberOfPlaces >= :numPlaces")
 })
 public class Summerhouse {
@@ -58,12 +59,12 @@ public class Summerhouse {
     private District district;
     
     @NotNull
-	@Column(name = "DATEFROM")
-    private Date dateFrom;
+	@Column(name = "DATEFROM", length = 10)
+    private String dateFrom;
     
     @NotNull
-	@Column(name = "DATETO")
-    private Date dateTo; 
+	@Column(name = "DATETO",length = 10)
+    private String dateTo; 
     
     @OneToOne(
 		fetch = FetchType.LAZY,
@@ -72,7 +73,23 @@ public class Summerhouse {
 	@PrimaryKeyJoinColumn
 	protected ExtraActivities extraActivities;
     
-    //TODO: Add notnull
+    public String getDateFrom() {
+		return dateFrom;
+	}
+
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public String getDateTo() {
+		return dateTo;
+	}
+
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+
+	//TODO: Add notnull
     @Column(name = "PRICE")
     private double price;
 
