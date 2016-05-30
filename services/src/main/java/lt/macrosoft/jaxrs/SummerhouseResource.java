@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Stateless
 @Path("/summerhouses")
 public class SummerhouseResource {
 	@EJB
