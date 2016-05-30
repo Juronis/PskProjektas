@@ -1,12 +1,20 @@
-app.controller('userSettingsController', ['$scope', 'adminService', function ($scope, adminService) {
+app.controller('usersSettingsController', ['$scope', 'adminService', function ($scope, adminService) {
 
     $scope.successMessage = "";
     $scope.messageLog = "";
 
     var setFields = function () {
-        adminService.getUsersSettings().then(function (response) {
-            $scope.maxUsers = response.data.maxMembers;
-            $scope.membershipFee = response.data.membershipFee;
+        adminService.getSettings('max_members').then(function (response) {
+            $scope.maxUsers = parseInt(response.data.pvalue);
+        });
+        adminService.getSettings('membership_price').then(function (response) {
+           $scope. membershipFee = parseInt(response.data.pvalue);
+        });
+        adminService.getSettings('minimum_recommendations').then(function (response) {
+            $scope. minRecommendations = parseInt(response.data.pvalue);
+        });
+        adminService.getSettings('max_registration_days').then(function (response) {
+            $scope. maxReservation = parseInt(response.data.pvalue);
         });
     }
 
@@ -14,12 +22,24 @@ app.controller('userSettingsController', ['$scope', 'adminService', function ($s
 
     $scope.edit = function() {
         if($scope.userSettingsForm.$valid) {
-            var data = {
-                "maxMembers" : $scope.maxUsers,
-                "membershipFee" : $scope.membershipFee
-            }
-            adminService.editUsersSettings(data).then(function (response) {
-                $scope.successMessage = "Nustatymai atnaujinti";
+            var data = [{
+                    "name" : "MAX_MEMBERS",
+                    "pvalue" : $scope.maxUsers
+                },
+                {
+                    "name" : "MEMBERSHIP_PRICE",
+                    "pvalue" : $scope.membershipFee
+                },
+                {
+                    "name" : "MINIMUM_RECOMMENDATIONS",
+                    "pvalue" : $scope.minRecommendations
+                },
+                {
+                    "name" : "MAX_REGISTRATION_DAYS",
+                    "pvalue" : $scope.maxReservation
+                }]
+            adminService.updateSettings(data).then(function (response) {
+                $scope.successMessage = "Informacija atnaujinta";
             }).catch(function(response) {
                 //TODO: error handler
             });

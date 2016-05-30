@@ -1,19 +1,14 @@
 app.service('adminService', ['$http', function ($http) {
 
-    var baseUrl = "/frontend/services/resources/admin/";
+    var baseUrl = "/frontend/services/resources/parameters/";
 
-    this.getUsersSettings = function() {
-        var url = baseUrl + "membersSettings";
+    this.getSettings = function(data) {
+        var url = baseUrl + "get/"+data;
         return $http.get(url);
     }
 
-    this.setUsersSettings = function(data) {
-        var url = baseUrl + "setMembersSettings";
-        return $http.post(url, data);
-    }
-
-    this.addCredits = function(data) {
-        var url = baseUrl + "addCredits";
+    this.updateSettings = function(data) {
+        var url = baseUrl + "update";
         return $http.post(url, data);
     }
 

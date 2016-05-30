@@ -5,7 +5,6 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', 'aut
         userService.getUserDataByAuth().then(function(response) {
             $scope.user = response.data;
             currentEmail = $scope.user.email;
-            $scope.messageLog = $scope.user;
 
             var tempString = $scope.user.name.split(" ");
             $scope.name = tempString.slice(0, -1).join(" ");
@@ -47,14 +46,10 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', 'aut
     $scope.delete = function() {
         var answer = prompt("Įveskite slaptažodį", "");
         if(answer) {
-            answer = { "password" : answer };
-            userService.checkPassword(answer).then(function() {
-                userService.delete().then(function (response) {
-                    authService.logout();
-                    $state.go("main");
-                }).catch(function (response) {
-                    //TODO: error handling
-                });
+            var data = { "password" : answer };
+            userService.delete(data).then(function (response) {
+                authService.logout();
+                $state.go("main");
             }).catch(function (response) {
                 //TODO: error handling
             });
