@@ -1,9 +1,12 @@
 package lt.macrosoft.daos;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.*;
+import javax.ws.rs.core.Response;
 
 import com.google.common.base.Optional;
 
@@ -109,4 +112,20 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 		}
 		return Exceptions.METHOD_NOT_ALLOWED; //Kai Memberis yra ne kandidatas, t.y. Adminas arba fullmemeberis
 	}
+
+	public Boolean activeMembership(Member member){
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.add(Calendar.YEAR, 1);
+
+		if (member.getMembership() != null) {
+			if (member.getMembership().before(today)) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

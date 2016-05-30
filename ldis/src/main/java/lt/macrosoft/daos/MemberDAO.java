@@ -31,4 +31,6 @@ public interface MemberDAO extends GenericDAO<Member, Long> {
 
 	public Exceptions candidateToMember(Member member);
 
+	public Boolean activeMembership(Member member);
+
 }
