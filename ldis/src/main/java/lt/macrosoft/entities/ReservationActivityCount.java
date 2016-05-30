@@ -19,6 +19,9 @@ public class ReservationActivityCount {
 
     private Integer numOfActivity;
 
+    public ReservationActivityCount() {
+    }
+
     public ReservationActivityCount(Activity activity, Reservation reservation, Integer numOfActivity) {
         this.activity = activity;
         this.reservation = reservation;

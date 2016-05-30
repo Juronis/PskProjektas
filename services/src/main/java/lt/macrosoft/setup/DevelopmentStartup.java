@@ -90,7 +90,7 @@ public class DevelopmentStartup extends SystemStartup {
         summerhouse2.setDateFrom(dates[0]);
         summerhouse2.setDateTo(dates[0]);
         summerhouse2.setImageUrl("http://mstcontractors.com/mstc/images/stories/nice-house-main.jpg");
-        summerhouse.setActivityList(activities.subList(1, 3));
+        summerhouse2.setActivityList(activities.subList(1, 3));
         summerhouseDao.saveIfNotExists(summerhouse2);
 
 
@@ -167,8 +167,10 @@ public class DevelopmentStartup extends SystemStartup {
         reservation.setMember(member);
 
         reservationActivityCounts = new ArrayList<>();
-        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
-            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 2));
+        for (Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            ReservationActivityCount reservationActivityCount = new ReservationActivityCount(iActivity, reservation, 2);
+            reservationActivityCounts.add(reservationActivityCount);
+            reservationActivityCountDAO.save(reservationActivityCount);
         }
         reservation.setReservationActivityCounts(reservationActivityCounts);
         reservationDAO.saveIfNotExists(reservation);
@@ -184,8 +186,10 @@ public class DevelopmentStartup extends SystemStartup {
         reservation.setMember(member2);
 
         reservationActivityCounts = new ArrayList<>();
-        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
-            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 1));
+        for (Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            ReservationActivityCount reservationActivityCount = new ReservationActivityCount(iActivity, reservation, 1);
+            reservationActivityCounts.add(reservationActivityCount);
+            reservationActivityCountDAO.save(reservationActivityCount);
         }
         reservation.setReservationActivityCounts(reservationActivityCounts);
 
@@ -202,8 +206,10 @@ public class DevelopmentStartup extends SystemStartup {
         reservation.setMember(member);
 
         reservationActivityCounts = new ArrayList<>();
-        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
-            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 3));
+        for (Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            ReservationActivityCount reservationActivityCount = new ReservationActivityCount(iActivity, reservation, 3);
+            reservationActivityCounts.add(reservationActivityCount);
+            reservationActivityCountDAO.save(reservationActivityCount);
         }
         reservation.setReservationActivityCounts(reservationActivityCounts);
         reservationDAO.saveIfNotExists(reservation);
