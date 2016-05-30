@@ -47,15 +47,15 @@ public class DevelopmentStartup extends SystemStartup {
          * Activities
          ***********************************************/
 
-        activity = new Activity(lt.macrosoft.enums.Activity.BOAT.toString(), 6);
+        activity = new Activity(lt.macrosoft.enums.Activity.BOAT.toString().toLowerCase(), 6);
         activityDAO.save(activity);
-        activity = new Activity(lt.macrosoft.enums.Activity.CAYAK.toString(), 5);
+        activity = new Activity(lt.macrosoft.enums.Activity.CAYAK.toString().toLowerCase(), 5);
         activityDAO.save(activity);
-        activity = new Activity(lt.macrosoft.enums.Activity.TRAMPOLINE.toString(), 5);
+        activity = new Activity(lt.macrosoft.enums.Activity.TRAMPOLINE.toString().toLowerCase(), 5);
         activityDAO.save(activity);
-        activity = new Activity(lt.macrosoft.enums.Activity.SAUNA.toString(), 7);
+        activity = new Activity(lt.macrosoft.enums.Activity.SAUNA.toString().toLowerCase(), 7);
         activityDAO.save(activity);
-        activity = new Activity(lt.macrosoft.enums.Activity.TUB.toString(), 6);
+        activity = new Activity(lt.macrosoft.enums.Activity.TUB.toString().toLowerCase(), 6);
         activityDAO.save(activity);
         activities = activityDAO.findAll();
 

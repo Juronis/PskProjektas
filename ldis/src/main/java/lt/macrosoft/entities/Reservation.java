@@ -44,7 +44,7 @@ public class Reservation {
     @Temporal(TemporalType.DATE)
     @Column(name = "DATE_END")
     protected Date dateEnd;
-    
+
     @OneToMany
     protected List<ReservationActivityCount> reservationActivityCounts;
 
