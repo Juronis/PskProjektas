@@ -11,12 +11,12 @@ app.controller('headerController', ['$scope', '$rootScope', 'authService', 'user
             $scope.isAdmin = userService.isAdmin();
         }
         else {
-            $scope.isAuthenticated = 0;
+            $scope.isAuthenticated = false;
         }
     }
 
     var handleAuth2 = function() {
-
+        $scope.isAuthenticated = authService.isAuthenticated();
         if ($scope.isAuthenticated) {
             $scope.amount = userService.userCredits();
 
@@ -24,10 +24,10 @@ app.controller('headerController', ['$scope', '$rootScope', 'authService', 'user
             $scope.isMember = userService.isMember();
             $scope.isAdmin = userService.isAdmin();
 
+            //alert($scope.isMember+" --- "+userService.getRole());
         }
     }
 
-    handleAuth();
     handleAuth2();
 
     $scope.$on('authChanged', function () {

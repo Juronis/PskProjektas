@@ -1,4 +1,4 @@
-app.controller('menuController', ['$scope', '$rootScope', 'authService', function ($scope, $rootScope, authService) {
+app.controller('menuController', ['$scope', '$rootScope', 'authService', 'userService', function ($scope, $rootScope, authService, userService) {
 
     var handleAuth = function() {
         if(!$scope.isAuthenticated) {
@@ -7,6 +7,10 @@ app.controller('menuController', ['$scope', '$rootScope', 'authService', functio
         else {
             $scope.isAuthenticated = 0;
         }
+
+        userService.getCandidatesTotal().then(function (response) {
+            $scope.candidatesTotalNumber = response.data.total;
+        })
     }
 
     handleAuth();

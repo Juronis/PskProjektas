@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="alert alert-danger" ng-show="messageLog">
+        <strong>Klaida!</strong> {{ messageLog }}
+    </div>
+    <div class="alert alert-success" ng-show="successMessage">
+        <strong>Sėkminga!</strong> {{ successMessage }}
+    </div>
+    <div class="col-md-6">
+        <br/>
+        <h3>Registracijos formos redagavimas</h3>
+        Pasirinkite laukelius, kuriuos registracijos metu turės užpildyti vartotojas<br />
+        <br />
+        <form method="post" role="form" name="registrationFormForm" ng-submit="edit()">
+            <div class="input-group" id="email">
+                <span class="input-group-addon" id="basic-addon1">Gimimo data</span>
+                <select class="form-control" aria-describedby="basic-addon1" ng-model="birthday" required>
+                    <option value="true">Taip</option>
+                    <option value="false">Ne</option>
+                </select>
+            </div>
+            <br/>
+
+            <button type="submit" class="btn btn-success">Atnaujinti</button>
+            <button type="reset" class="btn btn-default">Valyti laukelius</button>
+        </form>
+
+    </div>
+</div>

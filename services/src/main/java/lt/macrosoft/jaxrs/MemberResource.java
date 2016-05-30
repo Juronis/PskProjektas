@@ -221,7 +221,7 @@ public class MemberResource {
 	}
 
 
-	@GET
+	@POST
 	@Path("byemail")
 	public Response checkMemberByEmail(String json, @Context final HttpServletRequest request) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -285,8 +285,11 @@ public class MemberResource {
 	 * Helper methods
 	 */	
 	private Optional<Member> getAuthMember(HttpServletRequest request) throws ParseException, JOSEException {
-		String subject = AuthUtils.getSubject(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-		return dao.getMemberById(Long.parseLong(subject));
+				String subject = AuthUtils.getSubject(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+				if (subject == "0") {
+					return Optional.absent();
+				}
+				return dao.getMemberById(Long.parseLong(subject));
 	}
 
 }
