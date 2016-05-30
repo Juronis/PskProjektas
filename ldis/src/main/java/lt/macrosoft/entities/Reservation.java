@@ -1,5 +1,7 @@
 package lt.macrosoft.entities;
 
+import com.fasterxml.jackson.annotation.*;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,14 +20,13 @@ import javax.validation.constraints.NotNull;
                 query = "SELECT r FROM Reservation r " +
                         " WHERE r.member = :member AND r.dateStart = :dateStart AND r.dateEnd = :dateEnd AND r.summerhouse = :summerhouse")
 })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Reservation {
 
     @Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-   // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
-   // @SequenceGenerator(name = "id", sequenceName = "hibernate_sequence")
     protected Long id;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "SUMMERHOUSE")

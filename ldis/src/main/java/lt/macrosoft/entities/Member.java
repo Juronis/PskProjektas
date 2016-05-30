@@ -3,11 +3,12 @@ package lt.macrosoft.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lt.macrosoft.enums.Role;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -19,7 +20,6 @@ import java.util.Set;
 	@NamedQuery(name = "Member.findByToken", query = "SELECT m FROM Member m WHERE m.logintoken = :logintoken"),
 	@NamedQuery(name = "Member.findCandidates", query = "SELECT m FROM Member m WHERE m.role = :role")
 })
-
 public class Member {
 
 	@Id
@@ -72,8 +72,9 @@ public class Member {
 		this.creditAmount = creditAmount;
 	}
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "member")
-	protected Set<Reservation> reservations = new HashSet<>();
+	protected List<Reservation> reservations = new ArrayList<>();
 
 	public Member() {
 	}
@@ -94,7 +95,7 @@ public class Member {
 		this.name = name;
 	}
 
-	public Set<Reservation> getReservations() {
+	public List<Reservation> getReservations() {
 		return reservations;
 	}
 
