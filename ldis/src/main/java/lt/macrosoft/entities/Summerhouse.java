@@ -57,7 +57,7 @@ public class Summerhouse {
 
     @NotNull
     @Column(name = "PRICE")
-    private double price;
+    private int price;
 
     @JoinTable(name = "SUMMERHOUSE_ACTIVITIES",
             joinColumns = {
@@ -98,11 +98,11 @@ public class Summerhouse {
         this.id = id;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
