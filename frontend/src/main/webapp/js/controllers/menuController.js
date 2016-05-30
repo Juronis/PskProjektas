@@ -3,17 +3,32 @@ app.controller('menuController', ['$scope', '$rootScope', 'authService', 'userSe
     var handleAuth = function() {
         if(!$scope.isAuthenticated) {
             $scope.isAuthenticated = authService.isAuthenticated();
+
+            userService.getUserDataByAuth().then(function (response) {
+                $scope.amount = response.data.credits;
+                $scope.isCandidate = userService.isCandidate(response.data.role);
+                $scope.isMember = userService.isMember(response.data.role);
+                $scope.isAdmin = userService.isAdmin(response.data.role);
+            });
         }
         else {
-            $scope.isAuthenticated = 0;
+            $scope.isAuthenticated = false;
         }
-
-        userService.getCandidatesTotal().then(function (response) {
-            $scope.candidatesTotalNumber = response.data.total;
-        })
     }
 
-    handleAuth();
+    var handleAuth2 = function() {
+        $scope.isAuthenticated = authService.isAuthenticated();
+        if ($scope.isAuthenticated) {
+            userService.getUserDataByAuth().then(function (response) {
+                $scope.amount = response.data.credits;
+                $scope.isCandidate = userService.isCandidate(response.data.role);
+                $scope.isMember = userService.isMember(response.data.role);
+                $scope.isAdmin = userService.isAdmin(response.data.role);
+            });
+        }
+    }
+
+    handleAuth2();
 
     $scope.$on('authChanged', function () {
         handleAuth();

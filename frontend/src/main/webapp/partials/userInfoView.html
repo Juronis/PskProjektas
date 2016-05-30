@@ -1,0 +1,23 @@
+<div class="row">
+    <h3><strong>{{ user.name }}</strong> profilis</h3>
+
+    <table class="table">
+        <tr>
+            <td>Vardas Pavardė</td>
+            <td>{{ user.name }}</td>
+        </tr>
+        <tr>
+            <td>El. paštas</td>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <td>Statusas</td>
+            <td>{{ user.role }}</td>
+        </tr>
+    </table>
+
+    <a ui-sref="editUser({ userId: {{ userId }} })" ng-show="isAdmin">
+        <button type="button" class="btn btn-default">Redaguoti nario profilį</button>
+    </a>
+
+</div>

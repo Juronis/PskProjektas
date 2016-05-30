@@ -15,17 +15,11 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/login",
                 controller: 'loginController',
                 templateUrl: 'partials/loginView.html',
-                data: {
-                    requireLogin: false
-                }
             })
             .state('register', {
                 url: "/register",
                 controller: 'registerController',
                 templateUrl: 'partials/registerView.html',
-                data: {
-                    requireLogin: false
-                }
             })
             .state('usersList', {
                 url: "/usersList",
@@ -61,6 +55,16 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/admin/registrationForm",
                 controller: 'registrationFormController',
                 templateUrl: 'partials/admin/registrationFormView.html'
+            })
+            .state('userInfo', {
+                url: "/user/:userId",
+                controller: 'userInfoController',
+                templateUrl: 'partials/userInfoView.html'
+            })
+            .state('editUser', {
+                url: "/admin/editUser/:userId",
+                controller: 'editUserController',
+                templateUrl: 'partials/admin/editUserView.html'
             });
 
         $locationProvider.html5Mode({
