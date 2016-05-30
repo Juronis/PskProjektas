@@ -73,7 +73,7 @@ public class Member {
 	}
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	protected List<Reservation> reservations = new ArrayList<>();
 
 	public Member() {

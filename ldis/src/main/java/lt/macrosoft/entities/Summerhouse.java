@@ -33,36 +33,45 @@ public class Summerhouse {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "summerhouse", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "summerhouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     protected List<Reservation> reservations = new ArrayList<>();
+    
     @OneToOne(
             fetch = FetchType.EAGER,
             optional = true
     )
     @PrimaryKeyJoinColumn
     protected ExtraActivities extraActivities;
+    
     @NotNull
     @Column(name = "NAME", length = 50)
     private String name;
+    
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
+    
     @Column(name = "NUMBEROFPLACES")
     private Integer numberOfPlaces;
+    
     @Column(name = "IMAGEURL")
     private String imageUrl;
+    
     @NotNull
     @Column(name = "DISTRICT")
     @Enumerated(EnumType.STRING)
     private District district;
+    
     @NotNull
     @Column(name = "DATEFROM", length = 10)
     @Temporal(TemporalType.DATE)
     private Date dateFrom;
+    
     @NotNull
     @Column(name = "DATETO", length = 10)
     @Temporal(TemporalType.DATE)
     private Date dateTo;
-    //TODO: Add notnull
+    
+    @NotNull
     @Column(name = "PRICE")
     private double price;
 
