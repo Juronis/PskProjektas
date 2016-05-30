@@ -61,16 +61,18 @@ public class ApprovalResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response sendEmails(List<String> emailList) {
-        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        if(member == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
+    public Response sendEmails(List<String> emailList) throws ParseException, JOSEException {
+
+        Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        System.out.println("gavo");
+        if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
+        Member member1 = member.get();
 
         List<Future<MailStatus>> statusList = new ArrayList<>();
         List<Approval> approvals = new ArrayList<>();
         for (String email : emailList) {
             statusList.add(mailerBean.sendMessage(email));
-            approvals.add(new Approval(email, member.getEmail()));
+            approvals.add(new Approval(email, member1.getEmail()));
         }
 
         for (Approval approval : approvals) {
@@ -85,12 +87,12 @@ public class ApprovalResource {
     @Path("approver/candidates")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getApproverCandidatesEmailList() {
-        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        if (member == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
+    public Response getApproverCandidatesEmailList(@Context final HttpServletRequest request) throws ParseException, JOSEException {
+        Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
+        Member member1 = member.get();
 
-        Optional<List<Approval>> approvals = approvalDAO.findByApproverEmail(member.getEmail());
+        Optional<List<Approval>> approvals = approvalDAO.findByApproverEmail(member1.getEmail());
         if (approvals.isPresent())
             return Response.ok().entity(approvals.get()).build();
         else {
@@ -112,12 +114,12 @@ public class ApprovalResource {
 
     @Path("approver/approve/{email}")
     @POST
-    public Response approve(@PathParam("email") String candidateEmail) {
-        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        if(member == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
+    public Response approve(@PathParam("email") String candidateEmail) throws ParseException, JOSEException {
+        Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
+        Member member1 = member.get();
 
-        String userEmail = member.getEmail();
+        String userEmail = member1.getEmail();
 
         Optional<Approval> approval = approvalDAO.findByCandidateAndApprover(candidateEmail, userEmail);
         if (approval.isPresent()) {
@@ -129,4 +131,5 @@ public class ApprovalResource {
         }
         return Response.status(Response.Status.NOT_FOUND).entity(Error.DB_APPROVAL_NOT_FOUND).build();
     }
+
 }
