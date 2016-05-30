@@ -11,6 +11,8 @@ public interface MemberDAO extends GenericDAO<Member, Long> {
 
 	public Optional<Member> getMemberById(Long id);
 
+	public Member saveIfNotExists(Member member);
+
 	public Member save(Member member);
 
 	public Optional<Member> findByEmail(String email);

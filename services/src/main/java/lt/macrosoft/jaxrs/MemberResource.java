@@ -2,7 +2,10 @@ package lt.macrosoft.jaxrs;
 
 import com.nimbusds.jose.JOSEException;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import javax.ejb.Stateful;
@@ -14,6 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 
+import lt.macrosoft.daos.ParameterDAO;
 import lt.macrosoft.enums.Exceptions;
 import lt.macrosoft.jaxrs.Error;
 import lt.macrosoft.security.Secured;
@@ -22,8 +26,10 @@ import com.google.common.base.Optional;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
 import lt.macrosoft.utils.PasswordService;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Path("/members")
 @Stateless
@@ -33,6 +39,9 @@ public class MemberResource {
 
 	@Inject
 	MemberDAO dao;
+
+	@Inject
+	ParameterDAO par;
 
 	@Context
 	SecurityContext securityContext;
@@ -78,10 +87,26 @@ public class MemberResource {
 
 	@POST
 	@Path("delete")
-	public Response deleteMember(Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
-		if (member.getPassword() == null){
+	public Response deleteMember(String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String password;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("password");
+			if (jsonNode1 == null) {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			password = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
+
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
 			return Response
@@ -89,8 +114,7 @@ public class MemberResource {
 					.entity(Error.DB_DELETE).build();
 		}
 		Member memberToDelete = foundUser.get();
-		if (PasswordService.checkPassword(member.getPassword(), memberToDelete.getPassword())) {
-		//if (memberToDelete.getPassword() == PasswordService.hashPassword(member.getPassword())) {
+		if (PasswordService.checkPassword(password, memberToDelete.getPassword())) {
 			Exceptions result = dao.deleteMember(memberToDelete);
 			switch (result) {
 				case SUCCESS:
@@ -105,6 +129,67 @@ public class MemberResource {
 		}
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
+
+	@POST
+	@Path("delete/{id}")
+	public Response deleteMemberByAdmin(@PathParam("id") Long id, String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String password;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("password");
+			if (jsonNode1 == null) {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			password = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+
+		Optional<Member> adminUser = getAuthMember(request);
+		if (!adminUser.isPresent()) {
+			return Response
+					.status(Status.GONE)
+					.entity(Error.DB_DELETE).build();
+		}
+		Member adminMember = adminUser.get();
+
+		if (adminMember.getId() == id) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (PasswordService.checkPassword(password, adminMember.getPassword())) {
+
+			Optional<Member> memberToDelete = dao.getMemberById(id);
+			if (!memberToDelete.isPresent()) {
+				return Response
+						.status(Status.GONE)
+						.entity(Error.DB_DELETE).build();
+			}
+
+
+			Exceptions result = dao.deleteMember(memberToDelete.get());
+
+			switch (result) {
+				case SUCCESS:
+					return Response.ok().build();
+				case OPTIMISTIC:
+					return Response.status(Status.FORBIDDEN).build();
+				case PERSISTENCE:
+					return Response.status(Status.REQUEST_TIMEOUT).build();
+				default:
+					return Response.status(Status.NOT_FOUND).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+	}
+
 
 	@POST
 	@Path("update")
@@ -136,17 +221,65 @@ public class MemberResource {
 	}
 
 
-	@POST
+	@GET
 	@Path("byemail")
-	public Response checkMemberByEmail(Member member) {
-		if(member.getEmail() == null) {
+	public Response checkMemberByEmail(String json, @Context final HttpServletRequest request) {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String email;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("email");
+			if (jsonNode1 == null) {
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			email = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.NOT_FOUND).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		Optional<Member> findMember = dao.findByEmail(member.getEmail());
+
+		Optional<Member> findMember = dao.findByEmail(email);
 		if (!findMember.isPresent()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.status(Status.OK).build();
+	}
+
+	@GET
+	@Path("membership")
+	public Response buyMembership(@Context final HttpServletRequest request) throws ParseException, JOSEException {
+		Optional<Member> foundUser = getAuthMember(request);
+		if (!foundUser.isPresent()) {
+			return Response
+					.status(Status.UNAUTHORIZED).build(); //Nerastas toks member
+		}
+		Member member = foundUser.get();
+
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.add(Calendar.YEAR, 1);
+		Date nextYear = cal.getTime();
+
+		if (member.getMembership() != null) {
+			if (member.getMembership().after(today)) {
+				return Response.status(Status.METHOD_NOT_ALLOWED).build(); //Jei dar galioja
+			}
+		}
+
+		Integer price = Integer.parseInt(par.findParameterValue("MEMBERSHIP_PRICE").get().getPvalue());
+		if (member.getCreditAmount() >= price) {
+			member.setMembership(nextYear);
+			member.setCreditAmount(member.getCreditAmount() - price);
+			dao.save(member);
+			return Response.status(Status.OK).build();  //pavyko gauti prenumerata
+		} else {
+			return Response.status(Status.PAYMENT_REQUIRED).build(); //nepakanka credito
+		}
 	}
 	/*
 	 * Helper methods

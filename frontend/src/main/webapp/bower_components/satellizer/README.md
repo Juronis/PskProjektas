@@ -460,7 +460,7 @@ use after page reload.
 - Go to **Settings** tab
 - Under *Application Type* select **Read and Write** access
 - Check the box **Allow this application to be used to Sign in with Twitter**
-- Click **Update this Twitter's applications settings**
+- Click **Update this Twitter's applications parameter**
 
 <hr>
 
@@ -478,7 +478,7 @@ As a workaround for local development add `127.0.0.1 mylocalwebsite.net` to **/e
 and specify `mylocalwebsite.net` as your *Redirect URL* in the **API Settings** tab.
 
 <img src="https://camo.githubusercontent.com/7318ebef474f99229892e6bf052f0117ca86f0e4/68747470733a2f2f6769746875622e676c6f62616c2e73736c2e666173746c792e6e65742f696d616765732f6d6f64756c65732f6c6f676f735f706167652f4769744875622d4c6f676f2e706e67" width="150">
-- Visit [https://github.com/settings/profile](https://github.com/settings/profile)
+- Visit [https://github.com/parameter/profile](https://github.com/parameter/profile)
 - Select **Applications** in the left panel
 - Go to **Developer applications** tab, then click on the **Register new application** button
  - **Application name**: Your app name
@@ -780,7 +780,7 @@ $auth.setStorageType('sessionStorage');
 
 #### :question: Can I change `redirectUri` to something other than base URL?
 
-By default, `redirectUri` is set to `window.location.origin` (protocol, hostname, port number of a URL) for all OAuth providers. This `redirectUri` must match *exactly* the URL¹ specified in your OAuth app settings.
+By default, `redirectUri` is set to `window.location.origin` (protocol, hostname, port number of a URL) for all OAuth providers. This `redirectUri` must match *exactly* the URL¹ specified in your OAuth app parameter.
 
 **Facebook (example)**
 ![](http://i.imgur.com/eaykgcZ.png)
@@ -796,7 +796,7 @@ window.location.origin + '/auth/facebook/google/callback'
 
 Using the example above, a popup window will be redirected to `http://localhost:3000/auth/facebook/callback?code=YOUR_AUTHORIZATION_CODE` after a successful Facebook authorization. To avoid potential 404 errors, create server routes for each `redirectUri` URL that return **200 OK**. Or alternatively, you may render a custom template with a loading spinner. For the moment, a popup will not stay long enough to see that custom template, due to 20ms interval polling, but in the future I may add support for overriding this polling interval value.
 
-As far as Satellizer is concerned, it does not matter what is the value of `redirectUri` as long as it matches URL in your OAuth app settings. Satellizer's primary concern is to read URL query/hash parameters, then close a popup.
+As far as Satellizer is concerned, it does not matter what is the value of `redirectUri` as long as it matches URL in your OAuth app parameter. Satellizer's primary concern is to read URL query/hash parameters, then close a popup.
 
 ¹ **Note:** Depending on the OAuth provider, it may be called *Site URL*, *Callback URL*, *Redirect URL*, and so on.
 

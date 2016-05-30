@@ -6,10 +6,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import com.google.common.base.Optional;
 
+import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Reservation;
+import lt.macrosoft.entities.Summerhouse;
 
 /**
  * Created by Arnas on 2016-05-26.
@@ -50,10 +53,49 @@ public class ReservationDAOImpl  extends GenericDAOImpl<Reservation, Long> imple
     }
 
     @Override
+    public Optional<List<Reservation>> findByDate(Date dateStart, Date dateEnd) {
+        return Optional.fromNullable(
+                getEntityManager().createNamedQuery("Reservation.findByDate", Reservation.class)
+                        .setParameter("dateStart", dateStart)
+                        .setParameter("dateEnd", dateEnd)
+                .getResultList()
+        );
+    }
+
+    @Override
+    public Optional<Reservation> findUnique(Member member, Summerhouse summerhouse, Date dateStart, Date dateEnd) {
+        try {
+            return Optional.fromNullable(getEntityManager().createNamedQuery("Reservation.findUnique", Reservation.class)
+                    .setParameter("dateStart", dateStart)
+                    .setParameter("dateEnd", dateEnd)
+                    .setParameter("member", member)
+                    .setParameter("summerhouse", summerhouse)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.absent();
+        }
+    }
+
+    @Override
     public Reservation save(Reservation reservation) {
         em.persist(reservation);
         System.out.println("persist reservation" + reservation.toString());
         System.out.println(getCount());
         return reservation;
-    }	
+    }
+
+    @Override
+    public boolean saveIfNotExists(Reservation reservation) {
+        Optional<Reservation> check= findUnique(
+                reservation.getMember(),
+                reservation.getSummerhouse(),
+                reservation.getDateStart(),
+                reservation.getDateEnd()
+        );
+        if (!check.isPresent()){
+            save(reservation);
+            return true;
+        }
+        return false;
+    }
 }

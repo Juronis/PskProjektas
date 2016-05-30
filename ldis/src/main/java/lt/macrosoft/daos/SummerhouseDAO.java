@@ -12,5 +12,7 @@ public interface SummerhouseDAO extends GenericDAO<Summerhouse, Long> {
     Optional<List<Summerhouse>> findByDistrict(District district);
     Optional<List<Summerhouse>> findAllCustom(District district, double priceMin, int numPlaces);
     Summerhouse save(Summerhouse summerhouse);
+    Summerhouse saveIfNotExists(Summerhouse summerhouse);
+    public Optional<Summerhouse> findByName(String name);
     public Exceptions deleteSummerhouse(Summerhouse summerhouse);
 }

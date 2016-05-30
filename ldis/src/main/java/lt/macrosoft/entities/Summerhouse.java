@@ -2,25 +2,16 @@ package lt.macrosoft.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "SUMMERHOUSE", uniqueConstraints = @UniqueConstraint(columnNames = {"NAME"}))
 @NamedQueries({
         @NamedQuery(name = "Summerhouse.findByDistrict", query = "SELECT s FROM Summerhouse s WHERE s.district = :district"),
+        @NamedQuery(name = "Summerhouse.findByName", query = "SELECT s FROM Summerhouse s WHERE s.name = :name"),
         @NamedQuery(name = "Summerhouse.findAllCustom", query = "SELECT s FROM Summerhouse s WHERE s.district = :district AND s.price >= :priceMin AND s.numberOfPlaces >= :numPlaces")
 })
 public class Summerhouse {
@@ -52,8 +43,41 @@ public class Summerhouse {
 	@Column(name = "DISTRICT")
 	@Enumerated(EnumType.STRING)
     private District district;
+    
+    @NotNull
+	@Column(name = "DATEFROM", length = 10)
+    @Temporal(TemporalType.DATE)
+    private Date dateFrom;
+    
+    @NotNull
+	@Column(name = "DATETO",length = 10)
+    @Temporal(TemporalType.DATE)
+    private Date dateTo;
+    
+    @OneToOne(
+		fetch = FetchType.LAZY,
+		optional = true
+	)
+	@PrimaryKeyJoinColumn
+	protected ExtraActivities extraActivities;
+    
+    public Date getDateFrom() {
+		return dateFrom;
+	}
 
-    //TODO: Add notnull
+	public void setDateFrom(Date dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public Date getDateTo() {
+		return dateTo;
+	}
+
+	public void setDateTo(Date dateTo) {
+		this.dateTo = dateTo;
+	}
+
+	//TODO: Add notnull
     @Column(name = "PRICE")
     private double price;
 
