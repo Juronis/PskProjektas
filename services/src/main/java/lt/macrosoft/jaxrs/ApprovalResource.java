@@ -1,5 +1,8 @@
 package lt.macrosoft.jaxrs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.beans.ApprovalStatelessBean;
@@ -22,6 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +68,6 @@ public class ApprovalResource {
     public Response sendEmails(List<String> emailList) throws ParseException, JOSEException {
 
         Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        System.out.println("gavo");
         if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
         Member member1 = member.get();
 
@@ -112,14 +115,35 @@ public class ApprovalResource {
         }
     }
 
-    @Path("approver/approve/{email}")
+    @Path("approver/approve")
     @POST
-    public Response approve(@PathParam("email") String candidateEmail) throws ParseException, JOSEException {
+    public Response approve(String json) throws ParseException, JOSEException {
         Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
         if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
         Member member1 = member.get();
 
         String userEmail = member1.getEmail();
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj;
+        String candidateEmail;
+        try {
+            actualObj = mapper.readTree(json);
+            JsonNode jsonNode1 = actualObj.get("password");
+            if (jsonNode1 == null) {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+            candidateEmail = jsonNode1.textValue();
+
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
 
         Optional<Approval> approval = approvalDAO.findByCandidateAndApprover(candidateEmail, userEmail);
         if (approval.isPresent()) {
