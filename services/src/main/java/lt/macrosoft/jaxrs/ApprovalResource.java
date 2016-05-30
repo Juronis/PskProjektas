@@ -150,8 +150,17 @@ public class ApprovalResource {
             Approval approvalValue = approval.get();
             approvalValue.setApproved(true);
             approvalDAO.save(approvalValue);
-            approvalStatelessBean.tryToMakeFullMember(candidateEmail);
-            return Response.ok().build();
+            if (approvalStatelessBean.tryToMakeFullMember(candidateEmail)) {
+
+                Optional<Member> memberAprove = memberDAO.findByEmail(candidateEmail);
+                if (!memberAprove.isPresent()) {
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
+                Member memberUpdate = memberAprove.get();
+                memberUpdate.setRole(Role.FULLUSER);
+                memberDAO.save(memberUpdate);
+                return Response.ok().build();
+            }
         }
         return Response.status(Response.Status.NOT_FOUND).entity(Error.DB_APPROVAL_NOT_FOUND).build();
     }
