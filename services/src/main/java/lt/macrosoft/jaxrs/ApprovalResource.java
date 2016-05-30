@@ -130,7 +130,7 @@ public class ApprovalResource {
         String candidateEmail;
         try {
             actualObj = mapper.readTree(json);
-            JsonNode jsonNode1 = actualObj.get("password");
+            JsonNode jsonNode1 = actualObj.get("email");
             if (jsonNode1 == null) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
