@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 
 import lt.macrosoft.daos.ParameterDAO;
 import lt.macrosoft.enums.Exceptions;
+import lt.macrosoft.enums.Role;
 import lt.macrosoft.jaxrs.Error;
 import lt.macrosoft.security.Secured;
 import lt.macrosoft.utils.AuthUtils;
@@ -83,6 +84,7 @@ public class MemberResource {
 		return Response.ok().entity(member.get()).build();
 	}
 
+	@Secured({Role.FULLUSER, Role.CANDIDATE})
 	@POST
 	@Path("delete")
 	public Response deleteMember(String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
@@ -127,7 +129,7 @@ public class MemberResource {
 		}
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
-
+	@Secured({Role.ADMIN})
 	@POST
 	@Path("delete/{id}")
 	public Response deleteMemberByAdmin(@PathParam("id") Long id, String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
@@ -188,7 +190,7 @@ public class MemberResource {
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-
+	@Secured({Role.ADMIN, Role.CANDIDATE, Role.FULLUSER})
 	@POST
 	@Path("update")
 	public Response updateMember(final Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
@@ -259,7 +261,8 @@ public class MemberResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@GET
+	@Secured({Role.FULLUSER, Role.ADMIN})
+	@POST
 	@Path("membership")
 	public Response buyMembership(@Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
@@ -291,6 +294,7 @@ public class MemberResource {
 		}
 	}
 
+	@Secured({Role.ADMIN})
 	@POST
 	@Path("addcredit")
 	public Response addCredit(String json) throws ParseException, JOSEException {
