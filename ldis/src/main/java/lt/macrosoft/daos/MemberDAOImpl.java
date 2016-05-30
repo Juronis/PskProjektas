@@ -92,6 +92,6 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 
 	public List<Member> findCandidates(){
 		return getEntityManager().createNamedQuery("Member.findByRole", Member.class)
-				.setParameter("role", "ROLE").getResultList();
+				.setParameter("role", "CANDIDATES").getResultList();
 	}
 }
