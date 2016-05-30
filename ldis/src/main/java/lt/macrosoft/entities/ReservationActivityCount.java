@@ -51,4 +51,14 @@ public class ReservationActivityCount {
     public void setNumOfActivity(Integer numOfActivity) {
         this.numOfActivity = numOfActivity;
     }
+
+    @Override
+    public String toString() {
+        return "ReservationActivityCount{" +
+                "id=" + id +
+                ", activity=" + activity +
+                ", reservation=" + reservation +
+                ", numOfActivity=" + numOfActivity +
+                '}';
+    }
 }
