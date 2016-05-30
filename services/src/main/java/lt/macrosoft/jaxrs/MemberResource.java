@@ -226,6 +226,12 @@ public class MemberResource {
 		return Response.ok().entity(dao.findCandidates()).build();
 	}
 
+	@GET
+	@Path("all/adminsmembers")
+	public Response sendAdminsMembers() {
+		return Response.ok().entity(dao.findAdminsMembers()).build();
+	}
+
 	@POST
 	@Path("byemail")
 	public Response checkMemberByEmail(String json, @Context final HttpServletRequest request) {

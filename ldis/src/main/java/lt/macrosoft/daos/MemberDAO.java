@@ -29,4 +29,6 @@ public interface MemberDAO extends GenericDAO<Member, Long> {
 
 	public List<Member> findCandidates();
 
+	public List<Member> findAdminsMembers();
+
 }
