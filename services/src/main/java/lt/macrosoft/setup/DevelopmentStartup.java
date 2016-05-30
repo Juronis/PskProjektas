@@ -51,7 +51,7 @@ public class DevelopmentStartup extends SystemStartup {
         /************************************************
          * Summerhouses
          ***********************************************/
-
+/*
         // 1
         dates = DateUtils.generateDateDuration("2016-01-01", "2017-01-01");
 
@@ -83,7 +83,7 @@ public class DevelopmentStartup extends SystemStartup {
         /************************************************
          * Members
          ***********************************************/
-
+/*
         Member admin = new Member();
         admin.setEmail("admin@admin.com");
         admin.setName("admin");
@@ -143,7 +143,7 @@ public class DevelopmentStartup extends SystemStartup {
         /************************************************
          * Reservations
          ***********************************************/
-
+/*
         // 1
         Reservation reservation = new Reservation();
         date = DateUtils.generateDate("2016-02-03");
@@ -176,7 +176,7 @@ public class DevelopmentStartup extends SystemStartup {
         reservation.setSummerhouse(summerhouse2);
         reservation.setMember(member);
         reservationDAO.saveIfNotExists(reservation);
-
+*/
 
     }
 }

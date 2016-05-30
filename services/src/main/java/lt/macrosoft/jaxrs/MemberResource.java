@@ -55,9 +55,7 @@ public class MemberResource {
 	
 	@GET
 	@Path("byauth")
-	public Response sendMemberByAuth(@Context HttpServletRequest request) throws ParseException, JOSEException {
-		System.out.println("bent bande");
-		String subject = AuthUtils.getSubject(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+	public Response sendMemberByAuth(@Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> memberis = getAuthMember(request);
 		if (!memberis.isPresent()) {
 			return Response.status(Status.NOT_FOUND).build();
