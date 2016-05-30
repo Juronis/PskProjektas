@@ -1,20 +1,22 @@
 package lt.macrosoft.beans;
 
-import com.google.common.base.Optional;
-import lt.macrosoft.daos.ReservationDAO;
-import lt.macrosoft.entities.Member;
-import lt.macrosoft.entities.Reservation;
-import lt.macrosoft.entities.Summerhouse;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.core.MultivaluedMap;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.ws.rs.core.MultivaluedMap;
+
+import com.google.common.base.Optional;
+
+import lt.macrosoft.daos.ParameterDAO;
+import lt.macrosoft.daos.ReservationDAO;
+import lt.macrosoft.entities.Member;
+import lt.macrosoft.entities.Reservation;
+import lt.macrosoft.entities.Summerhouse;
 
 /**
  * Created by Arnas on 2016-05-26.
@@ -23,6 +25,9 @@ import java.util.List;
 public class SummerhouseStatelessBean {
     @Inject
     ReservationDAO reservationDAO;
+    
+    @Inject
+	ParameterDAO parameterDAO;
 
     public SummerhouseStatelessBean() {
     }
@@ -57,6 +62,8 @@ public class SummerhouseStatelessBean {
         reservation.setDateEnd(dateEnd);
         reservation.setMember(member);
         reservation.setSummerhouse(summerhouse);
+        member.addReservation(reservation);
+        member.setCreditAmount(member.getCreditAmount() - summerhouse.getPrice());
         reservationDAO.save(reservation);
         return reservation.getId() != null;
     }

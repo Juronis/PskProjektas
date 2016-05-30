@@ -134,6 +134,8 @@ public class SummerhouseResource {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
 		Member member = memberDAO.findById(Long.getLong(userId));
+		return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_NOT_POSSIBLE).build();
+
 		Summerhouse summerhouse = summerhouseDAO.findById(id);
 
 		if (member.getCreditAmount() < summerhouse.getPrice()) {

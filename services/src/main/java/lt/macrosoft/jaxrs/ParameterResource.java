@@ -29,6 +29,8 @@ import com.nimbusds.jose.JOSEException;
 
 import lt.macrosoft.daos.ParameterDAO;
 import lt.macrosoft.entities.Parameter;
+import lt.macrosoft.enums.Role;
+import lt.macrosoft.security.Secured;
 
 /**
  * Created by Main on 5/29/2016.
@@ -47,6 +49,7 @@ public class ParameterResource {
     @Context
     SecurityContext securityContext;
 
+    @Secured({Role.ADMIN})
     @GET
     @Path("get/{parameter}")
     public Response findParameterValue(@PathParam("parameter") String parameter) throws ParseException, JOSEException {
@@ -61,6 +64,7 @@ public class ParameterResource {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
+    @Secured({Role.ADMIN})
     @POST
     @Path("update")
     public Response updateParameterValue(String json) throws ParseException, JOSEException {

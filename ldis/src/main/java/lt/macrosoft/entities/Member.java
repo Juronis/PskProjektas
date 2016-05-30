@@ -63,6 +63,10 @@ public class Member {
 	@Column(name = "MEMBERSHIP_UNTIL")
 	@Temporal(TemporalType.DATE)
 	private Date membership;
+		
+	@Column(name = "BIRTHDAY")
+	@Temporal(TemporalType.DATE)
+	private Date birthday;
 
 	public int getCreditAmount() {
 		return creditAmount;
@@ -156,4 +160,35 @@ public class Member {
 		this.membership = membership;
 	}
 
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+	
+	public Reservation addReservation(Reservation addableReservation){
+		try{
+			this.getReservations().add(addableReservation);
+			return addableReservation;
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public static Boolean activeMembership(Member member){
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.add(Calendar.YEAR, 1);
+
+		if (member.getMembership() != null) {
+			if (member.getMembership().before(today)) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
 }

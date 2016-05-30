@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 
 import lt.macrosoft.daos.ParameterDAO;
 import lt.macrosoft.enums.Exceptions;
+import lt.macrosoft.enums.Role;
 import lt.macrosoft.jaxrs.Error;
 import lt.macrosoft.security.Secured;
 import lt.macrosoft.utils.AuthUtils;
@@ -83,6 +84,7 @@ public class MemberResource {
 		return Response.ok().entity(member.get()).build();
 	}
 
+	@Secured({Role.FULLUSER, Role.CANDIDATE})
 	@POST
 	@Path("delete")
 	public Response deleteMember(String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
@@ -127,7 +129,7 @@ public class MemberResource {
 		}
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
-
+	@Secured({Role.ADMIN})
 	@POST
 	@Path("delete/{id}")
 	public Response deleteMemberByAdmin(@PathParam("id") Long id, String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
@@ -188,7 +190,7 @@ public class MemberResource {
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-
+	@Secured({Role.ADMIN, Role.CANDIDATE, Role.FULLUSER})
 	@POST
 	@Path("update")
 	public Response updateMember(final Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
@@ -259,7 +261,8 @@ public class MemberResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@GET
+	@Secured({Role.FULLUSER, Role.ADMIN})
+	@POST
 	@Path("membership")
 	public Response buyMembership(@Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
@@ -291,16 +294,46 @@ public class MemberResource {
 		}
 	}
 
-	@GET
-	@Path("addcredit/{id}/{amount}")
-	public Response addCredit(@PathParam("id") Long id, @PathParam("amount") Integer amount) throws ParseException, JOSEException {
-		Optional<Member> foundUser = dao.getMemberById(id);
+	@Secured({Role.ADMIN})
+	@POST
+	@Path("addcredit")
+	public Response addCredit(String json) throws ParseException, JOSEException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String email;
+		String amount;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode emailas = actualObj.get("email");
+			JsonNode amountas = actualObj.get("amount");
+			if (emailas == null || amountas == null) {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			email = emailas.textValue();
+			amount = amountas.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+
+
+
+		Optional<Member> foundUser = dao.findByEmail(email);
 		if (!foundUser.isPresent()) {
 			return Response
 					.status(Status.NOT_FOUND).build(); //Nerastas toks member
 		}
 		Member member = foundUser.get();
-		member.setCreditAmount(member.getCreditAmount() + amount);
+		try {
+			member.setCreditAmount(member.getCreditAmount() + Integer.parseInt(amount));
+			dao.save(member);
+		} catch (Exception e) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 		return Response.status(Status.OK).build();
 	}
 
