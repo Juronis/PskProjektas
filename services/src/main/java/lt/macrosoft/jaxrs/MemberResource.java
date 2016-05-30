@@ -290,6 +290,20 @@ public class MemberResource {
 			return Response.status(Status.PAYMENT_REQUIRED).build(); //nepakanka credito
 		}
 	}
+
+	@GET
+	@Path("addcredit/{id}/{amount}")
+	public Response addCredit(@PathParam("id") Long id, @PathParam("amount") Integer amount) throws ParseException, JOSEException {
+		Optional<Member> foundUser = dao.getMemberById(id);
+		if (!foundUser.isPresent()) {
+			return Response
+					.status(Status.NOT_FOUND).build(); //Nerastas toks member
+		}
+		Member member = foundUser.get();
+		member.setCreditAmount(member.getCreditAmount() + amount);
+		return Response.status(Status.OK).build();
+	}
+
 	/*
 	 * Helper methods
 	 */	
