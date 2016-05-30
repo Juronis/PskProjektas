@@ -3,9 +3,8 @@ package lt.macrosoft.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lt.macrosoft.enums.Role;
 
 import java.util.*;
@@ -18,7 +17,7 @@ import java.util.*;
     @NamedQuery(name = "Member.findByEmail", query = "SELECT m FROM Member m WHERE m.email = :email"),
     @NamedQuery(name = "Member.findByFacebook", query = "SELECT m FROM Member m WHERE m.facebookUser = :facebookUser"),
 	@NamedQuery(name = "Member.findByToken", query = "SELECT m FROM Member m WHERE m.logintoken = :logintoken"),
-	@NamedQuery(name = "Member.findCandidates", query = "SELECT m FROM Member m WHERE m.role = :role")
+	@NamedQuery(name = "Member.findByRole", query = "SELECT m FROM Member m WHERE m.role = :role")
 })
 public class Member {
 
