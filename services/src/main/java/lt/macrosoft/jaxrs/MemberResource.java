@@ -215,9 +215,9 @@ public class MemberResource {
 	}
 
 	@GET
-	@Path("total")
-	public Response sendMembersTotal() {
-		return Response.ok().entity(dao.findAll().size()).build();
+	@Path("total/candidates")
+	public Response sendCandidatesTotal() {
+		return Response.ok().entity(dao.findCandidates().size()).build();
 	}
 
 

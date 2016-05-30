@@ -16,7 +16,8 @@ import java.util.Set;
     @NamedQuery(name = "Member.findAll", query = "SELECT m FROM Member m"),
     @NamedQuery(name = "Member.findByEmail", query = "SELECT m FROM Member m WHERE m.email = :email"),
     @NamedQuery(name = "Member.findByFacebook", query = "SELECT m FROM Member m WHERE m.facebookUser = :facebookUser"),
-	@NamedQuery(name = "Member.findByToken", query = "SELECT m FROM Member m WHERE m.logintoken = :logintoken")
+	@NamedQuery(name = "Member.findByToken", query = "SELECT m FROM Member m WHERE m.logintoken = :logintoken"),
+	@NamedQuery(name = "Member.findCandidates", query = "SELECT m FROM Member m WHERE m.role = :role")
 })
 
 public class Member {
