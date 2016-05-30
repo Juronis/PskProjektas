@@ -7,12 +7,12 @@
     </div>
     <div class="col-md-6">
         <br/>
-        <h3>Pridėti naują vasarnamį</h3>
+        <h3>Pridėti klubo nariams kreditus</h3>
         <br />
         <form method="post" role="form" name="summerHouseForm" ng-submit="add()">
-            <div class="input-group">
+            <div class="input-group" id="email">
                 <span class="input-group-addon" id="basic-addon1">El. paštas</span>
-                <input type="email" id="email" class="form-control" aria-describedby="basic-addon1" ng-model="email" pattern=".{3,}" required>
+                <input type="email" class="form-control" aria-describedby="basic-addon1" ng-model="email" pattern=".{3,}" required>
             </div>
             <br />
             <button type="button" ng-click="check()" class="btn btn-default">Tikrinti ar toks narys egzistuoja</button>

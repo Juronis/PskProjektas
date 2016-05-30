@@ -1,42 +1,18 @@
 <div class="row">
-    <h3>Nauji nariai laukiantys patvirtinimo</h3>
+    <h3>Kandidatai laukiantys patvirtinimo</h3>
 
     <table class="table table-hover">
         <tr>
             <th>Vardas Pavardė</th>
-            <th>Pakvietė</th>
-            <th>Balsai už/prieš</th>
-            <th>Veiksmas</th>
+            <th>El. paštas</th>
+            <th></th>
         </tr>
-        <tr>
-            <td>Donatas Maikštėnas</td>
-            <td><a href="#">Marijus Koreniauskas</a></td>
-            <td><font color="green">3</font>/<font color="red">1</font></td>
+        <tr ng-repeat="candidate in candidates">
+            <td>{{ candidate.name }}</td>
+            <td>{{ candidate.email }}</td>
             <td>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Balsuoti...
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Balsuoti už</a></li>
-                        <li><a href="#">Balsuoti prieš</a></li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Donatas Maikštėnas</td>
-            <td><a href="#">Marijus Koreniauskas</a></td>
-            <td><font color="green">3</font>/<font color="red">1</font></td>
-            <td>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Balsuoti...
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Balsuoti už</a></li>
-                        <li><a href="#">Balsuoti prieš</a></li>
-                    </ul>
+                    <button type="button" class="btn btn-default" ng-click="aproveCandidate(candidate.id)">Patvirtinti kandidatūrą</button>
                 </div>
             </td>
         </tr>

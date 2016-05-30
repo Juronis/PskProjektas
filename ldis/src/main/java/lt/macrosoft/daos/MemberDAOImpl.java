@@ -89,4 +89,14 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 		}
 		return member;
 	}
+
+	public List<Member> findCandidates(){
+		return getEntityManager().createNamedQuery("Member.findByRole", Member.class)
+				.setParameter("role", Role.CANDIDATE).getResultList();
+	}
+
+	public List<Member> findAdminsMembers(){
+		return getEntityManager().createNamedQuery("Member.findByRoles", Member.class)
+				.setParameter("role", Role.ADMIN).setParameter("role2", Role.FULLUSER).getResultList();
+	}
 }

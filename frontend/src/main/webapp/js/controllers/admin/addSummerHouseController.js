@@ -1,5 +1,8 @@
 app.controller('addSummerHouseController', ['$scope', 'summerHouseService', function ($scope, summerHouseService) {
 
+    $scope.successMessage = "";
+    $scope.messageLog = "";
+
     $('#dateFrom').datepicker({
         format: 'yyyy-mm-dd',
         daysOfWeekDisabled: "2,3,4,5,6",

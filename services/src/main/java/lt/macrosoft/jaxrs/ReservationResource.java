@@ -22,8 +22,8 @@ import java.util.List;
 /**
  * Created by Arnas on 2016-05-26.
  */
+
 @Path("/reservations")
-@Stateless
 public class ReservationResource {
     @Inject
     ReservationDAO reservationDAO;
@@ -43,10 +43,10 @@ public class ReservationResource {
     }
 
     //Testing
-    @Path("total")
+    @Path("all")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Reservation> getReservationsTotal() {
+    public List<Reservation> getAllReservations() {
         return reservationDAO.findAll();
     }
 

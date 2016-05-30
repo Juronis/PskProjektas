@@ -24,7 +24,14 @@ public final class AuthUtils {
 	public static final String AUTH_HEADER_KEY = HttpHeaders.AUTHORIZATION;
 	
 	public static String getSubject(String authHeader) throws ParseException, JOSEException {
-		return decodeToken(authHeader).getSubject();
+		try {
+			String id = decodeToken(authHeader).getSubject();
+			return id;
+		} catch (ParseException e) {
+			return "0";
+		}catch (JOSEException e) {
+			return "0";
+		}
 	}
 	
 	public static boolean validateToken(String authHeader) throws ParseException, JOSEException {

@@ -1,6 +1,8 @@
 package lt.macrosoft.jaxrs;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -15,7 +17,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.deser.std.ObjectArrayDeserializer;
+import com.fasterxml.jackson.databind.ser.std.ObjectArraySerializer;
 import com.google.common.base.Optional;
+import com.google.common.collect.ObjectArrays;
 import com.nimbusds.jose.JOSEException;
 
 import lt.macrosoft.daos.ParameterDAO;
@@ -54,19 +63,28 @@ public class ParameterResource {
 
     @POST
     @Path("update")
-    public Response updateParameterValue(Parameter parameter) throws ParseException, JOSEException {
-    //String newval = "{\"name\":\"MEMBERSHIP_PRICE\",\"pvalue\":\"50\"}";
-        Optional<Parameter> updateParameter = dao.findParameterValue(parameter.getName());
-        if (!updateParameter.isPresent()) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .entity(AuthResource.NOT_FOUND_MSG).build();
+    public Response updateParameterValue(String json) throws ParseException, JOSEException {
+    //json = "[{\"name\":\"MEMBERSHIP_PRICE\",\"pvalue\":\"50\"},{\"name\":\"SHIP_PRICE\",\"pvalue\":\"50\"}]";
+
+        Parameter[] myObjects;
+        ObjectMapper mapper = new ObjectMapper();
+        try { myObjects = mapper.readValue(json, Parameter[].class);
+
+            for (final Parameter parameter : myObjects) {
+                Optional<Parameter> updateParameter = dao.findParameterValue(parameter.getName());
+                if (!updateParameter.isPresent()) {
+                } else {
+                    Parameter newParameter = updateParameter.get();
+                    if (parameter.getPvalue() != null) {
+                        newParameter.setPvalue(parameter.getPvalue());
+                        dao.save(newParameter);
+                    }
+                }
+            }
+            return Response.ok().build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Parameter newParameter = updateParameter.get();
-        if (parameter.getPvalue() != null) {
-            newParameter.setPvalue(parameter.getPvalue());
-            dao.save(newParameter);
-        }
-        return Response.ok().build();
     }
 }

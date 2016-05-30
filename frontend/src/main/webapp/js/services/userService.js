@@ -3,9 +3,17 @@ app.service('userService', ['$http', function ($http) {
     var baseUrl = "/frontend/services/resources/members/";
 
     this.getUserDataByAuth = function() {
-        var url = baseUrl+"byAuth";
+        var url = baseUrl+"byauth";
         return $http.get(url);
     }
+
+    this.getRole = function() {
+        this.getUserDataByAuth().then(function(response) {
+            return response.data.role;
+        });
+    }
+
+    var role = this.getRole();
 
     this.getUserDataById = function(id) {
         var url = baseUrl+"byId/"+id;
@@ -17,14 +25,9 @@ app.service('userService', ['$http', function ($http) {
         return $http.post(url, userInfo);
     }
 
-    this.delete = function() {
+    this.delete = function(data) {
         var url = baseUrl+"delete";
-        return $http.get(url);
-    }
-
-    this.checkPassword = function(data) {
-        var url = baseUrl+"checkPassword";
-        return $http.get(url, data);
+        return $http.post(url, data);
     }
 
     this.sendEmailRequest = function(email) {
@@ -38,24 +41,20 @@ app.service('userService', ['$http', function ($http) {
     }
 
     this.isMember = function () {
-        this.getUserDataByAuth().then(function(response){
-            return response.data.role === 'MEMBER';
-        });
-        return false;
+        return role === 'FULLMEMBER';
     };
 
     this.isAdmin = function () {
-        this.getUserDataByAuth().then(function(response){
-            return response.data.role === 'ADMIN';
-        });
-        return false;
+        return role === 'ADMIN'
     };
 
     this.isCandidate = function () {
-        this.getUserDataByAuth().then(function(response){
+        /* this.getUserDataByAuth().then(function(response){
             return response.data.role === 'CANDIDATE';
-        });
-        return false;
+        }).catch(function(response) {
+            return false;
+        }); */
+        return role === 'CANDIDATE';
     };
 
     this.userCredits = function() {
@@ -66,8 +65,28 @@ app.service('userService', ['$http', function ($http) {
     }
 
     this.getUserByEmail = function(data) {
-        var url = baseUrl + "byEmail";
+        var url = baseUrl + "byemail";
         return $http.post(url, data);
+    }
+
+    this.addCredits = function(data) {
+        var url = baseUrl + "addcredits";
+        return $http.post(url, data);
+    }
+
+    this.getCandidatesTotal = function () {
+        var url = baseUrl + "candidates/total";
+        return $http.get(url);
+    }
+
+    this.getAllCandidates = function () {
+        var url = baseUrl + "candidates/all";
+        return $http.get(url);
+    }
+
+    this.getAllUsers = function () {
+        var url = baseUrl + "members/all";
+        return $http.get(url);
     }
 
 }]);
