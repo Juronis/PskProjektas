@@ -25,7 +25,7 @@ app.controller('addCreditsController', ['$scope', 'userService', function ($scop
                 var data =
                     {
                         "email" : $scope.email,
-                        "credits" : $scope.credits
+                        "amount" : $scope.amount
                     };
                 userService.addCredits(data).then(function(response) {
                     $scope.successMessage = "Jūs sėkmingai nariui "+$scope.email+" pridėjote "+$scope.credits+" kreditų";
