@@ -65,6 +65,11 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/admin/editUser/:userId",
                 controller: 'editUserController',
                 templateUrl: 'partials/admin/editUserView.html'
+            })
+            .state('manageUsers', {
+                url: "/admin/manageUsers",
+                controller: 'manageUsersController',
+                templateUrl: 'partials/admin/manageUsersView.html'
             });
 
         $locationProvider.html5Mode({

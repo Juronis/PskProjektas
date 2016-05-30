@@ -1,5 +1,14 @@
-app.controller('registerController', ['$scope', '$state', 'authService', function ($scope, $state, authService) {
-    
+app.controller('registerController', ['$scope', '$state', 'authService', 'adminService', function ($scope, $state, authService, adminService) {
+
+    adminService.getSettings('birthday_required').then(function (response) {
+        $scope.birthdayRequired = response.data.pvalue;
+    });
+    $('#birthdayField').datepicker({
+        format: 'yyyy-mm-dd',
+        weekStart: 1
+    });
+
+
     $scope.register = function () {
         if ($scope.registerForm.$valid) {
             if($scope.user.password === $scope.password2) {

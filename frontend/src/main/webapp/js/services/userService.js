@@ -69,9 +69,19 @@ app.service('userService', ['$http', function ($http) {
         return $http.get(url);
     }
 
-    this.getAllUsers = function () {
+    this.getAllMembers = function () {
         var url = baseUrl + "all/adminsmembers";
         return $http.get(url);
+    }
+
+    this.getAllUsers = function () {
+        var url = baseUrl + "all";
+        return $http.get(url);
+    }
+
+    this.deleteUser = function (id, data) {
+        var url = baseUrl + "delete/" + id;
+        return $http.post(url, data);
     }
 
     this.payMembership = function () {

@@ -33,7 +33,7 @@
                         <li ui-sref-active="active"><a ui-sref="addSummerHouse">Vasarnamio pridėjimas</a></li>
                         <li ui-sref-active="active"><a href="#">Vasarnamių valdymas</a></li>
                         <li role="separator" class="divider"></li>
-                        <li ui-sref-active="active"><a href="#">Narių valdymas</a></li>
+                        <li ui-sref-active="active"><a ui-sref="manageUsers">Narių valdymas</a></li>
                         <li ui-sref-active="active"><a ui-sref="usersSettings">Nustatymai</a></li>
                         <li role="separator" class="divider"></li>
                         <li ui-sref-active="active"><a ui-sref="registrationForm">Stojimo anketos redagavimas</a></li>
@@ -119,7 +119,7 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
                 <div class="input-group col-md-8">
                     <input type="text" class="form-control input-lg" placeholder="El. paštas" ng-model="email">
               <span class="input-group-btn">
-                <button class="btn btn-primary btn-lg" type="button" ng-click="sendRecommendation()">Siųsti!</button>
+                <button class="btn btn-primary btn-lg" type="button" ng-click="askRecommendation()">Siųsti!</button>
               </span>
                 </div><!-- /input-group -->
             </div>
@@ -167,6 +167,7 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 <script src="js/services/transfersService.js"></script>
 <script src="js/services/summerHouseService.js"></script>
 <script src="js/services/adminService.js"></script>
+<script src="js/services/aprovalService.js"></script>
 
 <!-- controllers -->
 <script src="js/controllers/registerController.js"></script>
@@ -183,6 +184,7 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 <script src="js/controllers/admin/registrationFormController.js"></script>
 <script src="js/controllers/userInfoController.js"></script>
 <script src="js/controllers/admin/editUserController.js"></script>
+<script src="js/controllers/admin/manageUsersController.js"></script>
 
 
 </body>

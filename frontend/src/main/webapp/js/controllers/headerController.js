@@ -1,4 +1,4 @@
-app.controller('headerController', ['$scope', '$rootScope', 'authService', 'userService', function ($scope, $rootScope, authService, userService) {
+app.controller('headerController', ['$scope', '$rootScope', 'authService', 'userService', 'aprovalService', function ($scope, $rootScope, authService, userService, aprovalService) {
 
     var handleAuth = function() {
         if(!$scope.isAuthenticated) {
@@ -56,11 +56,11 @@ app.controller('headerController', ['$scope', '$rootScope', 'authService', 'user
         }
     }
 
-    $scope.sendRecommendation = function () {
+    $scope.askRecommendation = function () {
         if(isValidEmailAddress($scope.email)) {
             var data = { "email" : $scope.email };
-            userService.sendRecommendation(data).then(function(response) {
-
+            aprovalService.askRecommendation(data).then(function(response) {
+                $scope.successMessage = "Jūs sėkmingai paprašėte <b>"+data.email+"</b> rekomendacijos";
             }).catch(function(response) {
                 //TODO: error handling
             });

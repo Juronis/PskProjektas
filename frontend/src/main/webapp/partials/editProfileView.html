@@ -34,7 +34,13 @@
                 <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="password2"
                        pattern=".{5,}">
             </div>
-            <br/><br/>
+            <br/>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Gimimo data</span>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="user.birthday" id="birthdayField">
+            </div>
+            <br/>
+            <br/>
             <button type="submit" class="btn btn-success">Redaguoti profilį</button>
             <button type="reset" class="btn btn-default">Valyti laukelius</button>
         </form>

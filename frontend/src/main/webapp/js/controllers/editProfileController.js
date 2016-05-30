@@ -1,6 +1,11 @@
 app.controller('editProfileController', ['$scope', '$state', 'userService', 'authService', function ($scope, $state, userService, authService) {
     var currentEmail = null;
 
+    $('#birthdayField').datepicker({
+        format: 'yyyy-mm-dd',
+        weekStart: 1
+    });
+
     var setFields = function() {
         userService.getUserDataByAuth().then(function(response) {
             $scope.user = response.data;

@@ -29,14 +29,17 @@
             <br/><br/>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Slaptažodis</span>
-                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="user.password"
-                       required pattern=".{5,}">
+                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="user.password" required pattern=".{5,}">
             </div>
             <br/>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Pakartoti</span>
-                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="password2"
-                       required pattern=".{5,}">
+                <input type="password" class="form-control" aria-describedby="basic-addon1" ng-model="password2" required pattern=".{5,}">
+            </div>
+            <br/>
+            <div class="input-group" ng-show="birthdayRequired">
+                <span class="input-group-addon" id="basic-addon1">Gimimo data</span>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="user.birthday" id="birthdayField">
             </div>
             <br/><br/>
             <button type="submit" class="btn btn-success">Registruotis</button>
