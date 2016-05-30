@@ -67,7 +67,7 @@ public class Summerhouse {
                     @JoinColumn(name = "ACTIVITY_ID", referencedColumnName = "id"),
             }
     )
-    @NotNull
+
     @ManyToMany
     private List<Activity> activityList;
 
