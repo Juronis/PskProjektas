@@ -49,7 +49,6 @@ public class ParameterResource {
     @Context
     SecurityContext securityContext;
 
-    @Secured({Role.ADMIN})
     @GET
     @Path("get/{parameter}")
     public Response findParameterValue(@PathParam("parameter") String parameter) throws ParseException, JOSEException {
