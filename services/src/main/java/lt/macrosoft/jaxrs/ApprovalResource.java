@@ -2,6 +2,7 @@ package lt.macrosoft.jaxrs;
 
 import com.google.common.base.Optional;
 import com.nimbusds.jose.JOSEException;
+import lt.macrosoft.beans.ApprovalStatelessBean;
 import lt.macrosoft.beans.MemberStatelessBean;
 import lt.macrosoft.daos.ApprovalDAO;
 import lt.macrosoft.daos.MemberDAO;
@@ -37,7 +38,8 @@ public class ApprovalResource {
     private static final Logger logger = Logger.getLogger(ApprovalResource.class.getName());
     @Context
     HttpServletRequest request;
-
+    @EJB
+    ApprovalStatelessBean approvalStatelessBean;
     @EJB
     MailerBean mailerBean;
     @EJB
@@ -118,31 +120,9 @@ public class ApprovalResource {
             Approval approvalValue = approval.get();
             approvalValue.setApproved(true);
             approvalDAO.save(approvalValue);
+            approvalStatelessBean.tryToMakeFullMember(candidateEmail);
             return Response.ok().build();
         }
         return Response.status(Response.Status.NOT_FOUND).entity(Error.DB_APPROVAL_NOT_FOUND).build();
-    }
-
-    @Path("approver/approve")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response approve(List<String> emailList) {
-        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        if(member == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
-        String userEmail = member.getEmail();
-
-        Optional<List<Approval>> approvalList = approvalDAO.findByApproverEmail(userEmail);
-        if (approvalList.isPresent()) {
-            for (Approval approval : approvalList.get()) {
-                if (emailList.contains(approval.getCandidateEmail())) {
-                    approval.setApproved(true);
-                    approvalDAO.save(approval);
-                }
-            }
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).entity(Error.DB_APPROVAL_LIST_NOT_FOUND).build();
-        }
     }
 }
