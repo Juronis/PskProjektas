@@ -40,25 +40,28 @@ app.controller('addSummerHouseController', ['$scope', 'summerHouseService', func
     }
 
     $scope.add = function () {
-        if ($scope.summerHouseForm.$valid) {
+       // if ($scope.summerHouseForm.$valid) {
             summerHouseService.addImage($scope.image).then(function(response) {
                 $scope.summerHouse.image = response.data.link;
+
                 summerHouseService.addSummerHouse($scope.summerHouse).then(function (response) {
-                    summerHouseService.addServices(response.data.id, $scope.services).then(function(response) {
+                    $scope.successMessage = "Vasarnamis sėkmingai pridėtas";
+                    /* summerHouseService.addServices(response.data.id, $scope.services).then(function(response) {
                         $scope.successMessage = "Vasarnamis sėkmingai pridėtas";
                     }).catch(function (response) {
                         //TODO: error handling
-                    });
+                    }); */
                 }).catch(function (response) {
                     //TODO: error handling
                 });
+
             }).catch(function (response) {
                //TODO: error handling
             });
             //insert summerhouse
 
             //insert services
-        }
+        //}
     }
 
 }]);

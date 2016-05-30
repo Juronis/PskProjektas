@@ -1,5 +1,5 @@
 package lt.macrosoft.jaxrs;
-
+import java.util.Set;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -174,7 +174,8 @@ public class SummerhouseResource {
 		String fileName = "";
 		
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
-		List<InputPart> inputParts = uploadForm.get("uploadedFile");
+
+		List<InputPart> inputParts = uploadForm.get("file");
 		for (InputPart inputPart : inputParts) {
 		 try {
 			MultivaluedMap<String, String> header = inputPart.getHeaders();
@@ -191,7 +192,8 @@ public class SummerhouseResource {
 			e.printStackTrace();
 		  }
 		}
+		String output = "{\"link\":\"/pictures/" + fileName + "\"}";
 		return Response.status(200)
-		    .entity("/pictures/" + fileName).build();
+		    .entity(output).build();
 	}
 }
