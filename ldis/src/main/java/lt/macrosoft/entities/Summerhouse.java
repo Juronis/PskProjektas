@@ -30,7 +30,7 @@ public class Summerhouse {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "summerhouse", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "summerhouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     protected List<Reservation> reservations = new ArrayList<>();
 
     @NotNull
@@ -54,7 +54,8 @@ public class Summerhouse {
     @Column(name = "DATETO", length = 10)
     @Temporal(TemporalType.DATE)
     private Date dateTo;
-    //TODO: Add notnull
+
+    @NotNull
     @Column(name = "PRICE")
     private double price;
 

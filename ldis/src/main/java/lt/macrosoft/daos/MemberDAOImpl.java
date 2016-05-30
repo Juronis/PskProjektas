@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 import com.google.common.base.Optional;
 
-import lt.macrosoft.entities.Member;
+import lt.macrosoft.entities.*;
 import lt.macrosoft.enums.Exceptions;
 import lt.macrosoft.enums.Role;
 
@@ -18,6 +18,9 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 	public MemberDAOImpl(EntityManager em) {
 		super(em, Member.class);
 	}
+
+	@Inject
+	ParameterDAO par;
 
 	public Optional<Member> getMemberById(Long id) {
 		return Optional.fromNullable(findById(id));
@@ -83,5 +86,27 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 			save(member);
 		}
 		return member;
+	}
+
+	public List<Member> findCandidates(){
+		return getEntityManager().createNamedQuery("Member.findByRole", Member.class)
+				.setParameter("role", Role.CANDIDATE).getResultList();
+	}
+
+	public List<Member> findAdminsMembers(){
+		return getEntityManager().createNamedQuery("Member.findByRoles", Member.class)
+				.setParameter("role", Role.ADMIN).setParameter("role2", Role.FULLUSER).getResultList();
+	}
+
+	public Exceptions candidateToMember(Member member) {
+		if (findAll().size() >= Integer.parseInt(par.findParameterValue("MAX_MEMBERS").get().getPvalue())) {
+			return Exceptions.FORBIDDEN; //Kai max memberiu skaicius pasiektas
+		}
+		if (member.getRole() == Role.CANDIDATE) {
+			member.setRole(Role.FULLUSER);
+			save(member);
+			return Exceptions.SUCCESS; //Kai viskas pavyskta
+		}
+		return Exceptions.METHOD_NOT_ALLOWED; //Kai Memberis yra ne kandidatas, t.y. Adminas arba fullmemeberis
 	}
 }

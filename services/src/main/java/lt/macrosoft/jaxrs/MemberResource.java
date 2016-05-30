@@ -55,9 +55,7 @@ public class MemberResource {
 	
 	@GET
 	@Path("byauth")
-	public Response sendMemberByAuth(@Context HttpServletRequest request) throws ParseException, JOSEException {
-		System.out.println("bent bande");
-		String subject = AuthUtils.getSubject(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+	public Response sendMemberByAuth(@Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> memberis = getAuthMember(request);
 		if (!memberis.isPresent()) {
 			return Response.status(Status.NOT_FOUND).build();
@@ -215,11 +213,22 @@ public class MemberResource {
 	}
 
 	@GET
-	@Path("total")
-	public Response sendMembersTotal() {
-		return Response.ok().entity(dao.findAll().size()).build();
+	@Path("total/candidates")
+	public Response sendCandidatesTotal() {
+		return Response.ok().entity(dao.findCandidates().size()).build();
 	}
 
+	@GET
+	@Path("all/candidates")
+	public Response sendCandidates() {
+		return Response.ok().entity(dao.findCandidates()).build();
+	}
+
+	@GET
+	@Path("all/adminsmembers")
+	public Response sendAdminsMembers() {
+		return Response.ok().entity(dao.findAdminsMembers()).build();
+	}
 
 	@POST
 	@Path("byemail")
@@ -281,6 +290,20 @@ public class MemberResource {
 			return Response.status(Status.PAYMENT_REQUIRED).build(); //nepakanka credito
 		}
 	}
+
+	@GET
+	@Path("addcredit/{id}/{amount}")
+	public Response addCredit(@PathParam("id") Long id, @PathParam("amount") Integer amount) throws ParseException, JOSEException {
+		Optional<Member> foundUser = dao.getMemberById(id);
+		if (!foundUser.isPresent()) {
+			return Response
+					.status(Status.NOT_FOUND).build(); //Nerastas toks member
+		}
+		Member member = foundUser.get();
+		member.setCreditAmount(member.getCreditAmount() + amount);
+		return Response.status(Status.OK).build();
+	}
+
 	/*
 	 * Helper methods
 	 */	
