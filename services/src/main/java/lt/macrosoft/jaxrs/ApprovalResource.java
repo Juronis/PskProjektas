@@ -82,15 +82,19 @@ public class ApprovalResource {
     }
 
 
-    @Path("approver/candidates/{email}")
+    @Path("approver/candidates")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Approval> getApproverCandidatesEmailList(@PathParam("email") String email) {
-        Optional<List<Approval>> approvals = approvalDAO.findByApproverEmail(email);
+    public Response getApproverCandidatesEmailList() {
+        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        if (member == null)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
+
+        Optional<List<Approval>> approvals = approvalDAO.findByApproverEmail(member.getEmail());
         if (approvals.isPresent())
-            return approvals.get();
+            return Response.ok().entity(approvals.get()).build();
         else {
-            return null;
+            return Response.status(Response.Status.NOT_FOUND).entity(Error.DB_APPROVAL_LIST_NOT_FOUND).build();
         }
     }
 
