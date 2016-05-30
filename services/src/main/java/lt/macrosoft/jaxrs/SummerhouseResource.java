@@ -1,36 +1,45 @@
 package lt.macrosoft.jaxrs;
 
-import com.nimbusds.jose.JOSEException;
-import lt.macrosoft.beans.SummerhouseStatelessBean;
-import lt.macrosoft.daos.MemberDAO;
-import lt.macrosoft.daos.SummerhouseDAO;
-import lt.macrosoft.entities.Summerhouse.District;
-import lt.macrosoft.enums.Exceptions;
-import lt.macrosoft.entities.Member;
-import lt.macrosoft.entities.Summerhouse;
-import lt.macrosoft.utils.AuthUtils;
-import lt.macrosoft.utils.DateUtils;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.ejb.EJB;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.commons.io.IOUtils;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+
+import com.nimbusds.jose.JOSEException;
+
+import lt.macrosoft.beans.SummerhouseStatelessBean;
+import lt.macrosoft.daos.MemberDAO;
+import lt.macrosoft.daos.SummerhouseDAO;
+import lt.macrosoft.entities.Member;
+import lt.macrosoft.entities.Summerhouse;
+import lt.macrosoft.entities.Summerhouse.District;
+import lt.macrosoft.enums.Exceptions;
+import lt.macrosoft.utils.AuthUtils;
+import lt.macrosoft.utils.DateUtils;
 
 @Path("/summerhouses")
 public class SummerhouseResource {
@@ -134,7 +143,8 @@ public class SummerhouseResource {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
 		Member member = memberDAO.findById(Long.getLong(userId));
-		return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_NOT_POSSIBLE).build();
+		if (Member.activeMembership(member))
+			return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_NOT_POSSIBLE).build();
 
 		Summerhouse summerhouse = summerhouseDAO.findById(id);
 
