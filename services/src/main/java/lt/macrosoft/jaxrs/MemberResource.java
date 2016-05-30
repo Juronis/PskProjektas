@@ -220,6 +220,11 @@ public class MemberResource {
 		return Response.ok().entity(dao.findCandidates().size()).build();
 	}
 
+	@GET
+	@Path("all/candidates")
+	public Response sendCandidates() {
+		return Response.ok().entity(dao.findCandidates()).build();
+	}
 
 	@POST
 	@Path("byemail")
