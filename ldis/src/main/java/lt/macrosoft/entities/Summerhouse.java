@@ -1,14 +1,11 @@
 package lt.macrosoft.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -35,12 +32,7 @@ public class Summerhouse {
     @JsonIgnore
     @OneToMany(mappedBy = "summerhouse", fetch = FetchType.LAZY)
     protected List<Reservation> reservations = new ArrayList<>();
-    @OneToOne(
-            fetch = FetchType.EAGER,
-            optional = true
-    )
-    @PrimaryKeyJoinColumn
-    protected ExtraActivities extraActivities;
+
     @NotNull
     @Column(name = "NAME", length = 50)
     private String name;
@@ -65,6 +57,18 @@ public class Summerhouse {
     //TODO: Add notnull
     @Column(name = "PRICE")
     private double price;
+
+    @JoinTable(name = "SUMMERHOUSE_ACTIVITIES",
+            joinColumns = {
+                    @JoinColumn(name = "SUMMERHOUSE_ID", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "ACTIVITY_ID", referencedColumnName = "id"),
+            }
+    )
+    @NotNull
+    @ManyToMany
+    private List<Activity> activityList;
 
     public Summerhouse() {
     }
@@ -146,18 +150,18 @@ public class Summerhouse {
     public List<Reservation> getReservations() {
         return reservations;
     }
+
     @JsonIgnore
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }
 
-
-    public ExtraActivities getExtraActivities() {
-        return extraActivities;
+    public List<Activity> getActivityList() {
+        return activityList;
     }
 
-    public void setExtraActivities(ExtraActivities extraActivities) {
-        this.extraActivities = extraActivities;
+    public void setActivityList(List<Activity> activityList) {
+        this.activityList = activityList;
     }
 
     public enum District {

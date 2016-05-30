@@ -34,6 +34,8 @@ public interface GenericDAO<T, ID extends Serializable>
 
     void makeTransient(T entity);
 
+    T save(T entity);
+
     void checkVersion(T entity, boolean forceUpdate);
 
     EntityManager getEntityManager();

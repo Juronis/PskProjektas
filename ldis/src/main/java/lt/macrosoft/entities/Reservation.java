@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -43,7 +44,11 @@ public class Reservation {
     @Temporal(TemporalType.DATE)
     @Column(name = "DATE_END")
     protected Date dateEnd;
-    
+
+    @NotNull
+    @OneToMany
+    protected List<ReservationActivityCount> reservationActivityCounts;
+
     public Reservation() {
     }
 
@@ -81,5 +86,13 @@ public class Reservation {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public List<ReservationActivityCount> getReservationActivityCounts() {
+        return reservationActivityCounts;
+    }
+
+    public void setReservationActivityCounts(List<ReservationActivityCount> reservationActivityCounts) {
+        this.reservationActivityCounts = reservationActivityCounts;
     }
 }

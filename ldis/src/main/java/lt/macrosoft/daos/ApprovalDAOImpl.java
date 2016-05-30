@@ -18,14 +18,6 @@ public class ApprovalDAOImpl extends GenericDAOImpl<Approval, Long> implements A
     }
 
     @Override
-    public Approval save(Approval approval) {
-        em.persist(approval);
-        System.out.println("persist approval" + approval.toString());
-        System.out.println(getCount());
-        return approval;
-    }
-
-    @Override
     public Optional<List<Approval>> findByCandidateEmail(String email) {
         return Optional.fromNullable(
                 getEntityManager().createNamedQuery("Approval.findByCandidateEmail", Approval.class)

@@ -24,6 +24,12 @@ public abstract class GenericDAOImpl<T, ID extends Serializable>
     }
 
     @Override
+    public T save(T entity) {
+        em.persist(entity);
+        return entity;
+    }
+
+    @Override
     public void joinTransaction() {
         if (!em.isJoinedToTransaction())
             em.joinTransaction();

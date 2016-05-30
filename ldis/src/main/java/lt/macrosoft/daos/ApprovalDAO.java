@@ -9,8 +9,6 @@ import java.util.List;
  * Created by Arnas on 2016-05-25.
  */
 public interface ApprovalDAO extends GenericDAO<Approval, Long> {
-    Approval save(Approval approval);
-
     Optional<List<Approval>> findByCandidateEmail(String email);
 
     Optional<List<Approval>> findByApproverEmail(String email);

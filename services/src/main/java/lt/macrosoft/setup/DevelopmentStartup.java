@@ -1,51 +1,63 @@
 package lt.macrosoft.setup;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.logging.Logger;
-
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-
-import lt.macrosoft.daos.MemberDAO;
-import lt.macrosoft.daos.ReservationDAO;
-import lt.macrosoft.daos.ParameterDAO;
-import lt.macrosoft.daos.SummerhouseDAO;
-import lt.macrosoft.entities.Member;
-import lt.macrosoft.entities.Reservation;
-import lt.macrosoft.entities.Parameter;
-import lt.macrosoft.entities.Summerhouse;
+import lt.macrosoft.daos.*;
+import lt.macrosoft.entities.*;
 import lt.macrosoft.entities.Summerhouse.District;
 import lt.macrosoft.enums.Role;
 import lt.macrosoft.utils.DateUtils;
 import lt.macrosoft.utils.PasswordService;
 
+import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
+
 @Alternative
 public class DevelopmentStartup extends SystemStartup {
-    
-    /**
-     * Logger
-     */
     private static final Logger logger = Logger.getLogger("DevelopmentStartup");
-    
+
     @Inject
-    private  SummerhouseDAO summerhouseDao;
+    private SummerhouseDAO summerhouseDao;
     @Inject
-    private  MemberDAO memberDao;
+    private MemberDAO memberDao;
     @Inject
     private ParameterDAO dao;
     @Inject
-    ReservationDAO reservationDAO;
-    /**
-     * Initializes the system
-     */
+    private ReservationDAO reservationDAO;
+    @Inject
+    private ActivityDAO activityDAO;
+    @Inject
+    private ReservationActivityCountDAO reservationActivityCountDAO;
+
     @Override
     public void init() {
         Calendar calendar = Calendar.getInstance();
         Date date;
+        Activity activity;
+        List<Activity> activities;
+        List<ReservationActivityCount> reservationActivityCounts;
         Date[] dates;
         logger.info("Development startup initialized...");
 
+
+        /************************************************
+         * Activities
+         ***********************************************/
+
+        activity = new Activity(lt.macrosoft.enums.Activity.BOAT.toString(), 6);
+        activityDAO.save(activity);
+        activity = new Activity(lt.macrosoft.enums.Activity.CAYAK.toString(), 5);
+        activityDAO.save(activity);
+        activity = new Activity(lt.macrosoft.enums.Activity.TRAMPOLINE.toString(), 5);
+        activityDAO.save(activity);
+        activity = new Activity(lt.macrosoft.enums.Activity.SAUNA.toString(), 7);
+        activityDAO.save(activity);
+        activity = new Activity(lt.macrosoft.enums.Activity.TUB.toString(), 6);
+        activityDAO.save(activity);
+        activities = activityDAO.findAll();
 
 
         /************************************************
@@ -64,6 +76,7 @@ public class DevelopmentStartup extends SystemStartup {
         summerhouse.setDateFrom(dates[0]);
         summerhouse.setDateTo(dates[1]);
         summerhouse.setImageUrl("http://mstcontractors.com/mstc/images/stories/nice-house-main.jpg");
+        summerhouse.setActivityList(activities.subList(0, 2));
         summerhouseDao.saveIfNotExists(summerhouse);
 
         // 2
@@ -77,6 +90,7 @@ public class DevelopmentStartup extends SystemStartup {
         summerhouse2.setDateFrom(dates[0]);
         summerhouse2.setDateTo(dates[0]);
         summerhouse2.setImageUrl("http://mstcontractors.com/mstc/images/stories/nice-house-main.jpg");
+        summerhouse.setActivityList(activities.subList(1, 3));
         summerhouseDao.saveIfNotExists(summerhouse2);
 
 
@@ -139,11 +153,9 @@ public class DevelopmentStartup extends SystemStartup {
         dao.saveOrUpdate(parameter);
 
 
-
         /************************************************
          * Reservations
          ***********************************************/
-
         // 1
         Reservation reservation = new Reservation();
         date = DateUtils.generateDate("2016-02-03");
@@ -153,6 +165,12 @@ public class DevelopmentStartup extends SystemStartup {
 
         reservation.setSummerhouse(summerhouse);
         reservation.setMember(member);
+
+        reservationActivityCounts = new ArrayList<>();
+        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 2));
+        }
+        reservation.setReservationActivityCounts(reservationActivityCounts);
         reservationDAO.saveIfNotExists(reservation);
 
         // 2
@@ -164,6 +182,13 @@ public class DevelopmentStartup extends SystemStartup {
 
         reservation.setSummerhouse(summerhouse);
         reservation.setMember(member2);
+
+        reservationActivityCounts = new ArrayList<>();
+        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 1));
+        }
+        reservation.setReservationActivityCounts(reservationActivityCounts);
+
         reservationDAO.saveIfNotExists(reservation);
 
         // 3
@@ -175,6 +200,12 @@ public class DevelopmentStartup extends SystemStartup {
 
         reservation.setSummerhouse(summerhouse2);
         reservation.setMember(member);
+
+        reservationActivityCounts = new ArrayList<>();
+        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 3));
+        }
+        reservation.setReservationActivityCounts(reservationActivityCounts);
         reservationDAO.saveIfNotExists(reservation);
 
 

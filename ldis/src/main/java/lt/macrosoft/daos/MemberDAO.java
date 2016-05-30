@@ -13,8 +13,6 @@ public interface MemberDAO extends GenericDAO<Member, Long> {
 
 	public Member saveIfNotExists(Member member);
 
-	public Member save(Member member);
-
 	public Optional<Member> findByEmail(String email);
 	
 	public Optional<Member> findByFacebook(String facebookId);

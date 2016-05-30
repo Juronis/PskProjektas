@@ -51,11 +51,6 @@ public class MemberDAOImpl extends GenericDAOImpl<Member, Long> implements Membe
 			return Optional.absent();
 		}
 	}
-
-	public Member save(Member member) {
-		em.persist(member);
-		return member;
-	}
 	
 	public Optional<Role> findRolesById(Long id){
 		String query = "SELECT i.role FROM Member i WHERE i.id = :id";

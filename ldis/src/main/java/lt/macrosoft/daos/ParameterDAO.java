@@ -10,8 +10,6 @@ import lt.macrosoft.entities.Parameter;
 public interface ParameterDAO extends GenericDAO<Parameter, Long> {
 
         public Optional<Parameter> findParameterValue(String parameter);
-
-        public Parameter save(Parameter parameter);
         
         public Parameter saveOrUpdate(Parameter parameter);
 

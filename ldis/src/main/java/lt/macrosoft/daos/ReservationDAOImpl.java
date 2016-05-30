@@ -77,14 +77,6 @@ public class ReservationDAOImpl  extends GenericDAOImpl<Reservation, Long> imple
     }
 
     @Override
-    public Reservation save(Reservation reservation) {
-        em.persist(reservation);
-        System.out.println("persist reservation" + reservation.toString());
-        System.out.println(getCount());
-        return reservation;
-    }
-
-    @Override
     public boolean saveIfNotExists(Reservation reservation) {
         Optional<Reservation> check= findUnique(
                 reservation.getMember(),

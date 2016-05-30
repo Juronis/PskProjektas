@@ -7,10 +7,8 @@ import lt.macrosoft.entities.Member;
 
 
 public class ExtraActivitiesDAOImpl extends GenericDAOImpl<Member, Long> implements ExtraActivitiesDAO {
-
 	@Inject
 	public ExtraActivitiesDAOImpl(EntityManager em) {
 		super(em, Member.class);
 	}
-
 }	

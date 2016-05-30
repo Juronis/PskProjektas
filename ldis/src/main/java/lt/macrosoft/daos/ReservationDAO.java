@@ -20,7 +20,5 @@ public interface ReservationDAO extends GenericDAO<Reservation, Long>  {
 
     Optional<Reservation> findUnique(Member member, Summerhouse summerhouse, Date dateStart, Date dateEnd);
 
-    Reservation save(Reservation reservation);
-
     boolean saveIfNotExists(Reservation reservation);
 }
