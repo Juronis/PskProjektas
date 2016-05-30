@@ -193,7 +193,8 @@ public class MemberResource {
 	@Secured({Role.ADMIN, Role.CANDIDATE, Role.FULLUSER})
 	@POST
 	@Path("update")
-	public Response updateMember(final Member member, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+	public Response updateMember(final Member member, @Context final HttpServletRequest request)
+			throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
 
 		if (!foundUser.isPresent()) {
@@ -210,8 +211,30 @@ public class MemberResource {
 		if (member.getEmail() != userToUpdate.getEmail()) {
 			userToUpdate.setEmail(member.getEmail());
 		}
+		if (member.getBirthday() != userToUpdate.getBirthday()) {
+			userToUpdate.setBirthday(member.getBirthday());
+		}
 		dao.save(userToUpdate);
 		return Response.ok().build();
+	}
+
+	@Secured({Role.ADMIN})
+	@POST
+	@Path("update/{id}")
+	public Response updateMemberByAdmin(final Member member, @PathParam("id") Long id)
+			throws ParseException, JOSEException {
+		Optional<Member> memberToEdit = dao.getMemberById(id);
+		if(!memberToEdit.isPresent()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		Member memberUpdate = memberToEdit.get();
+		if (member.getBirthday() != memberUpdate.getBirthday()) { member.setBirthday( memberUpdate.getBirthday());}
+		if (member.getEmail() != memberUpdate.getEmail()) { member.setEmail(memberUpdate.getEmail()); }
+		if (!PasswordService.checkPassword(member.getPassword(), memberUpdate.getPassword())) {
+			memberUpdate.setPassword(PasswordService.hashPassword(member.getPassword()));
+		}
+		dao.save(memberUpdate);
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
