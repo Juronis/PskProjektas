@@ -9,7 +9,7 @@
         <br/>
         <h3>Pridėti klubo nariams kreditus</h3>
         <br />
-        <form method="post" role="form" name="summerHouseForm" ng-submit="add()">
+        <form method="post" role="form" name="creditsForm" ng-submit="add()">
             <div class="input-group" id="email">
                 <span class="input-group-addon" id="basic-addon1">El. paštas</span>
                 <input type="email" class="form-control" aria-describedby="basic-addon1" ng-model="email" pattern=".{3,}" required>
@@ -20,7 +20,7 @@
             <br />
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Kreditų kiekis</span>
-                <input type="number" class="form-control" aria-describedby="basic-addon1" ng-model="credits" required>
+                <input type="number" class="form-control" aria-describedby="basic-addon1" ng-model="amount" required>
             </div>
             <br/>
             <br/>

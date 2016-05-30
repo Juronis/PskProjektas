@@ -26,7 +26,7 @@
         <div class="col-md-9">
             <ul class="nav nav-pills" role="tablist" ng-show="isAuthenticated" ng-cloak>
 
-                <li class="dropdown">
+                <li class="dropdown" ng-show="isAdmin">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administracija <b class="caret"></b></a>
 
                     <ul class="dropdown-menu">
@@ -42,15 +42,13 @@
                     </ul>
                 </li>
 
-                <li role="presentation" ng-if="!isMember || isAdmin" ui-sref-active="active"><a
-                        ui-sref="summerHousesList">Vasarnamiai</a></li>
-                <li role="presentation" class="pull-right" ui-sref-active="active"><a ng-click="logout()"
-                                                                                      href="javascript:void(0)">Atsijungti</a>
+                <li role="presentation" ng-show="isMember" ui-sref-active="active"><a ui-sref="summerHousesList">Vasarnamiai</a></li>
+                <li role="presentation" class="pull-right" ui-sref-active="active"><a ng-click="logout()" href="javascript:void(0)">Atsijungti</a>
                 </li>
                 <li role="presentation" class="pull-right" ui-sref-active="active"><a ui-sref="editProfile"><span
                         class="
 glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
-                <li ui-sref-active="active" role="presentation"><a ui-sref="usersList">Klubo nariai <span class="badge">{{ candidatesTotalNumber }}</span></a>
+                <li ui-sref-active="active" ng-show="isMember" role="presentation"><a ui-sref="usersList">Klubo nariai <span class="badge">{{ candidatesTotalNumber }}</span></a>
                 </li>
             </ul>
 
@@ -65,7 +63,7 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
     </div>
 </div>
 <div class="container-fluid top-header" ng-controller="headerController">
-    <div class="container" ng-show="isAuthenticated && (isMember || isAdmin)" ng-cloak>
+    <div class="container" ng-show="isAuthenticated && isMember" ng-cloak>
         <div class="col-md-8 header-content">
           <span>
             <h1>Pakviesk draugą!</h1>
@@ -85,14 +83,14 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
             </p>
         </div>
         <div class="col-md-1"></div>
-        <div class="col-md-3 header-points visible-md visible-lg" ng-cloak>
+        <div class="col-md-3 header-points" ng-cloak>
             <div class="header-points-top">
                 <h4>Jūsų taškai</h4>
             </div>
             <div class="header-points-content">
                 <div class="input-group">
                     <span class="input-group-addon">€</span>
-                    <input type="text" class="form-control" value="credits" disabled>
+                    <input type="text" class="form-control" ng-model="amount" disabled>
                 </div>
                 <br/>
                 <div class="btn-group">
@@ -101,14 +99,14 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Papildyti taškus</a></li>
-                        <li><a href="#">Sumokėti metinį klubo nario mokestį</a></li>
+                        <li><a href="javascript:void(0)">Papildyti taškus</a></li>
+                        <li ng-click="payMembership()"><a href="javascript:void(0)">Sumokėti metinį klubo nario mokestį</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container" ng-show="isAuthenticated" ng-cloak>
+    <div class="container" ng-show="isAuthenticated && isCandidate" ng-cloak>
         <div class="col-md-8 header-content">
           <span>
             <h1>Paprašyk rekomendacijos!</h1>
@@ -183,6 +181,8 @@ glyphicon glyphicon-user"></span> Redaguoti profilį</a></li>
 <script src="js/controllers/admin/addCreditsController.js"></script>
 <script src="js/controllers/admin/usersSettingsController.js"></script>
 <script src="js/controllers/admin/registrationFormController.js"></script>
+<script src="js/controllers/userInfoController.js"></script>
+<script src="js/controllers/admin/editUserController.js"></script>
 
 
 </body>
