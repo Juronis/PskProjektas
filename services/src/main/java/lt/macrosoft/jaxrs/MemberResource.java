@@ -217,7 +217,6 @@ public class MemberResource {
 	@GET
 	@Path("total/candidates")
 	public Response sendCandidatesTotal() {
-        System.out.println("Bent bande");
 		return Response.ok().entity(dao.findCandidates().size()).build();
 	}
 

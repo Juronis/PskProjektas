@@ -1,6 +1,6 @@
 app.controller('mainController', ['$scope', '$http', function ($scope, $http) {
 
-    $http.post("/frontend/services/resources/parameters/update")
+    $http.get("/frontend/services/resources/members/total/candidates")
         .then(function(response){
             $scope.testas = response.data;
         });
