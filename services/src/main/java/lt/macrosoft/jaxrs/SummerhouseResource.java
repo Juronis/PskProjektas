@@ -26,6 +26,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lt.macrosoft.beans.MemberStatelessBean;
+import lt.macrosoft.utils.PasswordService;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -57,6 +62,8 @@ public class SummerhouseResource {
 	MemberDAO memberDAO;
 	@Inject
 	SummerhouseDAO summerhouseDAO;
+	@EJB
+	MemberStatelessBean memberStatelessBean;
 
 	@Context
 	private HttpServletRequest httpRequest;
@@ -102,26 +109,57 @@ public class SummerhouseResource {
 		return summerhouseDAO.findAll();
 	}
 	
-	@DELETE
+	@POST
 	@Path("delete/{id}")
-	public Response deleteSummerhouse(@PathParam("id") Long id) throws ParseException, JOSEException {
-		Summerhouse summerhouse = summerhouseDAO.findById(id);
-		if (summerhouse == null) {
+	public Response deleteSummerhouse(@PathParam("id") Long id, String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode actualObj;
+		String password;
+		try {
+			actualObj = mapper.readTree(json);
+			JsonNode jsonNode1 = actualObj.get("password");
+			if (jsonNode1 == null) {
+				return Response.status(Status.UNAUTHORIZED).build();
+			}
+			password = jsonNode1.textValue();
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+
+		Optional<Member> adminUser = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+		if (!adminUser.isPresent()) {
 			return Response
 					.status(Status.GONE)
 					.entity(Error.DB_DELETE).build();
 		}
-		Exceptions result = summerhouseDAO.deleteSummerhouse(summerhouse);
-		switch (result) {
-			case SUCCESS:
-				return Response.ok().build();
-			case OPTIMISTIC:
-				return  Response.status(Status.FORBIDDEN).build();
-			case PERSISTENCE:
-				return Response.status(Status.REQUEST_TIMEOUT).build();
-			default:
-				return  Response.status(Status.NOT_FOUND).build();
+		Member adminMember = adminUser.get();
+
+		if (PasswordService.checkPassword(password, adminMember.getPassword())) {
+
+			Summerhouse summerhouse = summerhouseDAO.findById(id);
+			if (summerhouse == null) {
+				return Response
+						.status(Status.GONE)
+						.entity(Error.DB_DELETE).build();
+			}
+			Exceptions result = summerhouseDAO.deleteSummerhouse(summerhouse);
+			switch (result) {
+				case SUCCESS:
+					return Response.ok().build();
+				case OPTIMISTIC:
+					return Response.status(Status.FORBIDDEN).build();
+				case PERSISTENCE:
+					return Response.status(Status.REQUEST_TIMEOUT).build();
+				default:
+					return Response.status(Status.NOT_FOUND).build();
+			}
 		}
+		return Response.status(Status.UNAUTHORIZED).build();
 	}
 	
 	@POST
