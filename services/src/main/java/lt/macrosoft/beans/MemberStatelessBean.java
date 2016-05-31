@@ -1,5 +1,6 @@
 package lt.macrosoft.beans;
 
+import com.google.common.base.Optional;
 import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.entities.Member;
@@ -21,16 +22,14 @@ public class MemberStatelessBean {
     public MemberStatelessBean() {
     }
 
-    public Member getMember(String authHeader) {
-        String userId = null;
-        try {
-            userId = AuthUtils.getSubject(authHeader);
-        } catch (ParseException | JOSEException e) {
-            e.printStackTrace();
-        }
-        if (userId == null)
-            return null;
+    public Optional<Member> getMember(String authHeader) throws ParseException, JOSEException {
 
-        return memberDAO.findById(Long.getLong(userId));
+        String userId = AuthUtils.getSubject(authHeader);
+        if (userId.equals("0")) {
+            return Optional.absent();
+        } else {
+
+            return memberDAO.getMemberById(Long.parseLong(userId));
+        }
     }
 }

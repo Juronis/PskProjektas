@@ -9,10 +9,15 @@
         <br/>
         <h3>Pridėti naują vasarnamį</h3>
         <br />
-        <form method="post" role="form" name="summerHouseForm" ng-submit="add()">
+        <form method="post" role="form" name="summerHouseForm" ng-submit="add()"  enctype="multipart/form-data">
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Pavadinimas</span>
-                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="summerHouse.title" pattern=".{3,}" required>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="summerHouse.name" pattern=".{3,}" required>
+            </div>
+            <br/>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Aprašymas</span>
+                <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="summerHouse.description" pattern=".{3,}" required>
             </div>
             <br/>
             <div class="input-group">
@@ -21,8 +26,17 @@
             </div>
             <br />
             <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Vieta</span>
+                <select min="0" class="form-control" aria-describedby="basic-addon1" ng-model="summerHouse.district" required>
+                    <option value="MOLETAI">Molėtai</option>
+                    <option value="UTENA">Utena</option>
+                    <option value="SVENCIONYS">Svencionys</option>
+                </select>
+            </div>
+            <br />
+            <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Žmonių skaičius</span>
-                <input type="number" min="0" class="form-control" aria-describedby="basic-addon1" ng-model="summerHouse.max" required>
+                <input type="number" min="0" class="form-control" aria-describedby="basic-addon1" ng-model="summerHouse.numberOfPlaces" required>
             </div>
             <br />
             <div class="input-group">
@@ -36,7 +50,7 @@
             </div>
             <br/>
 
-            <input type="file" id="imageInput" class="btn btn-default" ng-model="image" required style="display:none">
+            <input type="file" id="imageInput" file-model="image" required style="display:none">
             <button type="button" id="selectImage" class="btn btn-default">Įkelti nuotrauką</button>
             <br />
             <h3>Papildomos paslaugos</h3>

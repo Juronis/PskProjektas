@@ -14,17 +14,22 @@ app.service('summerHouseService', ['$http', function ($http) {
 
     this.editSummerHouse = function (data) {
         var url = baseUrl + "edit";
-        $http.post(url, data);
+        return $http.post(url, data);
     }
 
     this.addSummerHouse = function (data) {
         var url = baseUrl + "add";
-        $http.post(url, data);
+        return $http.post(url, data);
     }
 
-    this.addImage = function (data) {
-        var url = baseUrl + "addImage";
-        $http.post(url, data);
+    this.addImage = function (file) {
+        var url = baseUrl + "upload";
+        var fd = new FormData();
+        fd.append('file', file);
+        return $http.post(url, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        });
     }
 
     this.addServices = function (id, data) {

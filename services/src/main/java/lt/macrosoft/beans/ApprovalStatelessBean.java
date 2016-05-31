@@ -2,8 +2,10 @@ package lt.macrosoft.beans;
 
 import com.google.common.base.Optional;
 import lt.macrosoft.daos.ApprovalDAO;
+import lt.macrosoft.daos.MemberDAO;
 import lt.macrosoft.daos.ParameterDAO;
 import lt.macrosoft.entities.Approval;
+import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Parameter;
 import lt.macrosoft.enums.Exceptions;
 
@@ -20,6 +22,7 @@ public class ApprovalStatelessBean {
     ApprovalDAO approvalDAO;
     @Inject
     ParameterDAO parameterDAO;
+
 
     public ApprovalStatelessBean() {
     }

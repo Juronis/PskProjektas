@@ -1,5 +1,8 @@
 package lt.macrosoft.jaxrs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.nimbusds.jose.JOSEException;
 import lt.macrosoft.beans.ApprovalStatelessBean;
@@ -22,6 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,27 +60,47 @@ public class ApprovalResource {
     public ApprovalResource(ApprovalDAO approvalDAO) {
         this.approvalDAO = approvalDAO;
     }
-    @Secured({Role.ADMIN})
-    @Path("send")
+    //@Secured({Role.ADMIN})
+    @Path("ask")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response sendEmails(List<String> emailList) {
-        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        if(member == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
+    public Response askApprove(String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
 
-        List<Future<MailStatus>> statusList = new ArrayList<>();
-        List<Approval> approvals = new ArrayList<>();
-        for (String email : emailList) {
-            statusList.add(mailerBean.sendMessage(email));
-            approvals.add(new Approval(email, member.getEmail()));
+        Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
+        Member member1 = member.get(); //MEMBERIS KURIS PRAŠO
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj;
+        String emailForAsk;
+        try {
+            actualObj = mapper.readTree(json);
+            JsonNode jsonNode1 = actualObj.get("email");
+            if (jsonNode1 == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            emailForAsk = jsonNode1.textValue();
+
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        for (Approval approval : approvals) {
-            logger.log(Level.INFO, "saving approval");
-            approvalDAO.save(approval);
+
+        Optional<Member> memberApprove = memberDAO.findByEmail(emailForAsk);
+        if (!memberApprove.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
+        Member memberWhoApprove = memberApprove.get(); //MEMBERIS KURIO PRAŠO
+
+
+            mailerBean.sendMessage(memberWhoApprove.getEmail());
+            approvalDAO.save(new Approval(member1.getEmail(), memberWhoApprove.getEmail()));
 
         return Response.ok().build();
     }
@@ -85,12 +109,12 @@ public class ApprovalResource {
     @Path("approver/candidates")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getApproverCandidatesEmailList() {
-        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        if (member == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
+    public Response getApproverCandidatesEmailList(@Context final HttpServletRequest request) throws ParseException, JOSEException {
+        Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
+        Member member1 = member.get();
 
-        Optional<List<Approval>> approvals = approvalDAO.findByApproverEmail(member.getEmail());
+        Optional<List<Approval>> approvals = approvalDAO.findByApproverEmail(member1.getEmail());
         if (approvals.isPresent())
             return Response.ok().entity(approvals.get()).build();
         else {
@@ -98,35 +122,55 @@ public class ApprovalResource {
         }
     }
 
-    @Path("candidate/approvers/{email}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Approval> getCandidateApproversEmailList(@PathParam("email") String email) {
-        Optional<List<Approval>> approvals = approvalDAO.findByCandidateEmail(email);
-        if (approvals.isPresent())
-            return approvals.get();
-        else {
-            return null;
-        }
-    }
 
-    @Path("approver/approve/{email}")
+    @Path("approver/approve")
     @POST
-    public Response approve(@PathParam("email") String candidateEmail) {
-        Member member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
-        if(member == null)
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Error.MEMBER_COULND_NOT_EXTRACT_FROM_HEADER).build();
+    public Response approve(String json) throws ParseException, JOSEException {
+        Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
+        Member member1 = member.get();
 
-        String userEmail = member.getEmail();
+        String userEmail = member1.getEmail();
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj;
+        String candidateEmail;
+        try {
+            actualObj = mapper.readTree(json);
+            JsonNode jsonNode1 = actualObj.get("email");
+            if (jsonNode1 == null) {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+            candidateEmail = jsonNode1.textValue();
+
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
 
         Optional<Approval> approval = approvalDAO.findByCandidateAndApprover(candidateEmail, userEmail);
         if (approval.isPresent()) {
             Approval approvalValue = approval.get();
             approvalValue.setApproved(true);
             approvalDAO.save(approvalValue);
-            approvalStatelessBean.tryToMakeFullMember(candidateEmail);
-            return Response.ok().build();
+            if (approvalStatelessBean.tryToMakeFullMember(candidateEmail)) {
+
+                Optional<Member> memberAprove = memberDAO.findByEmail(candidateEmail);
+                if (!memberAprove.isPresent()) {
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
+                Member memberUpdate = memberAprove.get();
+                memberUpdate.setRole(Role.FULLUSER);
+                memberDAO.save(memberUpdate);
+                return Response.ok().build();
+            }
         }
         return Response.status(Response.Status.NOT_FOUND).entity(Error.DB_APPROVAL_NOT_FOUND).build();
     }
+
 }
