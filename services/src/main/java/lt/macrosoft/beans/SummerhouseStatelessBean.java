@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -63,7 +64,9 @@ public class SummerhouseStatelessBean {
         reservation.setMember(member);
         reservation.setSummerhouse(summerhouse);
         member.addReservation(reservation);
-        member.setCreditAmount(member.getCreditAmount() - summerhouse.getPrice());
+        long diff = dateEnd.getTime() - dateStart.getTime();
+        Long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        member.setCreditAmount(member.getCreditAmount() - summerhouse.getPrice()*Integer.parseInt(days.toString()));
         reservationDAO.save(reservation);
         return reservation.getId() != null;
     }

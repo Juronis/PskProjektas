@@ -1,11 +1,10 @@
 package lt.macrosoft.jaxrs;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -141,20 +140,17 @@ public class SummerhouseResource {
 	@POST
 	@Path("reserve/{summerhouseId}/{dateStart}/{dateEnd}")
 	@Interceptors(LoggingIntercept.class)
-	public Response reserveSummerhouse(@PathParam("summerhouseId") Long id, @PathParam("dateStart") String dateStartStr,
-			@PathParam("dateEnd") String dateEndStr, @Context final HttpServletRequest request) {
-		String userId = null;
-		try {
-			userId = AuthUtils.getSubject(httpRequest.getHeader(AuthUtils.AUTH_HEADER_KEY));
-		} catch (ParseException | JOSEException e) {
-			e.printStackTrace();
-		}
-		if (userId == null)
+	public Response reserveSummerhouse(@Context final HttpServletRequest request, @PathParam("summerhouseId") Long id, @PathParam("dateStart") String dateStartStr,
+			@PathParam("dateEnd") String dateEndStr) throws ParseException, JOSEException {
+		String userId  = AuthUtils.getSubject(httpRequest.getHeader(AuthUtils.AUTH_HEADER_KEY));
+
+		if (userId.equals("0"))
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-		Member member = memberDAO.findById(Long.getLong(userId));
-		if (Member.activeMembership(member))
-			return Response.status(Response.Status.BAD_REQUEST).entity(Error.RESERVATION_NOT_POSSIBLE).build();
+		Member member = memberDAO.findById(Long.parseLong(userId));
+		if (!Member.activeMembership(member)){
+			return Response.status(Status.PAYMENT_REQUIRED).entity(Error.RESERVATION_NOT_POSSIBLE).build();
+		}
 
 		Summerhouse summerhouse = summerhouseDAO.findById(id);
 
@@ -162,8 +158,13 @@ public class SummerhouseResource {
 			return Response.status(Response.Status.BAD_REQUEST).entity(Error.MEMBER_NOT_ENOUGH_CREDIT).build();
 		}
 
-		Date dateStart = DateUtils.getDate(dateStartStr);
-		Date dateEnd = DateUtils.getDate(dateEndStr);
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		Date date = format.parse(dateStartStr);
+		Date date2 = format.parse(dateEndStr);
+
+
+		Date dateStart = date;
+		Date dateEnd = date2;
 
 		if (summerhouseStatelessBean.isDateAvailable(summerhouse, dateStart, dateEnd)) {
 			if (summerhouseStatelessBean.reserve(summerhouse, member, dateStart, dateEnd)) {
