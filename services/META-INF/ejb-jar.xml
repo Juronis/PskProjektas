@@ -25,10 +25,13 @@
 	</interceptors>
 	<assembly-descriptor>
 		<interceptor-binding>
-			<ejb-name>SummerhouseDTO</ejb-name>
+			<ejb-name>*</ejb-name>
 			<interceptor-order>
 				<interceptor-class>lt.macrosoft.interceptors.LoggingIntercept</interceptor-class>
 			</interceptor-order>
+			<method-name>buyMembership</method-name>
+			<method-name>addCredit</method-name>
+			<method-name>reserveSummerhouse</method-name>
 		</interceptor-binding>
 	</assembly-descriptor>
 </ejb-jar>

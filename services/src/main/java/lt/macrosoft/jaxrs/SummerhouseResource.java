@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -39,6 +40,7 @@ import lt.macrosoft.entities.Member;
 import lt.macrosoft.entities.Summerhouse;
 import lt.macrosoft.entities.Summerhouse.District;
 import lt.macrosoft.enums.Exceptions;
+import lt.macrosoft.interceptors.LoggingIntercept;
 import lt.macrosoft.utils.AuthUtils;
 import lt.macrosoft.utils.DateUtils;
 
@@ -132,8 +134,9 @@ public class SummerhouseResource {
 
 	@POST
 	@Path("reserve/{summerhouseId}/{dateStart}/{dateEnd}")
+	@Interceptors(LoggingIntercept.class)
 	public Response reserveSummerhouse(@PathParam("summerhouseId") Long id, @PathParam("dateStart") String dateStartStr,
-			@PathParam("dateEnd") String dateEndStr) {
+			@PathParam("dateEnd") String dateEndStr, @Context final HttpServletRequest request) {
 		String userId = null;
 		try {
 			userId = AuthUtils.getSubject(httpRequest.getHeader(AuthUtils.AUTH_HEADER_KEY));

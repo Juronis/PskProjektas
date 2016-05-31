@@ -52,10 +52,6 @@ public class ParameterResource {
     @GET
     @Path("get/{parameter}")
     public Response findParameterValue(@PathParam("parameter") String parameter) throws ParseException, JOSEException {
-        //String json = "{\"name\":\"MEMBERSHIP_PRICE\"}";
-
-
-
         if(dao.findParameterValue(parameter).isPresent()){
             return Response.ok().entity(dao.findParameterValue(parameter).get()).build();
         }
