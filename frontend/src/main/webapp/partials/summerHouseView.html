@@ -15,6 +15,12 @@
     <br /><br />
     <div class="row">
         <div class="col-md-8">
+            <div class="alert alert-danger" ng-show="messageLog">
+                <strong>Klaida!</strong> {{ messageLog }}
+            </div>
+            <div class="alert alert-success" ng-show="successMessage">
+                <strong>Sėkminga!</strong> {{ successMessage }}
+            </div>
             <h3>Užsirezervuok vasaranmį jau šiandien!</h3>
             <br />
             <form method="post" role="form" name="reserveForm" ng-submit="reserve()">

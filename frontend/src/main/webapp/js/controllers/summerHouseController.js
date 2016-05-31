@@ -29,8 +29,8 @@ app.controller('summerHouseController', ['$scope', '$stateParams', 'summerHouseS
     $scope.price = 0;
 
     var countPrice = function() {
-        if($scope.fromDate && $scope.toDate) {
-            var days = Math.floor(( Date.parse($scope.toDate, "yyyy-mm-dd") - Date.parse($scope.fromDate, "yyyy-mm-dd") ) / 86400000);
+        if($scope.dateFrom && $scope.dateTo) {
+            var days = Math.floor(( Date.parse($scope.dateTo, "yyyy-mm-dd") - Date.parse($scope.dateFrom, "yyyy-mm-dd") ) / 86400000);
             days++;
             $scope.price = (days/7) * $scope.summerHouse.price;
             $scope.$apply();
@@ -70,9 +70,7 @@ app.controller('summerHouseController', ['$scope', '$stateParams', 'summerHouseS
 
     $scope.reserve = function() {
         if ($scope.reserveForm.$valid) {
-            console.log($scope.fromDate+" "+$scope.toDate);
-
-            summerHouseService.reserve($stateParams.id,$scope.fromDate, $scope.toDate, $scope.selection).then(function (response) {
+            summerHouseService.reserve($stateParams.id,$scope.dateFrom, $scope.dateTo, $scope.selection).then(function (response) {
                 $scope.successMessage = "Vasarnamis išnuomuotas";
             }).catch(function(response) {
                 $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'summerHouseController');

@@ -47,7 +47,7 @@ public class DevelopmentStartup extends SystemStartup {
          * Activities
          ***********************************************/
 
-        activity = new Activity(lt.macrosoft.enums.Activity.BOAT.toString().toLowerCase(), 6);
+   /*     activity = new Activity(lt.macrosoft.enums.Activity.BOAT.toString().toLowerCase(), 6);
         activityDAO.save(activity);
         activity = new Activity(lt.macrosoft.enums.Activity.CAYAK.toString().toLowerCase(), 5);
         activityDAO.save(activity);
@@ -65,7 +65,7 @@ public class DevelopmentStartup extends SystemStartup {
          ***********************************************/
 
         // 1
-        dates = DateUtils.generateDateDuration("2016-01-01", "2017-01-01");
+     /*   dates = DateUtils.generateDateDuration("2016-01-01", "2017-01-01");
 
         Summerhouse summerhouse = new Summerhouse();
         summerhouse.setDescription("Puikiausias vasarnamis");
@@ -90,7 +90,7 @@ public class DevelopmentStartup extends SystemStartup {
         summerhouse2.setDateFrom(dates[0]);
         summerhouse2.setDateTo(dates[0]);
         summerhouse2.setImageUrl("http://mstcontractors.com/mstc/images/stories/nice-house-main.jpg");
-        summerhouse2.setActivityList(activities.subList(1, 3));
+        summerhouse.setActivityList(activities.subList(1, 3));
         summerhouseDao.saveIfNotExists(summerhouse2);
 
 
@@ -98,7 +98,7 @@ public class DevelopmentStartup extends SystemStartup {
          * Members
          ***********************************************/
 
-        Member admin = new Member();
+     /*   Member admin = new Member();
         admin.setEmail("admin@admin.com");
         admin.setName("admin");
         admin.setCreditAmount(100000);
@@ -157,7 +157,7 @@ public class DevelopmentStartup extends SystemStartup {
          * Reservations
          ***********************************************/
         // 1
-        Reservation reservation = new Reservation();
+    /*    Reservation reservation = new Reservation();
         date = DateUtils.generateDate("2016-02-03");
         reservation.setDateStart(date);
         date = DateUtils.generateDate("2016-03-03");
@@ -165,18 +165,13 @@ public class DevelopmentStartup extends SystemStartup {
 
         reservation.setSummerhouse(summerhouse);
         reservation.setMember(member);
-        reservationDAO.saveIfNotExists(reservation);
 
         reservationActivityCounts = new ArrayList<>();
-        for (Activity iActivity : reservation.getSummerhouse().getActivityList()) {
-            ReservationActivityCount reservationActivityCount = new ReservationActivityCount(iActivity, reservation, 2);
-            reservationActivityCountDAO.save(reservationActivityCount);
-            System.out.println(reservationActivityCount);
-            reservationActivityCounts.add(reservationActivityCount);
-
+        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 2));
         }
         reservation.setReservationActivityCounts(reservationActivityCounts);
-
+        reservationDAO.saveIfNotExists(reservation);
 
         // 2
         reservation = new Reservation();
@@ -187,17 +182,14 @@ public class DevelopmentStartup extends SystemStartup {
 
         reservation.setSummerhouse(summerhouse);
         reservation.setMember(member2);
-        reservationDAO.saveIfNotExists(reservation);
-        reservationActivityCounts = new ArrayList<>();
-        for (Activity iActivity : reservation.getSummerhouse().getActivityList()) {
-            ReservationActivityCount reservationActivityCount = new ReservationActivityCount(iActivity, reservation, 1);
-            reservationActivityCountDAO.save(reservationActivityCount);
-            reservationActivityCounts.add(reservationActivityCount);
 
+        reservationActivityCounts = new ArrayList<>();
+        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 1));
         }
         reservation.setReservationActivityCounts(reservationActivityCounts);
 
-
+        reservationDAO.saveIfNotExists(reservation);
 
         // 3
         reservation = new Reservation();
@@ -208,16 +200,13 @@ public class DevelopmentStartup extends SystemStartup {
 
         reservation.setSummerhouse(summerhouse2);
         reservation.setMember(member);
-        reservationDAO.saveIfNotExists(reservation);
-        
-        reservationActivityCounts = new ArrayList<>();
-        for (Activity iActivity : reservation.getSummerhouse().getActivityList()) {
-            ReservationActivityCount reservationActivityCount = new ReservationActivityCount(iActivity, reservation, 3);
-            reservationActivityCountDAO.save(reservationActivityCount);
-            reservationActivityCounts.add(reservationActivityCount);
+
+      reservationActivityCounts = new ArrayList<>();
+        for(Activity iActivity : reservation.getSummerhouse().getActivityList()) {
+            reservationActivityCounts.add(new ReservationActivityCount(iActivity, reservation, 3));
         }
         reservation.setReservationActivityCounts(reservationActivityCounts);
-
+        reservationDAO.saveIfNotExists(reservation);*/
 
 
     }
