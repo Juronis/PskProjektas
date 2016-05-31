@@ -3,7 +3,7 @@ app.service('summerHouseService', ['$http', function ($http) {
     var baseUrl = "/frontend/services/resources/summerhouses/";
 
     this.getSummerHouse = function (id) {
-        var url = baseUrl + "id/"+id;
+        var url = baseUrl + "byid/"+id;
         return $http.get(url);
     }
 

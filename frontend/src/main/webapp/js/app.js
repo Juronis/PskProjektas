@@ -70,6 +70,11 @@ app.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', '$httpP
                 url: "/admin/manageUsers",
                 controller: 'manageUsersController',
                 templateUrl: 'partials/admin/manageUsersView.html'
+            })
+            .state('summerHouse', {
+                url: "/summerHouse/:id",
+                controller: 'summerHouseController',
+                templateUrl: 'partials/summerHouseView.html'
             });
 
         $locationProvider.html5Mode({

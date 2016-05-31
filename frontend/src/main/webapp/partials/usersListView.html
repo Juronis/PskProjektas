@@ -1,19 +1,24 @@
 <div class="row">
+
+    <div class="alert alert-danger" ng-show="messageLog">
+        <strong>Klaida!</strong> {{ messageLog }}
+    </div>
+    <div class="alert alert-success" ng-show="successMessage">
+        <strong>Sėkminga!</strong> {{ successMessage }}
+    </div>
+
     <h3>Kandidatai laukiantys patvirtinimo</h3>
 
     <table class="table table-hover">
         <tr>
-            <th>Vardas Pavardė</th>
             <th>El. paštas</th>
             <th></th>
         </tr>
         <tr ng-repeat="candidate in candidates">
-            <td><a ui-sref="userInfo({ userId: {{ candidate.id }} })">{{ candidate.name }}</a></td>
-            <td>{{ candidate.email }}</td>
+            <td>{{ candidate.candidateEmail }}</td>
             <td>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default" ng-click="aproveCandidate(candidate.id)">Patvirtinti kandidatūrą</button>
-                </div>
+                <button type="button" class="btn btn-default" ng-show="!candidate.approved" ng-click="aproveCandidate(candidate.candidateEmail)">Patvirtinti kandidatūrą</button>
+                <div ng-show="candidate.approved">Jūs jau patvirtinote šio nario kandidatūrą</div>
             </td>
         </tr>
     </table>

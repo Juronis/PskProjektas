@@ -16,4 +16,15 @@ var loadLists = function() {
 
 loadLists();
 
+    $scope.aproveCandidate = function(email) {
+        var data = {
+            "email" : email
+        };
+        aprovalService.aprove(data).then(function(response) {
+            $scope.successMessage = "Jūs patvirtinote kandidatūrą";
+        }).catch(function(response){
+            //TODO: error handling
+        });
+    }
+
 }]);

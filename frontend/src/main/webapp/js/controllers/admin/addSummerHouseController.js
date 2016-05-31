@@ -42,7 +42,7 @@ app.controller('addSummerHouseController', ['$scope', 'summerHouseService', func
     $scope.add = function () {
        // if ($scope.summerHouseForm.$valid) {
             summerHouseService.addImage($scope.image).then(function(response) {
-                $scope.summerHouse.image = response.data.link;
+                $scope.summerHouse.imageUrl = response.data.link;
 
                 summerHouseService.addSummerHouse($scope.summerHouse).then(function (response) {
                     $scope.successMessage = "Vasarnamis sėkmingai pridėtas";

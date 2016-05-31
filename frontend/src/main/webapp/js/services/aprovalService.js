@@ -7,9 +7,9 @@ app.service('aprovalService', ['$http', function ($http) {
         return $http.post(url, data);
     }
 
-    this.aprove = function(email) {
-        var url = baseUrl + "approver/approve/"+email;
-        return $http.post(url);
+    this.aprove = function(data) {
+        var url = baseUrl + "approver/approve";
+        return $http.post(url, data);
     }
 
     this.getCandidatesList = function() {
