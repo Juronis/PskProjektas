@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,11 +99,28 @@ public class ApprovalResource {
         }
         Member memberWhoApprove = memberApprove.get(); //MEMBERIS KURIO PRAŠO
 
+        if (memberWhoApprove.getRole() == Role.CANDIDATE) {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
 
-            mailerBean.sendMessage(memberWhoApprove.getEmail());
+        MailStatus mailStatus = MailStatus.NOT_SENT;
+
+        try {
+            Future<MailStatus> mail = mailerBean.sendMessage(memberWhoApprove.getEmail());
+            mailStatus = mail.get();
+        } catch (InterruptedException r) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (ExecutionException r) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (mailStatus == MailStatus.NOT_SENT) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (mailStatus == MailStatus.SENT) {
             approvalDAO.save(new Approval(member1.getEmail(), memberWhoApprove.getEmail()));
-
-        return Response.ok().build();
+            return Response.status(Response.Status.OK).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 

@@ -25,7 +25,7 @@ public class MailerBean {
 	private static final Logger logger = Logger.getLogger(MailerBean.class.getName());
     private Session session;
 	final String username = "psk.macrosoft@gmail.com";
-	final String password = "varma-KEPASA";
+	final String password = "varma-KEPASA4";
 
 	@Asynchronous
     public Future<MailStatus> sendMessage(String email) {

@@ -3,7 +3,7 @@ app.service('aprovalService', ['$http', function ($http) {
     var baseUrl = "/frontend/services/resources/approvals/";
 
     this.askRecommendation = function(data) {
-        var url = baseUrl + "send";
+        var url = baseUrl + "ask";
         return $http.post(url, data);
     }
 
