@@ -48,7 +48,7 @@ app.service('summerHouseService', ['$http', function ($http) {
         $http.post(url, data);
     }
 
-    this.delete = function(id, data) {
+    this.deleteById = function(id, data) {
         var url = baseUrl + "delete/"+id;
         $http.post(url, data);
     }

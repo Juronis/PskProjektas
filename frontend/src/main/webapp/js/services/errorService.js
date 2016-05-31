@@ -31,7 +31,17 @@ app.service('errorService', [ function() {
 
     this.getErrorMsgByCode = function(code, controller) {
         var codes = $.grep(errors, function(e){ return e.name == controller; });
-        var message = $.grep(codes[0].codes, function(e){ return e.code == code; });
-        return message[0].code;
+        if(codes.length) {
+            var message = $.grep(codes[0].codes, function (e) {return e.code == code; });
+            if(message.length) {
+                return message[0].code;
+            }
+            else {
+                return "Klaidos pranesimas nebuvo rastas";
+            }
+        }
+        else {
+            return "Klaidos pranesimas nebuvo rastas";
+        }
     }
 }]);
