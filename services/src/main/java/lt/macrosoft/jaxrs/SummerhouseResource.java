@@ -29,6 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import com.google.common.base.Optional;
 import com.nimbusds.jose.JOSEException;
 
 import lt.macrosoft.beans.SummerhouseStatelessBean;
@@ -193,5 +194,17 @@ public class SummerhouseResource {
 		}
 		return Response.status(200)
 		    .entity("/pictures/" + fileName).build();
+	}
+	
+	@GET
+	@Path("byid/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response returnMemberById(@PathParam("id") Long id, @Context HttpServletRequest request) throws ParseException, JOSEException {
+		Optional<Summerhouse> member = Optional.fromNullable(summerhouseDAO.findById(id));
+
+		if (!member.isPresent()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.ok().entity(member.get()).build();
 	}
 }
