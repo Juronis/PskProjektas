@@ -1,4 +1,4 @@
-app.controller('addCreditsController', ['$scope', 'userService', function ($scope, userService) {
+app.controller('addCreditsController', ['$scope', 'userService', 'errorService', function ($scope, userService, errorService) {
 
     $scope.successMessage = "";
     $scope.messageLog = "";
@@ -30,7 +30,7 @@ app.controller('addCreditsController', ['$scope', 'userService', function ($scop
                 userService.addCredits(data).then(function(response) {
                     $scope.successMessage = "Jūs sėkmingai nariui "+$scope.email+" pridėjote "+$scope.credits+" kreditų";
                 }).catch(function(response) {
-                    //TODO: error handling
+                    $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'addCreditsController');
                 });
             }
         }

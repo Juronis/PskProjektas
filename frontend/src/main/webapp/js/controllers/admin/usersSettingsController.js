@@ -1,4 +1,4 @@
-app.controller('usersSettingsController', ['$scope', 'adminService', function ($scope, adminService) {
+app.controller('usersSettingsController', ['$scope', 'adminService', 'errorService', function ($scope, adminService, errorService) {
 
     $scope.successMessage = "";
     $scope.messageLog = "";
@@ -41,7 +41,7 @@ app.controller('usersSettingsController', ['$scope', 'adminService', function ($
             adminService.updateSettings(data).then(function (response) {
                 $scope.successMessage = "Informacija atnaujinta";
             }).catch(function(response) {
-                //TODO: error handler
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'usersSettingsController');
             });
         }
     }

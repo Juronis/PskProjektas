@@ -1,4 +1,4 @@
-app.controller('editUserController', ['$scope', '$state', '$stateParams', 'userService', 'authService', function ($scope, $state, $stateParams, userService, authService) {
+app.controller('editUserController', ['$scope', '$state', '$stateParams', 'userService', 'authService', 'errorService', function ($scope, $state, $stateParams, userService, authService, errorService) {
     var currentEmail = null;
 
     var setFields = function() {
@@ -35,9 +35,9 @@ app.controller('editUserController', ['$scope', '$state', '$stateParams', 'userS
 
             if(updateProfile) {
                 userService.setUserDataById($stateParams.userId, $scope.user).then(function(response) {
-                    $scope.successMessage = "Nario profilis sėkmingai atnaujinstas";
+                    $scope.successMessage = "Nario profilis sėkmingai atnaujintas";
                 }).catch(function (response) {
-                    //TODO: error handling
+                    $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'editUserController');
                 })
             }
         }

@@ -1,4 +1,4 @@
-app.controller('menuController', ['$scope', '$rootScope', 'authService', 'userService', function ($scope, $rootScope, authService, userService) {
+app.controller('menuController', ['$scope', '$rootScope', 'authService', 'userService', 'errorService', function ($scope, $rootScope, authService, userService, errorService) {
 
     var handleAuth = function() {
         if(!$scope.isAuthenticated) {

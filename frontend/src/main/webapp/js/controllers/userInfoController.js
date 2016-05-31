@@ -1,4 +1,4 @@
-app.controller('userInfoController', ['$scope', '$stateParams', 'userService', function ($scope, $stateParams, userService) {
+app.controller('userInfoController', ['$scope', '$stateParams', 'userService', 'errorService', function ($scope, $stateParams, userService, errorService) {
 
     $scope.userId = $stateParams.userId;
 

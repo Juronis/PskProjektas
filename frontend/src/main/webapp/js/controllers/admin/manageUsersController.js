@@ -1,16 +1,12 @@
-app.controller('manageUsersController', ['$scope', 'userService', function ($scope, userService) {
+app.controller('manageUsersController', ['$scope', 'userService', 'errorService', function ($scope, userService, errorService) {
 
     var loadLists = function() {
         userService.getAllCandidates().then(function (response) {
             $scope.candidates = response.data;
-        }).catch(function (response) {
-            //TODO: error handling
         });
 
         userService.getAllUsers().then(function (response) {
             $scope.users = response.data;
-        }).catch(function (response) {
-            //TODO: error handling
         });
     }
 
@@ -27,7 +23,7 @@ app.controller('manageUsersController', ['$scope', 'userService', function ($sco
                 });
                 $scope.successMessage = "Narys sėkmingai ištrintas";
             }).catch(function (response) {
-                //TODO: error handling
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'manageUsersController');
             });
         }
     }
