@@ -1,4 +1,4 @@
-app.controller('headerController', ['$scope', '$rootScope', 'authService', 'userService', 'aprovalService', function ($scope, $rootScope, authService, userService, aprovalService) {
+app.controller('headerController', ['$scope', '$rootScope', 'authService', 'userService', 'aprovalService', 'errorService', function ($scope, $rootScope, authService, userService, aprovalService, errorService) {
 
     var handleAuth = function() {
         if(!$scope.isAuthenticated) {
@@ -51,7 +51,7 @@ app.controller('headerController', ['$scope', '$rootScope', 'authService', 'user
             aprovalService.sendInvite(data).then(function(response) {
 
             }).catch(function(response) {
-                //TODO: error handling
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'headerController');
             });
         }
     }
@@ -62,7 +62,7 @@ app.controller('headerController', ['$scope', '$rootScope', 'authService', 'user
             aprovalService.askRecommendation(data).then(function(response) {
                 $scope.successMessage = "Jūs sėkmingai paprašėte <b>"+data.email+"</b> rekomendacijos";
             }).catch(function(response) {
-                //TODO: error handling
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'headerController');
             });
         }
     }
@@ -72,7 +72,7 @@ app.controller('headerController', ['$scope', '$rootScope', 'authService', 'user
             $scope.successMessage = "Apmokėjote metinį nario mokestį";
             $rootScope.$broadcast('transferCompleted');
         }).catch(function (response) {
-           //TODO: error handling
+            $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'headerController');
         });
     }
 

@@ -12,8 +12,8 @@ app.service('summerHouseService', ['$http', function ($http) {
         return $http.get(url);
     }
 
-    this.editSummerHouse = function (data) {
-        var url = baseUrl + "edit";
+    this.editSummerHouse = function (id, data) {
+        var url = baseUrl + "edit/"+id;
         return $http.post(url, data);
     }
 
@@ -38,14 +38,19 @@ app.service('summerHouseService', ['$http', function ($http) {
 
     }
 
-    this.deleteSummerHouse = function (id) {
-        var url = baseUrl + "delete/"+id;
-        return $http.get(url);
-    }
-
     this.getDisabledDates = function (id) {
         var url = baseUrl + "disabledDates/"+id;
         return $http.get(url);
+    }
+
+    this.reserve = function(id, dateFrom, dateTo, data) {
+        var url = baseUrl + "reserve/" + id + "/" + dateFrom + "/" + dateTo;
+        $http.post(url, data);
+    }
+
+    this.delete = function(id, data) {
+        var url = baseUrl + "delete/"+id;
+        $http.post(url, data);
     }
 
 }]);

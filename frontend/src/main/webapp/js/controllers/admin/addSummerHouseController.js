@@ -1,4 +1,4 @@
-app.controller('addSummerHouseController', ['$scope', 'summerHouseService', function ($scope, summerHouseService) {
+app.controller('addSummerHouseController', ['$scope', 'summerHouseService', 'errorService', function ($scope, summerHouseService, errorService) {
 
     $scope.successMessage = "";
     $scope.messageLog = "";
@@ -40,7 +40,6 @@ app.controller('addSummerHouseController', ['$scope', 'summerHouseService', func
     }
 
     $scope.add = function () {
-       // if ($scope.summerHouseForm.$valid) {
             summerHouseService.addImage($scope.image).then(function(response) {
                 $scope.summerHouse.imageUrl = response.data.link;
 
@@ -52,16 +51,12 @@ app.controller('addSummerHouseController', ['$scope', 'summerHouseService', func
                         //TODO: error handling
                     }); */
                 }).catch(function (response) {
-                    //TODO: error handling
+                    $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'addSummerHouseController');
                 });
 
             }).catch(function (response) {
-               //TODO: error handling
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'addSummerHouseController');
             });
-            //insert summerhouse
-
-            //insert services
-        //}
     }
 
 }]);

@@ -1,16 +1,12 @@
-app.controller('usersListController', ['$scope', 'userService', 'aprovalService', function ($scope, userService, aprovalService) {
+app.controller('usersListController', ['$scope', 'userService', 'aprovalService', 'errorService', function ($scope, userService, aprovalService, errorService) {
 
 var loadLists = function() {
     aprovalService.getCandidatesList().then(function (response) {
         $scope.candidates = response.data;
-    }).catch(function (response) {
-        //TODO: error handling
     });
 
     userService.getAllMembers().then(function (response) {
         $scope.users = response.data;
-    }).catch(function (response) {
-        //TODO: error handling
     });
 }
 
@@ -23,7 +19,7 @@ loadLists();
         aprovalService.aprove(data).then(function(response) {
             $scope.successMessage = "Jūs patvirtinote kandidatūrą";
         }).catch(function(response){
-            //TODO: error handling
+            $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'usersListController');
         });
     }
 

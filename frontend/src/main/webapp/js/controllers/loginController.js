@@ -1,4 +1,4 @@
-app.controller('loginController', ['$scope', '$state', 'authService', function ($scope, $state, authService) {
+app.controller('loginController', ['$scope', '$state', 'authService', 'errorService', function ($scope, $state, authService, errorService) {
 
     $scope.login = function() {
         if ($scope.loginForm.$valid) {
@@ -6,7 +6,7 @@ app.controller('loginController', ['$scope', '$state', 'authService', function (
                 authService.setAuthData(response.data);
                 $state.go('main');
             }).catch(function (response) {
-                //TODO: error Handling
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'loginController');
             })
         }
     }
@@ -16,7 +16,7 @@ app.controller('loginController', ['$scope', '$state', 'authService', function (
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            $scope.messageLog = response.data;
+            $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'loginController');
         })
     }
 

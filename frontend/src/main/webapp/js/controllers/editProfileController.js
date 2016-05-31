@@ -1,4 +1,4 @@
-app.controller('editProfileController', ['$scope', '$state', 'userService', 'authService', function ($scope, $state, userService, authService) {
+app.controller('editProfileController', ['$scope', '$state', 'userService', 'authService', 'errorService', function ($scope, $state, userService, authService, errorService) {
     var currentEmail = null;
 
     $('#birthdayField').datepicker({
@@ -42,7 +42,7 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', 'aut
                 userService.setUserData($scope.user).then(function(response) {
                     $state.go('main');
                 }).catch(function (response) {
-                    //TODO: error handling
+                    $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'editProfileController');
                 })
             }
         }
@@ -56,7 +56,7 @@ app.controller('editProfileController', ['$scope', '$state', 'userService', 'aut
                 authService.logout();
                 $state.go("main");
             }).catch(function (response) {
-                //TODO: error handling
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'editProfileController');
             });
         }
     }

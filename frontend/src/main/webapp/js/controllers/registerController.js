@@ -1,4 +1,4 @@
-app.controller('registerController', ['$scope', '$state', 'authService', 'adminService', function ($scope, $state, authService, adminService) {
+app.controller('registerController', ['$scope', '$state', 'authService', 'adminService', 'errorService', function ($scope, $state, authService, adminService, errorService) {
 
     adminService.getSettings('birthday_required').then(function (response) {
         $scope.birthdayRequired = response.data.pvalue;
@@ -25,9 +25,7 @@ app.controller('registerController', ['$scope', '$state', 'authService', 'adminS
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            //if(response.status == 500) {
-                $scope.messageLog = response.status;
-            //}
+            $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'registerController');
         })
     };
 
@@ -36,9 +34,7 @@ app.controller('registerController', ['$scope', '$state', 'authService', 'adminS
             authService.setAuthData(response.data);
             $state.go('main');
         }).catch(function (response) {
-            if(response.status == 404) {
-                $scope.messageLog = "Puslapis nerastas";
-            }
+            $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'registerController');
         })
     };
 }]);

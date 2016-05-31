@@ -1,4 +1,4 @@
-app.controller('summerHouseController', ['$scope', '$stateParams', 'summerHouseService', function ($scope, $stateParams, summerHouseService) {
+app.controller('summerHouseController', ['$scope', '$stateParams', 'summerHouseService', 'errorService', function ($scope, $stateParams, summerHouseService, errorService) {
 
 
     var loadSummerHouse = function() {
@@ -21,8 +21,6 @@ app.controller('summerHouseController', ['$scope', '$stateParams', 'summerHouseS
                 startDate: $scope.summerHouse.dateFrom,
                 endDate: $scope.summerHouse.dateTo
             });
-        }).catch(function (response) {
-            //TODO: error handling
         });
     }
 
@@ -73,13 +71,13 @@ app.controller('summerHouseController', ['$scope', '$stateParams', 'summerHouseS
     $scope.reserve = function() {
         if ($scope.reserveForm.$valid) {
             console.log($scope.fromDate+" "+$scope.toDate);
-         /*
-            transfersService.transfer($stateParams.id,).then(function (response) {
 
+            summerHouseService.reserve($stateParams.id,$scope.fromDate, $scope.toDate, $scope.selection).then(function (response) {
+                $scope.successMessage = "Vasarnamis išnuomuotas";
             }).catch(function(response) {
-               //TODO: error handling
+                $scope.messageLog = errorService.getErrorMsgByCode(response.status, 'summerHouseController');
             });
-            */
+
         }
     }
 
