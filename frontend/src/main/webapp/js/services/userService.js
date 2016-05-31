@@ -38,7 +38,7 @@ app.service('userService', ['$http', function ($http) {
     }
 
     this.isMember = function (role) {
-        return this.isAdmin(role) || role === 'FULLMEMBER';
+        return this.isAdmin(role) || role === 'FULLUSER';
     };
 
     this.isAdmin = function (role) {

@@ -61,7 +61,8 @@ public class ApprovalResource {
     public ApprovalResource(ApprovalDAO approvalDAO) {
         this.approvalDAO = approvalDAO;
     }
-    //@Secured({Role.ADMIN})
+
+
     @Path("ask")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -106,7 +107,7 @@ public class ApprovalResource {
         MailStatus mailStatus = MailStatus.NOT_SENT;
 
         try {
-            Future<MailStatus> mail = mailerBean.sendMessage(memberWhoApprove.getEmail());
+            Future<MailStatus> mail = mailerBean.sendMessage(memberWhoApprove.getEmail(), member1.getEmail());
             mailStatus = mail.get();
         } catch (InterruptedException r) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -123,7 +124,7 @@ public class ApprovalResource {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-
+    @Secured({Role.ADMIN, Role.FULLUSER})
     @Path("approver/candidates")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -140,7 +141,7 @@ public class ApprovalResource {
         }
     }
 
-
+    @Secured({Role.ADMIN, Role.FULLUSER})
     @Path("approver/approve")
     @POST
     public Response approve(String json) throws ParseException, JOSEException {
@@ -189,6 +190,54 @@ public class ApprovalResource {
             }
         }
         return Response.status(Response.Status.NOT_FOUND).entity(Error.DB_APPROVAL_NOT_FOUND).build();
+    }
+
+    @Secured({Role.ADMIN, Role.FULLUSER})
+    @Path("invite")
+    @POST
+    public Response invite(String json) throws ParseException, JOSEException {
+        Optional<Member> member = memberStatelessBean.getMember(request.getHeader(AuthUtils.AUTH_HEADER_KEY));
+        if (!member.isPresent()) { return Response.status(Response.Status.FORBIDDEN).build(); }
+        Member member1 = member.get(); //MEMBERIS KURIS SIUNČIA
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj;
+        String emailToSend;
+        try {
+            actualObj = mapper.readTree(json);
+            JsonNode jsonNode1 = actualObj.get("email");
+            if (jsonNode1 == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            emailToSend = jsonNode1.textValue();
+
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+
+
+        MailStatus mailStatus = MailStatus.NOT_SENT;
+
+        try {
+            Future<MailStatus> mail = mailerBean.sendMessageInvite(emailToSend, member1.getEmail());
+            mailStatus = mail.get();
+        } catch (InterruptedException r) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (ExecutionException r) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (mailStatus == MailStatus.NOT_SENT) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (mailStatus == MailStatus.SENT) {
+            return Response.status(Response.Status.OK).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 }

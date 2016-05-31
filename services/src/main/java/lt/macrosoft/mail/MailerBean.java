@@ -28,7 +28,7 @@ public class MailerBean {
 	final String password = "varma-KEPASA4";
 
 	@Asynchronous
-    public Future<MailStatus> sendMessage(String email) {
+    public Future<MailStatus> sendMessage(String email, String emailAsking) {
         MailStatus status;
 
         try {
@@ -47,15 +47,12 @@ public class MailerBean {
             message.setFrom();
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(email, false));
-            message.setSubject("Test message from async example");
+            message.setSubject("Taves praso rekomendacijos");
             message.setHeader("X-Mailer", "JavaMail");
             DateFormat dateFormatter = DateFormat
                     .getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
             Date timeStamp = new Date();
-            String messageBody = "This is a test message from the async "
-                    + "example of the Java EE Tutorial. It was sent on "
-                    + dateFormatter.format(timeStamp)
-                    + ".";
+            String messageBody = "Taves praso " + emailAsking + " Rekomendacijos.";
             message.setText(messageBody);
             message.setSentDate(timeStamp);
             Transport.send(message);
@@ -68,4 +65,44 @@ public class MailerBean {
         }
         return new AsyncResult<>(status);
 	}
+
+    @Asynchronous
+    public Future<MailStatus> sendMessageInvite(String email, String emailFrom) {
+        MailStatus status;
+
+        try {
+            Properties properties = new Properties();
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.smtp.host", "smtp.gmail.com");
+            properties.put("mail.smtp.port", "587");
+            session = Session.getInstance(properties,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+            Message message = new MimeMessage(session);
+            message.setFrom();
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(email, false));
+            message.setSubject("Tave kviecia prisijungti prie Labanoro draugai");
+            message.setHeader("X-Mailer", "JavaMail");
+            DateFormat dateFormatter = DateFormat
+                    .getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+            Date timeStamp = new Date();
+            String messageBody = "Tave kviecia " + emailFrom + "prisijungti prie Labanoro draugai."
+            + "Prisijunk prie <LINKAS> ir uzsiregistruok!";
+            message.setText(messageBody);
+            message.setSentDate(timeStamp);
+            Transport.send(message);
+            status = MailStatus.SENT;
+            logger.log(Level.INFO, "Mail sent to {0}", email);
+        } catch (MessagingException ex) {
+            logger.severe("Error in sending message.");
+            status = MailStatus.NOT_SENT;
+            logger.severe(ex.getMessage());
+        }
+        return new AsyncResult<>(status);
+    }
 }

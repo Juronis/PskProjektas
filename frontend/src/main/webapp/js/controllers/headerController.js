@@ -48,7 +48,7 @@ app.controller('headerController', ['$scope', '$rootScope', 'authService', 'user
     $scope.sendRequest = function () {
         if(isValidEmailAddress($scope.email)) {
             var data = { "email" : $scope.email };
-            userService.sendEmailRequest(data).then(function(response) {
+            aprovalService.sendInvite(data).then(function(response) {
 
             }).catch(function(response) {
                 //TODO: error handling

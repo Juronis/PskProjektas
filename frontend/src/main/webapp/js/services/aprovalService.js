@@ -17,4 +17,10 @@ app.service('aprovalService', ['$http', function ($http) {
         return $http.get(url);
     }
 
+    this.sendInvite = function(data) {
+        var url = baseUrl + "invite";
+        return $http.post(url, data);
+    }
+
+
 }]);
