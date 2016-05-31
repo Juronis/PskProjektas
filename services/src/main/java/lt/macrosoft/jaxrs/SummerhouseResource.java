@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,12 @@ import lt.macrosoft.interceptors.LoggingIntercept;
 import lt.macrosoft.utils.AuthUtils;
 import lt.macrosoft.utils.DateUtils;
 
+
+
 @Path("/summerhouses")
+@Stateless
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class SummerhouseResource {
 	@EJB
 	SummerhouseStatelessBean summerhouseStatelessBean;
@@ -123,7 +129,7 @@ public class SummerhouseResource {
 	@Path("add")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addSummerhouse(Summerhouse summerhouse) {
+	public Response addSummerhouse(Summerhouse summerhouse) throws ParseException, JOSEException{
 		try {
 			summerhouseDAO.save(summerhouse);
 		} catch (Exception e) {

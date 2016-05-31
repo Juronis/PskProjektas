@@ -1,41 +1,35 @@
 package lt.macrosoft.jaxrs;
 
+import com.nimbusds.jose.JOSEException;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
 
+import lt.macrosoft.daos.ParameterDAO;
+import lt.macrosoft.enums.Exceptions;
+import lt.macrosoft.enums.Role;
+import lt.macrosoft.jaxrs.Error;
+import lt.macrosoft.security.Secured;
+import lt.macrosoft.utils.AuthUtils;
+import com.google.common.base.Optional;
+import lt.macrosoft.daos.MemberDAO;
+import lt.macrosoft.entities.Member;
+import lt.macrosoft.utils.PasswordService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import com.nimbusds.jose.JOSEException;
-
-import lt.macrosoft.daos.MemberDAO;
-import lt.macrosoft.daos.ParameterDAO;
-import lt.macrosoft.entities.Member;
-import lt.macrosoft.enums.Exceptions;
-import lt.macrosoft.enums.Role;
-import lt.macrosoft.interceptors.LoggingIntercept;
-import lt.macrosoft.security.Secured;
-import lt.macrosoft.utils.AuthUtils;
-import lt.macrosoft.utils.PasswordService;
 
 
 @Path("/members")
@@ -293,7 +287,6 @@ public class MemberResource {
 	@Secured({Role.FULLUSER, Role.ADMIN})
 	@POST
 	@Path("membership")
-	@Interceptors(LoggingIntercept.class)
 	public Response buyMembership(@Context final HttpServletRequest request) throws ParseException, JOSEException {
 		Optional<Member> foundUser = getAuthMember(request);
 		if (!foundUser.isPresent()) {
@@ -327,8 +320,7 @@ public class MemberResource {
 	@Secured({Role.ADMIN})
 	@POST
 	@Path("addcredit")
-	@Interceptors(LoggingIntercept.class)
-	public Response addCredit(String json, @Context final HttpServletRequest request) throws ParseException, JOSEException {
+	public Response addCredit(String json) throws ParseException, JOSEException {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode actualObj;
 		String email;
